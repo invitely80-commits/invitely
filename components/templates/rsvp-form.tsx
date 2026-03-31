@@ -31,7 +31,7 @@ export function RsvpForm({
     <Card className="rounded-[28px] border-maroon/10 bg-white/95">
       <h3 className="font-heading text-3xl text-maroon">RSVP</h3>
       <p className="mt-2 text-sm leading-7 text-stone-600">
-        Let the couple know you'll be joining the celebration.
+        Let the couple know you&apos;ll be joining the celebration.
       </p>
       <form ref={formRef} action={formAction} className="mt-6 grid gap-4">
         <div>

@@ -172,7 +172,7 @@ export default async function HomePage() {
           {testimonials.map((testimonial, index) => (
             <FadeInSection key={testimonial.name} delay={index * 0.08}>
               <div className="surface-card h-full rounded-[30px] p-7">
-                <p className="font-heading text-3xl leading-10 text-maroon">"{testimonial.quote}"</p>
+                <p className="font-heading text-3xl leading-10 text-maroon">&quot;{testimonial.quote}&quot;</p>
                 <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">
                   {testimonial.name}
                 </p>

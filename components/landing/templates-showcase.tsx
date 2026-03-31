@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -108,13 +109,13 @@ export function TemplatesShowcase() {
               </div>
               <InviteRenderer invite={activeTemplate} preview />
               <div className="flex justify-end px-2 pb-2 pt-6">
-                <a
+                <Link
                   href="/sign-up"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-maroon"
                 >
                   Use this template
                   <ArrowUpRight className="size-4" />
-                </a>
+                </Link>
               </div>
             </motion.div>
           </motion.div>

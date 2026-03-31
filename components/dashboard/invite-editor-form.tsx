@@ -345,7 +345,14 @@ export function InviteEditorForm({
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {newPreviews.map((preview) => (
                 <div key={preview} className="overflow-hidden rounded-[22px] border border-maroon/10 bg-white p-3">
-                  <img src={preview} alt="New upload preview" className="aspect-square w-full rounded-[16px] object-cover" />
+                  <Image
+                    src={preview}
+                    alt="New upload preview"
+                    width={400}
+                    height={400}
+                    unoptimized
+                    className="aspect-square w-full rounded-[16px] object-cover"
+                  />
                 </div>
               ))}
             </div>
