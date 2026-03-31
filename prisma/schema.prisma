@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  invites      Invite[]
+}
+
+model Invite {
+  id        String         @id @default(cuid())
+  userId    String
+  slug      String         @unique
+  template  InviteTemplate
+  data      Json
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rsvps     RSVP[]
+
+  @@index([userId])
+}
+
+model RSVP {
+  id        String   @id @default(cuid())
+  inviteId  String
+  name      String
+  email     String
+  phone     String
+  guests    Int
+  createdAt DateTime @default(now())
+  invite    Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+
+  @@index([inviteId])
+}
+
+enum InviteTemplate {
+  MINIMAL
+  ROYAL
+}
