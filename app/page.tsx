@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ChevronRight, Compass, Heart, Layers, MessageSquare, Monitor, Palette, Sparkles, Wand2 } from "lucide-react";
+import { ArrowRight, ChevronRight, Layers, MessageSquare, Monitor, Palette, Sparkles, Wand2 } from "lucide-react";
 
 import { FadeIn, ScaleIn } from "@/components/landing/motion";
 import { HeroPreview } from "@/components/landing/hero-preview";
@@ -168,7 +168,7 @@ export default async function HomePage() {
           <div className="relative z-10 flex flex-col items-center">
              <FadeIn direction="up">
                 <h2 className="font-heading text-5xl font-medium text-white sm:text-7xl">
-                  Ready to curate your heirloom?
+                   Ready to curate your heirloom?
                 </h2>
                 <p className="mx-auto mt-8 max-w-xl text-lg text-white/50">
                   Join 15,000+ couples who celebrated with digital elegance.

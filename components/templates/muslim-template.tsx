@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Moon, Star, MapPin, Sparkles, Heart } from "lucide-react";
+import { Moon, Star, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { buttonStyles } from "@/components/ui/button";
 import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { getCoupleNames } from "@/lib/invites";
 import { formatDisplayDate } from "@/lib/utils";
@@ -13,7 +12,6 @@ import { type TemplateInvite } from "@/components/templates/render-invite";
 
 export function MuslimTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;

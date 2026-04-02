@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import { FadeIn, ScaleIn } from "@/components/landing/motion";
+import { ScaleIn } from "@/components/landing/motion";
 import { SiteHeader } from "@/components/landing/site-header";
 import { TraditionIcons } from "@/components/landing/tradition-icons";
 import { themeOptions } from "@/lib/invites";
@@ -28,10 +26,10 @@ export default function TemplatesPage() {
         ease: "power4.out",
       });
 
-      gsap.utils.toArray(".template-card").forEach((card: any, i: number) => {
-        gsap.from(card, {
+      gsap.utils.toArray(".template-card").forEach((card: unknown, i: number) => {
+        gsap.from(card as HTMLElement, {
           scrollTrigger: {
-            trigger: card,
+            trigger: card as HTMLElement,
             start: "top bottom-=100",
             toggleActions: "play none none none",
           },
@@ -74,7 +72,8 @@ export default function TemplatesPage() {
       <section className="section-shell px-6">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
           {themeOptions.filter(t => t.value !== 'minimal' && t.value !== 'royal').map((template, i) => {
-            const Icon = (TraditionIcons as any)[template.label] || TraditionIcons.Civil;
+            const label = template.label as keyof typeof TraditionIcons;
+            const Icon = TraditionIcons[label] || TraditionIcons.Civil;
             return (
               <div key={template.value} className="template-card group">
                 <div className="surface-card relative aspect-[4/5] rounded-[40px] overflow-hidden p-2 transition-all duration-700 group-hover:shadow-[0_40px_100px_rgba(87,0,19,0.12)] group-hover:-translate-y-4">

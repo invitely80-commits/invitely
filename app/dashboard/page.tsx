@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarClock, MessageCircleHeart, PartyPopper } from "lucide-react";
+import { PartyPopper } from "lucide-react";
 
 import { buttonStyles } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

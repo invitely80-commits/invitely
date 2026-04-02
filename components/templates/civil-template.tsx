@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Sparkles, Heart, ArrowUpRight, Camera } from "lucide-react";
+import { MapPin, ArrowUpRight, Camera } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
-import { buttonStyles } from "@/components/ui/button";
 import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { getCoupleNames } from "@/lib/invites";
 import { formatDisplayDate } from "@/lib/utils";

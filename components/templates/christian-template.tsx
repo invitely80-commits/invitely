@@ -1,19 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { Church, MapPin, Sparkles, Heart, Bell } from "lucide-react";
+import { MapPin, Heart, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { buttonStyles } from "@/components/ui/button";
-import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { getCoupleNames } from "@/lib/invites";
 import { formatDisplayDate } from "@/lib/utils";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 
 export function ChristianTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
@@ -112,7 +108,7 @@ export function ChristianTemplate({
            </div>
 
            <div className="grid gap-2 items-start">
-              {invite.data.events.map((event, i) => (
+              {invite.data.events.map((event) => (
                 <motion.div 
                   key={event.id}
                   initial={{ opacity: 0, y: 30 }}
