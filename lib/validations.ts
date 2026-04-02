@@ -30,7 +30,7 @@ export const inviteDataSchema = z.object({
   theme: z.enum(["minimal", "royal"]),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
-  gallery: z.array(z.string().url()).max(8, "You can upload up to 8 images.").default([]),
+  gallery: z.array(z.string().url()).max(1, "You can upload 1 image.").default([]),
   heroImage: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   events: z.array(inviteEventSchema).min(1, "Add at least one event.").max(6, "Keep the invite to 6 events or fewer."),
 });
@@ -38,18 +38,10 @@ export const inviteDataSchema = z.object({
 export const inviteSubmissionSchema = inviteDataSchema
   .omit({ gallery: true, heroImage: true })
   .extend({
-    existingGallery: z.array(z.string().url()).max(8).default([]),
+    existingGallery: z.array(z.string().url()).max(1).default([]),
   });
-
-export const rsvpSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name."),
-  email: z.string().trim().email("Please enter a valid email."),
-  phone: z.string().trim().min(8, "Please enter a valid phone number.").max(20),
-  guests: z.coerce.number().int().min(1).max(12),
-});
 
 export type InviteEvent = z.infer<typeof inviteEventSchema>;
 export type InviteData = z.infer<typeof inviteDataSchema>;
 export type InviteSubmission = z.infer<typeof inviteSubmissionSchema>;
-export type RsvpInput = z.infer<typeof rsvpSchema>;
 

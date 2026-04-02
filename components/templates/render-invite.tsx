@@ -14,16 +14,14 @@ export type TemplateInvite = {
 export function InviteRenderer({
   invite,
   preview = false,
-  rsvpSlot,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
-  rsvpSlot?: React.ReactNode;
 }) {
   if (invite.template === "royal") {
-    return <RoyalTemplate invite={invite} preview={preview} rsvpSlot={rsvpSlot} />;
+    return <RoyalTemplate invite={invite} preview={preview} />;
   }
 
-  return <MinimalTemplate invite={invite} preview={preview} rsvpSlot={rsvpSlot} />;
+  return <MinimalTemplate invite={invite} preview={preview} />;
 }
 

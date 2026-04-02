@@ -66,9 +66,9 @@ async function parseInvitePayload(formData: FormData): Promise<ParsedInvitePaylo
     .getAll("galleryFiles")
     .filter((value): value is File => value instanceof File && value.size > 0);
 
-  if (parsed.data.existingGallery.length + files.length > 8) {
+  if (parsed.data.existingGallery.length + files.length > 1) {
     return {
-      error: "You can keep up to 8 photos in one invite.",
+      error: "You can keep only 1 photo in one invite to ensure it remains lightweight.",
     };
   }
 
@@ -190,13 +190,6 @@ export async function getOwnedInviteOrThrow(inviteId: string, userId: string) {
     where: {
       id: inviteId,
       userId,
-    },
-    include: {
-      rsvps: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
     },
   });
 

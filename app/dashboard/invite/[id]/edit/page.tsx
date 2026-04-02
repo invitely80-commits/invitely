@@ -45,7 +45,7 @@ export default async function EditInvitePage({
           {invite.parsedData.brideName} & {invite.parsedData.groomName}
         </h1>
         <p className="mt-3 max-w-3xl text-base leading-8 text-stone-600">
-          Refine every detail of your wedding website and monitor new RSVPs as they arrive.
+          Refine every detail of your wedding website to make it perfect for your guests.
         </p>
       </div>
 
@@ -57,38 +57,6 @@ export default async function EditInvitePage({
         notice={notice}
       />
 
-      <Card>
-        <h2 className="font-heading text-4xl text-maroon">RSVP activity</h2>
-        <p className="mt-2 text-sm leading-7 text-stone-600">
-          Responses appear here in real time as guests confirm attendance.
-        </p>
-        <div className="mt-6 space-y-4">
-          {invite.rsvps.length === 0 ? (
-            <p className="rounded-[24px] bg-cream/70 px-5 py-4 text-sm text-stone-600">
-              No RSVPs yet. Share your link and guest confirmations will show up here.
-            </p>
-          ) : (
-            invite.rsvps.map((rsvp) => (
-              <div
-                key={rsvp.id}
-                className="rounded-[24px] border border-maroon/10 bg-white px-5 py-4 text-sm text-stone-700"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-semibold text-maroon">{rsvp.name}</p>
-                    <p className="mt-1">{rsvp.email}</p>
-                    <p>{rsvp.phone}</p>
-                  </div>
-                  <div className="text-sm text-stone-500 sm:text-right">
-                    <p>{rsvp.guests} guest(s)</p>
-                    <p className="mt-1">{formatDateTime(rsvp.createdAt)}</p>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </Card>
     </div>
   );
 }

@@ -99,9 +99,16 @@ export function InviteEditorForm({
 
   function handleFilesChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
+    const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024);
+
+    if (validFiles.length < files.length) {
+      alert("The image exceeds the 3MB limit. Please choose a smaller file.");
+    }
+
     setNewPreviews((current) => {
       current.forEach((preview) => URL.revokeObjectURL(preview));
-      return files.map((file) => URL.createObjectURL(file));
+      // Only keep the first valid file for the preview
+      return validFiles.slice(0, 1).map((file) => URL.createObjectURL(file));
     });
   }
 
@@ -311,9 +318,9 @@ export function InviteEditorForm({
             <ImagePlus className="size-5" />
           </div>
           <div>
-            <h2 className="font-heading text-3xl text-maroon">Gallery images</h2>
+            <h2 className="font-heading text-3xl text-maroon">Gallery image</h2>
             <p className="mt-2 text-sm leading-7 text-stone-600">
-              Upload up to 8 images. Your first image becomes the hero visual on the invite.
+              Upload a single image (max 3MB). This will be the main visual for your invitation.
             </p>
           </div>
         </div>
@@ -339,8 +346,8 @@ export function InviteEditorForm({
         ) : null}
 
         <div className="mt-8 rounded-[26px] border border-dashed border-maroon/20 bg-white/70 p-6">
-          <Label htmlFor="galleryFiles">Upload images</Label>
-          <Input id="galleryFiles" name="galleryFiles" type="file" accept="image/*" multiple onChange={handleFilesChange} />
+          <Label htmlFor="galleryFiles">Choose an image (Optional)</Label>
+          <Input id="galleryFiles" name="galleryFiles" type="file" accept="image/*" onChange={handleFilesChange} />
           {newPreviews.length > 0 ? (
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {newPreviews.map((preview) => (
@@ -362,7 +369,7 @@ export function InviteEditorForm({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-7 text-stone-500">
-          Guests will see your invite as a mobile-first wedding website with live RSVPs.
+          Guests will see your invite as a mobile-first wedding website.
         </p>
         <SubmitButton size="lg" pendingLabel="Saving your invite...">
           {submitLabel}

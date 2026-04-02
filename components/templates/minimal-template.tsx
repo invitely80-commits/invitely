@@ -12,11 +12,9 @@ import { type TemplateInvite } from "@/components/templates/render-invite";
 export function MinimalTemplate({
   invite,
   preview = false,
-  rsvpSlot,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
-  rsvpSlot?: React.ReactNode;
 }) {
   const coupleNames = getCoupleNames(invite.data);
   const primaryEvent = invite.data.events[0];
@@ -148,7 +146,6 @@ export function MinimalTemplate({
               </div>
             </div>
           ) : null}
-          {!preview && rsvpSlot ? rsvpSlot : null}
         </div>
       </section>
     </div>

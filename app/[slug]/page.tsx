@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { InviteRenderer } from "@/components/templates/render-invite";
-import { RsvpForm } from "@/components/templates/rsvp-form";
-import { submitRsvpAction } from "@/lib/actions/rsvp-actions";
 import { getCoupleNames, parseInviteData, templateToTheme } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 
@@ -71,7 +69,6 @@ export default async function PublicInvitePage({ params }: PublicInvitePageProps
             template: templateToTheme(invite.template),
             data,
           }}
-          rsvpSlot={<RsvpForm action={submitRsvpAction.bind(null, invite.id)} />}
         />
       </div>
     </main>

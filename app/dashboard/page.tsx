@@ -16,9 +16,6 @@ export default async function DashboardPage() {
     where: {
       userId: user.id,
     },
-    include: {
-      rsvps: true,
-    },
     orderBy: {
       updatedAt: "desc",
     },
@@ -31,16 +28,12 @@ export default async function DashboardPage() {
       data,
       theme: templateToTheme(invite.template),
       coupleNames: getCoupleNames(data),
-      totalGuests: invite.rsvps.reduce((sum, rsvp) => sum + rsvp.guests, 0),
     };
   });
 
-  const totalRsvps = inviteCards.reduce((sum, invite) => sum + invite.rsvps.length, 0);
-  const totalGuests = inviteCards.reduce((sum, invite) => sum + invite.totalGuests, 0);
-
   return (
     <div className="space-y-8">
-      <section className="grid gap-5 xl:grid-cols-3">
+      <section className="grid gap-5 xl:grid-cols-2">
         <Card>
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-maroon/60">Active invites</p>
           <div className="mt-4 flex items-center gap-4">
@@ -48,24 +41,6 @@ export default async function DashboardPage() {
               <PartyPopper className="size-5" />
             </div>
             <p className="font-heading text-5xl text-maroon">{inviteCards.length}</p>
-          </div>
-        </Card>
-        <Card>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-maroon/60">Total RSVPs</p>
-          <div className="mt-4 flex items-center gap-4">
-            <div className="rounded-2xl bg-cream p-3 text-maroon">
-              <MessageCircleHeart className="size-5" />
-            </div>
-            <p className="font-heading text-5xl text-maroon">{totalRsvps}</p>
-          </div>
-        </Card>
-        <Card>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-maroon/60">Guests expected</p>
-          <div className="mt-4 flex items-center gap-4">
-            <div className="rounded-2xl bg-blush p-3 text-maroon">
-              <CalendarClock className="size-5" />
-            </div>
-            <p className="font-heading text-5xl text-maroon">{totalGuests}</p>
           </div>
         </Card>
       </section>
@@ -110,14 +85,6 @@ export default async function DashboardPage() {
                     <p className="mt-1 text-sm leading-7 text-stone-600">Invite link: /{invite.slug}</p>
                   </div>
                   <div className="grid gap-3 rounded-[24px] bg-cream/70 px-5 py-4 text-sm text-stone-700">
-                    <div className="flex items-center justify-between gap-6">
-                      <span>RSVPs</span>
-                      <strong className="text-maroon">{invite.rsvps.length}</strong>
-                    </div>
-                    <div className="flex items-center justify-between gap-6">
-                      <span>Guests</span>
-                      <strong className="text-maroon">{invite.totalGuests}</strong>
-                    </div>
                     <div className="flex items-center justify-between gap-6">
                       <span>Updated</span>
                       <strong className="text-maroon">{formatShortDate(invite.updatedAt)}</strong>

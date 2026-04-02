@@ -27,23 +27,11 @@ model Invite {
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  rsvps     Rsvp[]
 
   @@index([userId])
 }
 
-model Rsvp {
-  id        String   @id @default(cuid())
-  inviteId  String
-  name      String
-  email     String
-  phone     String
-  guests    Int
-  createdAt DateTime @default(now())
-  invite    Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
 
-  @@index([inviteId])
-}
 
 enum InviteTemplate {
   MINIMAL
