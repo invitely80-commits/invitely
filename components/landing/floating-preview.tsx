@@ -33,7 +33,7 @@ export function FloatingPreview() {
             <div className="absolute inset-0 bg-gradient-to-t from-burgundy/60 via-burgundy/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">
               <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/70">The Wedding Of</p>
-              <h3 className="mt-2 font-heading text-4xl font-medium tracking-tight">Mira & Kabir</h3>
+              <h3 className="mt-2 font-heading text-4xl font-medium tracking-tight">Aanvi & Siddharth</h3>
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-3 px-2 py-4 text-[13px] font-medium text-stone-600 sm:flex-row sm:items-center sm:justify-between">
