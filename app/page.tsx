@@ -126,7 +126,7 @@ export default async function HomePage() {
           </div>
           
           <Link href="/templates" className="mt-16 inline-flex items-center gap-3 text-gold hover:text-white transition-colors font-semibold group">
-            See all moods <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            Explore all templates <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </section>
