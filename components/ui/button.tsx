@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = {
   primary:
-    "bg-maroon text-white shadow-[0_18px_50px_rgba(122,31,61,0.22)] hover:bg-[#65172f] focus-visible:outline-maroon",
+    "bg-[linear-gradient(135deg,var(--color-burgundy)_0%,var(--color-burgundy-container)_100%)] text-white shadow-[0_24px_50px_rgba(87,0,19,0.18)] hover:brightness-110 focus-visible:outline-burgundy",
   secondary:
-    "bg-white/85 text-maroon ring-1 ring-maroon/15 hover:bg-white focus-visible:outline-maroon",
+    "bg-gold-fixed text-gold ring-1 ring-gold/10 hover:bg-gold-fixed/90 focus-visible:outline-gold",
   ghost:
-    "bg-transparent text-maroon hover:bg-maroon/5 focus-visible:outline-maroon",
+    "bg-transparent text-burgundy hover:bg-burgundy/5 focus-visible:outline-burgundy",
 };
 
 const buttonSizes = {

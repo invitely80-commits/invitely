@@ -52,20 +52,21 @@ export function TemplatesShowcase() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
               </div>
-              <div className="flex items-center justify-between px-6 pb-6 pt-2">
+              <div className="flex items-center justify-between px-8 pb-8 pt-4">
                 <div>
-                  <h3 className="font-heading text-3xl text-maroon">
-                    {template.template === "royal" ? "Royal Template" : "Minimal Template"}
+                  <h3 className="font-heading text-3xl font-medium text-burgundy">
+                    {template.template === "royal" ? "Royal Heritage" : "Modern Minimal"}
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-stone-600">
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-stone-500/90">
                     {template.template === "royal"
-                      ? "A maroon-and-gold statement for grand Indian celebrations."
+                      ? "A burgundy-and-gold statement for grand celebrations."
                       : "An airy editorial style with graceful spacing and soft romance."}
                   </p>
                 </div>
                 <Button
                   variant="secondary"
-                  className="shrink-0"
+                  size="sm"
+                  className="shrink-0 px-5"
                   onClick={() => setActiveTemplate(template)}
                 >
                   <Eye className="size-4" />
@@ -80,40 +81,40 @@ export function TemplatesShowcase() {
       <AnimatePresence>
         {activeTemplate ? (
           <motion.div
-            className="fixed inset-0 z-50 bg-maroon/45 px-4 py-8 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] bg-burgundy/40 px-4 py-8 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setActiveTemplate(null)}
           >
             <motion.div
-              className="mx-auto h-full max-w-6xl overflow-y-auto rounded-[36px] bg-ivory p-4 shadow-[0_30px_100px_rgba(58,14,30,0.25)]"
-              initial={{ opacity: 0, scale: 0.97, y: 18 }}
+              className="mx-auto h-full max-w-6xl overflow-y-auto rounded-[48px] bg-ivory p-6 shadow-[0_40px_120px_rgba(87,0,19,0.3)]"
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 8 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, scale: 0.98, y: 15 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="mb-4 flex items-center justify-between gap-4 px-2 py-2">
+              <div className="mb-6 flex items-center justify-between gap-4 px-4 py-3">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-maroon/70">
-                    Template Preview
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-burgundy/40">
+                    Template Showcase
                   </p>
-                  <h3 className="font-heading text-3xl text-maroon">
-                    {activeTemplate.template === "royal" ? "Royal Template" : "Minimal Template"}
+                  <h3 className="mt-1 font-heading text-3xl font-medium text-burgundy">
+                    {activeTemplate.template === "royal" ? "Royal Heritage" : "Modern Minimal"}
                   </h3>
                 </div>
-                <Button variant="ghost" onClick={() => setActiveTemplate(null)}>
-                  Close
+                <Button variant="ghost" onClick={() => setActiveTemplate(null)} size="sm">
+                  Close Preview
                 </Button>
               </div>
               <InviteRenderer invite={activeTemplate} preview />
-              <div className="flex justify-end px-2 pb-2 pt-6">
+              <div className="flex justify-end px-4 pb-4 pt-8">
                 <Link
                   href="/sign-up"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-maroon"
+                  className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-burgundy/80 hover:text-burgundy transition-colors"
                 >
-                  Use this template
+                  Start creating with this design
                   <ArrowUpRight className="size-4" />
                 </Link>
               </div>

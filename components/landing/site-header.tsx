@@ -10,26 +10,23 @@ export function SiteHeader({
   ctaLabel: string;
 }) {
   return (
-    <header className="section-shell relative z-20 pt-6">
-      <div className="surface-card flex items-center justify-between rounded-full px-4 py-3 sm:px-6">
-        <Link href="/" className="font-heading text-3xl text-maroon">
+    <header className="section-shell fixed inset-x-0 top-0 z-50 pt-4 sm:pt-6">
+      <div className="glass-nav flex items-center justify-between rounded-full px-4 py-3 sm:px-6">
+        <Link href="/" className="font-heading text-3xl font-medium tracking-tight text-burgundy">
           Invitely
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-stone-600 md:flex">
-          <a href="#how-it-works" className="transition hover:text-maroon">
+        <nav className="hidden items-center gap-8 text-[13px] font-medium uppercase tracking-wider text-stone-500 md:flex">
+          <a href="#how-it-works" className="transition hover:text-burgundy">
             How it works
           </a>
-          <a href="#templates" className="transition hover:text-maroon">
+          <a href="#templates" className="transition hover:text-burgundy">
             Templates
           </a>
-          <a href="#features" className="transition hover:text-maroon">
+          <a href="#features" className="transition hover:text-burgundy">
             Features
           </a>
-          <a href="#testimonials" className="transition hover:text-maroon">
-            Testimonials
-          </a>
         </nav>
-        <Link href={ctaHref} className={buttonStyles({ size: "sm" })}>
+        <Link href={ctaHref} className={buttonStyles({ size: "sm", className: "px-6" })}>
           {ctaLabel}
         </Link>
       </div>

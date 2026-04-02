@@ -28,9 +28,9 @@ export function RsvpForm({
   }, [state.success]);
 
   return (
-    <Card className="rounded-[28px] border-maroon/10 bg-white/95">
-      <h3 className="font-heading text-3xl text-maroon">RSVP</h3>
-      <p className="mt-2 text-sm leading-7 text-stone-600">
+    <Card className="p-10">
+      <h3 className="font-heading text-4xl font-medium text-burgundy">RSVP</h3>
+      <p className="mt-4 text-[15px] leading-relaxed text-stone-500">
         Let the couple know you&apos;ll be joining the celebration.
       </p>
       <form ref={formRef} action={formAction} className="mt-6 grid gap-4">

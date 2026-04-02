@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ivory: #fffaf3;
-  --color-cream: #fff1e2;
-  --color-peach: #f6c8b4;
-  --color-blush: #f6dde0;
-  --color-gold: #c99a3c;
-  --color-maroon: #7a1f3d;
-  --color-rosewood: #a54a63;
-  --font-sans: var(--font-manrope);
-  --font-heading: var(--font-cormorant);
+  --color-ivory: #fcf9f2;
+  --color-burgundy: #570013;
+  --color-burgundy-container: #800020;
+  --color-gold: #735c00;
+  --color-gold-fixed: #ffe088;
+  --color-gold-fixed-dim: #e9c349;
+  --color-teal: #004545;
+  --color-teal-container: #002d2d;
+  --font-sans: var(--font-plus-jakarta);
+  --font-heading: var(--font-noto);
 }
 
 :root {
@@ -26,11 +27,11 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(246, 221, 224, 0.7), transparent 35%),
-    radial-gradient(circle at top right, rgba(246, 200, 180, 0.6), transparent 38%),
-    linear-gradient(180deg, #fffaf3 0%, #fff4ea 100%);
-  color: #292524;
-  font-family: var(--font-manrope), sans-serif;
+    radial-gradient(circle at top left, rgba(201, 154, 60, 0.05), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(87, 0, 19, 0.03), transparent 45%),
+    #fcf9f2;
+  color: #1c1c18;
+  font-family: var(--font-plus-jakarta), sans-serif;
   margin: 0;
   min-height: 100vh;
 }
@@ -41,7 +42,7 @@ a {
 }
 
 ::selection {
-  background: rgba(122, 31, 61, 0.14);
+  background: rgba(87, 0, 19, 0.1);
 }
 
 .text-balance {
@@ -59,15 +60,23 @@ a {
   padding-inline: 1.5rem;
 }
 
+/* The Heritage Modernist: No-Line Cards */
 .surface-card {
-  background: rgba(255, 255, 255, 0.84);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(122, 31, 61, 0.1);
-  box-shadow: 0 24px 70px rgba(122, 31, 61, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  /* Boundary through color shift, not solid borders */
+  border: 1px solid rgba(224, 191, 191, 0.2); 
+  box-shadow: 0 32px 80px rgba(28, 28, 24, 0.06);
+}
+
+.glass-nav {
+  background: rgba(252, 249, 242, 0.82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(87, 0, 19, 0.05);
 }
 
 .gold-divider {
-  background: linear-gradient(90deg, transparent, rgba(201, 154, 60, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(115, 92, 0, 0.3), transparent);
   height: 1px;
   width: 100%;
 }
@@ -77,16 +86,23 @@ a {
 }
 
 .invite-glow::after {
-  background: radial-gradient(circle, rgba(201, 154, 60, 0.22), transparent 70%);
+  background: radial-gradient(circle, rgba(115, 92, 0, 0.15), transparent 70%);
   content: "";
-  inset: -12%;
+  inset: -15%;
   pointer-events: none;
   position: absolute;
   z-index: -1;
 }
 
+/* Ghost Patterns */
+.bg-mandala {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L55 35 L90 40 L60 55 L70 90 L50 70 L30 90 L40 55 L10 40 L45 35 Z' fill='%23735c00' fill-opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
 .auth-backdrop {
   background:
-    radial-gradient(circle at top, rgba(246, 221, 224, 0.9), transparent 42%),
-    linear-gradient(180deg, #fffaf3 0%, #fff0e0 100%);
+    radial-gradient(circle at top, rgba(224, 191, 191, 0.4), transparent 45%),
+    #fcf9f2;
 }
+

@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Noto_Serif, Plus_Jakarta_Sans } from "next/font/google";
 
 import "@/app/globals.css";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/utils";
 
-const heading = Cormorant_Garamond({
+const heading = Noto_Serif({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-cormorant",
+  variable: "--font-noto",
 });
 
-const sans = Manrope({
+const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-manrope",
+  variable: "--font-plus-jakarta",
 });
 
 export const metadata: Metadata = {

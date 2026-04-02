@@ -77,28 +77,33 @@ export default async function HomePage() {
     <main className="page-shell pb-16">
       <SiteHeader ctaHref={ctaHref} ctaLabel={ctaLabel} />
 
-      <section className="section-shell grid gap-12 px-6 pb-20 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <section className="section-shell grid gap-14 px-6 pb-24 pt-28 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <FadeInSection>
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-maroon/70">
-            Wedding Websites for Modern Couples
-          </p>
-          <h1 className="mt-6 max-w-2xl font-heading text-6xl leading-none text-maroon sm:text-7xl">
-            Your Wedding Invitation, as a Beautiful Website
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-stone-600">
-            Create, share, and manage your wedding invite in minutes with a polished site designed
-            for modern Indian celebrations.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link href={ctaHref} className={buttonStyles({ size: "lg" })}>
-              Create Your Invite
-            </Link>
-            <a href="#templates" className={buttonStyles({ variant: "secondary", size: "lg" })}>
-              Explore Templates
-            </a>
+          <div className="flex flex-col items-start gap-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.45em] text-burgundy/50">
+              The Digital Curator for Modern Weddings
+            </p>
+            <h1 className="max-w-2xl font-heading text-6xl font-medium leading-[1.05] tracking-tight text-burgundy sm:text-7xl lg:text-8xl">
+              Your Wedding Invite, <br/> as a Digital Heirloom
+            </h1>
+            <p className="max-w-xl text-[17px] leading-relaxed text-stone-500/90">
+              Create and share a wedding website that bridges thousand-year-old traditions with 
+              contemporary digital elegance. Designed for the modern Indian celebration.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-5">
+              <Link href={ctaHref} className={buttonStyles({ size: "lg", className: "px-8" })}>
+                Get Started
+              </Link>
+              <a href="#templates" className={buttonStyles({ variant: "secondary", size: "lg", className: "px-8" })}>
+                View Templates
+              </a>
+            </div>
           </div>
         </FadeInSection>
-        <FloatingPreview />
+        <div className="relative">
+          <div className="bg-mandala absolute -inset-20 scale-150 rounded-full opacity-[0.04]" />
+          <FloatingPreview />
+        </div>
       </section>
 
       <section id="how-it-works" className="section-shell py-16">
@@ -109,15 +114,15 @@ export default async function HomePage() {
             description="Everything is designed to keep you moving quickly while still delivering a polished, premium invitation experience."
           />
         </FadeInSection>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-16 grid gap-8 md:grid-cols-3">
           {howItWorks.map(({ title, description, icon: Icon }, index) => (
             <FadeInSection key={title} delay={index * 0.08}>
-              <div className="surface-card rounded-[30px] p-6">
-                <div className="inline-flex rounded-2xl bg-blush p-3 text-maroon">
+              <div className="surface-card rounded-[32px] p-8">
+                <div className="inline-flex rounded-2xl bg-burgundy/5 p-4 text-burgundy">
                   <Icon className="size-6" />
                 </div>
-                <h3 className="mt-6 font-heading text-3xl text-maroon">{title}</h3>
-                <p className="mt-3 text-sm leading-7 text-stone-600">{description}</p>
+                <h3 className="mt-8 font-heading text-3xl font-medium text-burgundy">{title}</h3>
+                <p className="mt-4 text-[15px] leading-relaxed text-stone-500">{description}</p>
               </div>
             </FadeInSection>
           ))}
@@ -145,15 +150,15 @@ export default async function HomePage() {
             description="Invitely combines beauty with practical wedding planning tools so guests stay informed and couples stay organized."
           />
         </FadeInSection>
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
           {features.map(({ title, description, icon: Icon }, index) => (
             <FadeInSection key={title} delay={index * 0.06}>
-              <div className="surface-card h-full rounded-[28px] p-6">
-                <div className="inline-flex rounded-2xl bg-cream p-3 text-maroon">
+              <div className="surface-card h-full rounded-[32px] p-8">
+                <div className="inline-flex rounded-2xl bg-gold-fixed/20 p-4 text-gold">
                   <Icon className="size-6" />
                 </div>
-                <h3 className="mt-5 font-heading text-3xl text-maroon">{title}</h3>
-                <p className="mt-3 text-sm leading-7 text-stone-600">{description}</p>
+                <h3 className="mt-7 font-heading text-3xl font-medium text-burgundy">{title}</h3>
+                <p className="mt-4 text-[15px] leading-relaxed text-stone-500">{description}</p>
               </div>
             </FadeInSection>
           ))}
@@ -168,46 +173,57 @@ export default async function HomePage() {
             description="Placeholder stories for now, ready to be swapped for live customer proof as Invitely grows."
           />
         </FadeInSection>
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <div className="mt-16 grid gap-8 lg:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <FadeInSection key={testimonial.name} delay={index * 0.08}>
-              <div className="surface-card h-full rounded-[30px] p-7">
-                <p className="font-heading text-3xl leading-10 text-maroon">&quot;{testimonial.quote}&quot;</p>
-                <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">
-                  {testimonial.name}
-                </p>
+              <div className="surface-card h-full rounded-[32px] p-9">
+                <p className="font-heading text-3xl font-medium leading-[1.3] text-burgundy">&quot;{testimonial.quote}&quot;</p>
+                <div className="mt-8 flex flex-col gap-1">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-burgundy/40">
+                    Couple
+                  </p>
+                  <p className="text-sm font-semibold text-stone-600">
+                    {testimonial.name}
+                  </p>
+                </div>
               </div>
             </FadeInSection>
           ))}
         </div>
       </section>
 
-      <section className="section-shell py-16">
-        <div className="rounded-[40px] bg-[linear-gradient(135deg,#7a1f3d_0%,#a54a63_100%)] px-6 py-12 text-center text-white shadow-[0_25px_80px_rgba(122,31,61,0.18)] sm:px-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">Start today</p>
-          <h2 className="mt-5 font-heading text-5xl">Create Your Wedding Invite Now</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/82">
-            Launch a wedding website that feels personal, premium, and easy for every guest to use.
-          </p>
-          <Link
-            href={ctaHref}
-            className={buttonStyles({
-              className: "mt-8 bg-white text-maroon hover:bg-white/90 focus-visible:outline-white",
-              size: "lg",
-            })}
-          >
-            Create Your Invite
-          </Link>
+      <section className="section-shell py-24">
+        <div className="bg-mandala relative overflow-hidden rounded-[48px] bg-burgundy-container px-6 py-20 text-center text-white shadow-[0_40px_100px_rgba(87,0,19,0.22)] sm:px-12">
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(87,0,19,0.95)_0%,rgba(128,0,32,0.85)_100%)]" />
+          <div className="relative z-10">
+            <p className="text-[11px] font-bold uppercase tracking-[0.45em] text-white/50">Your Celebration Awaits</p>
+            <h2 className="mt-6 font-heading text-5xl font-medium sm:text-6xl">Create Your Invitation Today</h2>
+            <p className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-white/80">
+              Join hundreds of modern couples who chose beauty and ease for their digital wedding presence.
+            </p>
+            <Link
+              href={ctaHref}
+              className={buttonStyles({
+                className: "mt-10 bg-white text-burgundy hover:bg-white/90 focus-visible:outline-white px-10",
+                size: "lg",
+              })}
+            >
+              Start Designing
+            </Link>
+          </div>
         </div>
       </section>
 
-      <footer className="section-shell border-t border-maroon/10 pt-8 text-sm text-stone-500">
-        <div className="flex flex-col items-center justify-between gap-4 pb-8 sm:flex-row">
-          <p>Invitely</p>
-          <div className="flex items-center gap-5">
-            <Link href="/sign-in">Sign in</Link>
-            <a href="#templates">Templates</a>
-            <a href="#features">Features</a>
+      <footer className="section-shell mb-12 border-t border-burgundy/5 pt-12 text-[13px] font-medium text-stone-400">
+        <div className="flex flex-col items-center justify-between gap-8 sm:flex-row">
+          <div className="flex flex-col items-center gap-2 sm:items-start">
+            <p className="font-heading text-2xl font-medium text-burgundy/30">Invitely</p>
+            <p>© 2026 Crafted with love.</p>
+          </div>
+          <div className="flex items-center gap-10 uppercase tracking-widest text-burgundy/40">
+            <Link href="/sign-in" className="hover:text-burgundy transition-colors">Sign in</Link>
+            <a href="#templates" className="hover:text-burgundy transition-colors">Templates</a>
+            <a href="#features" className="hover:text-burgundy transition-colors">Features</a>
           </div>
         </div>
       </footer>

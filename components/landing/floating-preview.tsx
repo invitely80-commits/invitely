@@ -19,9 +19,9 @@ export function FloatingPreview() {
         transition={{ repeat: Number.POSITIVE_INFINITY, duration: 6.5, ease: "easeInOut" }}
         className="surface-card relative overflow-hidden rounded-[36px] p-4"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(246,221,224,0.85),_transparent_40%),linear-gradient(180deg,_rgba(255,250,243,0.94),_rgba(255,241,226,0.88))]" />
-        <div className="relative rounded-[28px] border border-gold/25 bg-white/70 p-4">
-          <div className="relative h-60 overflow-hidden rounded-[24px]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,191,191,0.4),_transparent_40%),linear-gradient(180deg,_rgba(252,249,242,0.95),_rgba(252,249,242,0.9))]" />
+        <div className="relative rounded-[28px] border border-gold/10 bg-white/40 p-4 shadow-sm">
+          <div className="relative h-64 overflow-hidden rounded-[24px]">
             <Image
               src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1200&q=80"
               alt="Couple portrait preview"
@@ -30,24 +30,24 @@ export function FloatingPreview() {
               sizes="420px"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-maroon/55 via-maroon/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-burgundy/60 via-burgundy/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-              <p className="text-sm uppercase tracking-[0.35em] text-white/80">The Wedding Of</p>
-              <h3 className="mt-2 font-heading text-4xl">Mira & Kabir</h3>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/70">The Wedding Of</p>
+              <h3 className="mt-2 font-heading text-4xl font-medium tracking-tight">Mira & Kabir</h3>
             </div>
           </div>
-          <div className="grid gap-4 px-2 py-5 text-sm text-stone-700 sm:grid-cols-3">
-            <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3">
-              <CalendarDays className="size-4 text-gold" />
+          <div className="mt-4 flex flex-col gap-3 px-2 py-4 text-[13px] font-medium text-stone-600 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="size-4 text-gold/60" />
               <span>{formatDisplayDate("2026-11-22")}</span>
             </div>
-            <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3">
-              <MapPin className="size-4 text-gold" />
+            <div className="flex items-center gap-2">
+              <MapPin className="size-4 text-gold/60" />
               <span>Jaipur</span>
             </div>
-            <div className="flex items-center gap-2 rounded-2xl bg-white/90 px-3 py-3">
-              <Heart className="size-4 text-gold" />
-              <span>Live RSVP</span>
+            <div className="flex items-center gap-2 text-burgundy/80">
+              <Heart className="size-4 fill-current opacity-70" />
+              <span>RSVP</span>
             </div>
           </div>
         </div>
