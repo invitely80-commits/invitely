@@ -97,12 +97,12 @@ export default function TemplatesPage() {
                          {template.description}
                        </p>
                        
-                       <NextLink 
-                         href={`/dashboard/invite/new?template=${template.value}`}
-                         className="mt-8 inline-flex h-12 items-center gap-3 rounded-2xl bg-burgundy px-6 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-burgundy/90 hover:gap-5"
-                       >
-                         Select Mood <ArrowRight className="h-4 w-4" />
-                       </NextLink>
+                        <NextLink 
+                          href={`/templates/${template.value}`}
+                          className="mt-8 inline-flex h-12 items-center gap-3 rounded-2xl bg-burgundy px-6 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-burgundy/90 hover:gap-5"
+                        >
+                          Preview Style <ArrowRight className="h-4 w-4" />
+                        </NextLink>
                     </div>
                   </div>
                 </div>
@@ -125,10 +125,10 @@ export default function TemplatesPage() {
                          {template.description}
                        </p>
                        <NextLink 
-                         href={`/dashboard/invite/new?template=${template.value}`}
+                         href={`/templates/${template.value}`}
                          className="mt-8 inline-flex h-12 items-center gap-3 rounded-2xl border border-stone-200 px-6 text-xs font-bold uppercase tracking-widest text-burgundy transition-all hover:bg-stone-50 hover:gap-5"
                        >
-                         Select Mood <ArrowRight className="h-4 w-4" />
+                         Preview Style <ArrowRight className="h-4 w-4" />
                        </NextLink>
                     </div>
                   </div>
