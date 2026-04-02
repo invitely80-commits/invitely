@@ -17,7 +17,7 @@ function slugifySegment(value: string) {
 }
 
 function randomSuffix() {
-  return randomBytes(4).toString("base64url").replace(/[^a-z0-9]/gi, "").toLowerCase().slice(0, 5);
+  return randomBytes(8).toString("base64url").replace(/[^a-z0-9]/gi, "").toLowerCase().slice(0, 10);
 }
 
 export async function generateInviteSlug(brideName: string, groomName: string) {

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -5,7 +6,15 @@ import { InviteRenderer } from "@/components/templates/render-invite";
 import { getCoupleNames, parseInviteData, templateToTheme } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+const getInviteBySlug = cache(async (slug: string) => {
+  return prisma.invite.findUnique({
+    where: {
+      slug,
+    },
+  });
+});
+
+export const revalidate = 3600; // Cache the invite page for 1 hour
 
 type PublicInvitePageProps = {
   params: Promise<{
@@ -17,11 +26,7 @@ export async function generateMetadata({
   params,
 }: PublicInvitePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const invite = await prisma.invite.findUnique({
-    where: {
-      slug,
-    },
-  });
+  const invite = await getInviteBySlug(slug);
 
   if (!invite) {
     return {
@@ -47,11 +52,7 @@ export async function generateMetadata({
 
 export default async function PublicInvitePage({ params }: PublicInvitePageProps) {
   const { slug } = await params;
-  const invite = await prisma.invite.findUnique({
-    where: {
-      slug,
-    },
-  });
+  const invite = await getInviteBySlug(slug);
 
   if (!invite) {
     notFound();
