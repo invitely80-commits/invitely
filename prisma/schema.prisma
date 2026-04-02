@@ -31,8 +31,6 @@ model Invite {
   @@index([userId])
 }
 
-
-
 enum InviteTemplate {
   MINIMAL
   ROYAL
