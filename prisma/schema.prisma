@@ -36,4 +36,9 @@ model Invite {
 enum InviteTemplate {
   MINIMAL
   ROYAL
+  HINDU
+  MUSLIM
+  CHRISTIAN
+  SIKH
+  CIVIL
 }

@@ -1,32 +1,80 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
-
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil";
 
 export const themeOptions: Array<{
   value: InviteTheme;
   label: string;
   description: string;
+  color: string;
 }> = [
   {
     value: "minimal",
     label: "Minimal",
     description: "Soft ivory layout with elegant spacing and a modern editorial feel.",
+    color: "#fcf9f2",
   },
   {
     value: "royal",
     label: "Royal",
     description: "Maroon and gold styling for a richer, celebratory Indian wedding mood.",
+    color: "#5c1530",
+  },
+  {
+    value: "hindu",
+    label: "Hindu",
+    description: "A sacred celebration in Saffron and Gold, featuring traditional mandala patterns.",
+    color: "#f97316",
+  },
+  {
+    value: "muslim",
+    label: "Muslim",
+    description: "Nikah elegance in Emerald and Rich Gold with geometric artistic motifs.",
+    color: "#065f46",
+  },
+  {
+    value: "christian",
+    label: "Christian",
+    description: "Clean White and Champagne Silver with delicate floral textures and editorial type.",
+    color: "#ffffff",
+  },
+  {
+    value: "sikh",
+    label: "Sikh",
+    description: "Majestic celebration in Royal Blue and Vibrant Orange with bold typography.",
+    color: "#1e3a8a",
+  },
+  {
+    value: "civil",
+    label: "Civil",
+    description: "Modern minimalist storytelling focusing on high-fashion photography and clean lines.",
+    color: "#1c1c18",
   },
 ];
 
-export function themeToTemplate(theme: InviteTheme) {
-  return theme === "royal" ? InviteTemplate.ROYAL : InviteTemplate.MINIMAL;
+export function themeToTemplate(theme: InviteTheme): InviteTemplate {
+  switch (theme) {
+    case "royal": return InviteTemplate.ROYAL;
+    case "hindu": return InviteTemplate.HINDU;
+    case "muslim": return InviteTemplate.MUSLIM;
+    case "christian": return InviteTemplate.CHRISTIAN;
+    case "sikh": return InviteTemplate.SIKH;
+    case "civil": return InviteTemplate.CIVIL;
+    default: return InviteTemplate.MINIMAL;
+  }
 }
 
 export function templateToTheme(template: InviteTemplate): InviteTheme {
-  return template === InviteTemplate.ROYAL ? "royal" : "minimal";
+  switch (template) {
+    case InviteTemplate.ROYAL: return "royal";
+    case InviteTemplate.HINDU: return "hindu";
+    case InviteTemplate.MUSLIM: return "muslim";
+    case InviteTemplate.CHRISTIAN: return "christian";
+    case InviteTemplate.SIKH: return "sikh";
+    case InviteTemplate.CIVIL: return "civil";
+    default: return "minimal";
+  }
 }
 
 export function parseInviteData(data: Prisma.JsonValue) {

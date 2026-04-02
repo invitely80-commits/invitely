@@ -52,6 +52,7 @@ export function InviteEditorForm({
   defaultValue,
   inviteUrl,
   notice,
+  initialTemplate,
 }: {
   action: (
     state: InviteActionState,
@@ -61,10 +62,11 @@ export function InviteEditorForm({
   defaultValue?: InviteData;
   inviteUrl?: string;
   notice?: string;
+  initialTemplate?: InviteTheme;
 }) {
   const mergedValue = defaultValue ?? defaultInviteData;
   const [state, formAction] = useActionState(action, initialState);
-  const [theme, setTheme] = useState<InviteTheme>(mergedValue.theme);
+  const [theme, setTheme] = useState<InviteTheme>(initialTemplate ?? mergedValue.theme);
   const [events, setEvents] = useState<InviteEvent[]>(
     mergedValue.events.length ? mergedValue.events : [createEvent()],
   );

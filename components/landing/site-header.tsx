@@ -16,7 +16,7 @@ export function SiteHeader({
         </Link>
         
         <nav className="hidden items-center gap-10 text-[11px] font-bold uppercase tracking-[.25em] text-stone-400 md:flex">
-          <Link href="#templates" className="transition hover:text-burgundy">
+          <Link href="/templates" className="transition hover:text-burgundy">
             Templates
           </Link>
           <Link href="#features" className="transition hover:text-burgundy">

@@ -1,7 +1,13 @@
 import { InviteEditorForm } from "@/components/dashboard/invite-editor-form";
 import { createInviteAction } from "@/lib/actions/invite-actions";
+import { type InviteTheme } from "@/lib/invites";
 
-export default function NewInvitePage() {
+export default async function NewInvitePage(props: {
+  searchParams: Promise<{ template?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const initialTemplate = searchParams.template as InviteTheme | undefined;
+
   return (
     <div className="space-y-4">
       <div>
@@ -12,8 +18,11 @@ export default function NewInvitePage() {
           shareable wedding invitation website instantly.
         </p>
       </div>
-      <InviteEditorForm action={createInviteAction} submitLabel="Create Invite" />
+      <InviteEditorForm 
+        action={createInviteAction} 
+        submitLabel="Create Invite" 
+        initialTemplate={initialTemplate}
+      />
     </div>
   );
 }
-

@@ -3,6 +3,11 @@ import { type InviteData } from "@/lib/validations";
 
 import { MinimalTemplate } from "@/components/templates/minimal-template";
 import { RoyalTemplate } from "@/components/templates/royal-template";
+import { HinduTemplate } from "@/components/templates/hindu-template";
+import { MuslimTemplate } from "@/components/templates/muslim-template";
+import { ChristianTemplate } from "@/components/templates/christian-template";
+import { SikhTemplate } from "@/components/templates/sikh-template";
+import { CivilTemplate } from "@/components/templates/civil-template";
 
 export type TemplateInvite = {
   id: string;
@@ -18,10 +23,21 @@ export function InviteRenderer({
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  if (invite.template === "royal") {
-    return <RoyalTemplate invite={invite} preview={preview} />;
+  switch (invite.template) {
+    case "royal":
+      return <RoyalTemplate invite={invite} preview={preview} />;
+    case "hindu":
+      return <HinduTemplate invite={invite} preview={preview} />;
+    case "muslim":
+      return <MuslimTemplate invite={invite} preview={preview} />;
+    case "christian":
+      return <ChristianTemplate invite={invite} preview={preview} />;
+    case "sikh":
+      return <SikhTemplate invite={invite} preview={preview} />;
+    case "civil":
+      return <CivilTemplate invite={invite} preview={preview} />;
+    case "minimal":
+    default:
+      return <MinimalTemplate invite={invite} preview={preview} />;
   }
-
-  return <MinimalTemplate invite={invite} preview={preview} />;
 }
-
