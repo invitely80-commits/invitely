@@ -137,3 +137,162 @@ a {
   mix-blend-mode: exclusion;
 }
 
+/* ═══════════════════════════════════════════════════
+   Templates Page: CSS-only Animations (perf-first)
+   ═══════════════════════════════════════════════════ */
+
+/* Scroll indicator bounce */
+@keyframes scroll-dot {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(12px); opacity: 0; }
+}
+
+.animate-scroll-dot {
+  animation: scroll-dot 1.5s ease-in-out infinite;
+}
+
+/* Slow spin for decorative elements */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+
+/* Card reveal on scroll (triggered by IntersectionObserver) */
+@keyframes card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-reveal-hidden {
+  opacity: 0;
+  transform: translateY(32px) scale(0.97);
+}
+
+.card-reveal-visible {
+  animation: card-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hero clipPath reveal (CSS-only) */
+@keyframes hero-unfold {
+  from { clip-path: inset(50% 50% 50% 50%); }
+  to   { clip-path: inset(0% 0% 0% 0%); }
+}
+
+.hero-reveal {
+  animation: hero-unfold 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hero subtitle fade */
+@keyframes fade-up-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.hero-subtitle {
+  opacity: 0;
+  animation: fade-up-in 1.2s ease forwards;
+  animation-delay: 1s;
+}
+
+/* Scroll indicator entrance */
+.scroll-indicator-entrance {
+  opacity: 0;
+  animation: fade-up-in 1s ease forwards;
+  animation-delay: 1.5s;
+}
+
+.scroll-indicator-label {
+  opacity: 0;
+  animation: fade-up-in 1s ease forwards;
+  animation-delay: 1.8s;
+}
+
+/* Template card hover (replaces framer spring) */
+.template-card {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.template-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25),
+              0 16px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Card CTA button hover */
+.card-cta {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.card-cta:hover {
+  background-color: var(--color-gold-accent);
+  transform: scale(1.05);
+}
+
+.card-cta:active {
+  transform: scale(0.95);
+}
+
+/* Card info panel reveal */
+.card-info-panel {
+  transform: translateY(24px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.template-card:hover .card-info-panel,
+.card-info-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Culture background transition (replaces AnimatePresence) */
+.culture-bg {
+  transition: background-color 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.culture-bg-pattern {
+  transition: opacity 1.5s ease;
+}
+
+/* CTA section hover */
+.cta-button-static {
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.cta-button-static:hover {
+  background-color: var(--color-gold-accent);
+  transform: scale(1.05);
+}
+
+.cta-button-static:active {
+  transform: scale(0.95);
+}
+
+/* Closing section reveal */
+@keyframes section-reveal {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.section-reveal-hidden {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.section-reveal-visible {
+  animation: section-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
