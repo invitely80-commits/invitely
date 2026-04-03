@@ -39,4 +39,5 @@ enum InviteTemplate {
   CHRISTIAN
   SIKH
   CIVIL
+  LUXURY
 }

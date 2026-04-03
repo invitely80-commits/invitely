@@ -67,6 +67,7 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     case "christian": return InviteTemplate.CHRISTIAN;
     case "sikh": return InviteTemplate.SIKH;
     case "civil": return InviteTemplate.CIVIL;
+    case "luxury": return InviteTemplate.LUXURY;
     default: return InviteTemplate.MINIMAL;
   }
 }
@@ -79,6 +80,7 @@ export function templateToTheme(template: InviteTemplate): InviteTheme {
     case InviteTemplate.CHRISTIAN: return "christian";
     case InviteTemplate.SIKH: return "sikh";
     case InviteTemplate.CIVIL: return "civil";
+    case InviteTemplate.LUXURY: return "luxury";
     default: return "minimal";
   }
 }
