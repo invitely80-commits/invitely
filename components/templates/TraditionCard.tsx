@@ -8,7 +8,8 @@ import {
 import { Sparkles, Heart, Crown, CircleDashed } from "lucide-react";
 import { type InviteTheme } from "@/lib/invites";
 
-const hapticSpring = { type: "spring", stiffness: 500, damping: 15 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const hapticSpring = { type: "spring", stiffness: 500, damping: 15 } as any;
 
 /**
  * High-end CSS Card Visuals for each tradition
