@@ -1,7 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -49,6 +49,12 @@ export const themeOptions: Array<{
     value: "civil",
     label: "Civil",
     description: "Modern minimalist storytelling focusing on high-fashion photography and clean lines.",
+    color: "#1c1c18",
+  },
+  {
+    value: "luxury",
+    label: "Luxury",
+    description: "God-Tier Editorial digital heirloom with 3D Virtual Envelope and bento-luxury architecture.",
     color: "#1c1c18",
   },
 ];

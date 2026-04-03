@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { Noto_Serif, Plus_Jakarta_Sans, Cormorant_Garamond, Geist_Mono } from "next/font/google";
 
 import "@/app/globals.css";
 import { siteConfig } from "@/lib/site";
@@ -14,6 +14,17 @@ const heading = Noto_Serif({
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -43,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${heading.variable} ${sans.variable}`}>
+    <html lang="en" className={`${heading.variable} ${sans.variable} ${cormorant.variable} ${geistMono.variable}`}>
       <body>{children}</body>
     </html>
   );

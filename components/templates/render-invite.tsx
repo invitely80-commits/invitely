@@ -8,6 +8,7 @@ import { MuslimTemplate } from "@/components/templates/muslim-template";
 import { ChristianTemplate } from "@/components/templates/christian-template";
 import { SikhTemplate } from "@/components/templates/sikh-template";
 import { CivilTemplate } from "@/components/templates/civil-template";
+import { TemplateComponent as LuxuryTemplate } from "@/components/templates/TemplateComponent";
 
 export type TemplateInvite = {
   id: string;
@@ -36,6 +37,8 @@ export function InviteRenderer({
       return <SikhTemplate invite={invite} preview={preview} />;
     case "civil":
       return <CivilTemplate invite={invite} preview={preview} />;
+    case "luxury":
+      return <LuxuryTemplate invite={invite} preview={preview} />;
     case "minimal":
     default:
       return <MinimalTemplate invite={invite} preview={preview} />;

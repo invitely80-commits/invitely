@@ -3,17 +3,16 @@
 @theme {
   --color-ivory: #fcf9f2;
   --color-burgundy: #570013;
-  --color-burgundy-container: #800020;
-  --color-maroon: #7a1f3d;
-  --color-blush: #fef1f2;
-  --color-cream: #fffaf0;
-  --color-gold: #735c00;
-  --color-gold-fixed: #ffe088;
-  --color-gold-fixed-dim: #e9c349;
-  --color-teal: #004545;
-  --color-teal-container: #002d2d;
+  /* Luxury Palette (OKLCH) */
+  --color-vellum: oklch(98% 0.01 70);
+  --color-silk: oklch(94% 0.02 50);
+  --color-charcoal: oklch(25% 0.02 260);
+  --color-gold-accent: oklch(85% 0.12 90);
+  
   --font-sans: var(--font-plus-jakarta);
   --font-heading: var(--font-noto);
+  --font-serif-lux: var(--font-cormorant);
+  --font-mono-lux: var(--font-geist-mono);
 }
 
 :root {
@@ -107,5 +106,34 @@ a {
   background:
     radial-gradient(circle at top, rgba(224, 191, 191, 0.4), transparent 45%),
     #fcf9f2;
+}
+
+/* Digital Materiality: Physical Textures */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.text-fluid-h1 {
+  font-size: clamp(2.5rem, 8vw + 1rem, 6rem);
+}
+
+.text-fluid-h2 {
+  font-size: clamp(1.8rem, 5vw + 1rem, 3.5rem);
+}
+
+.mix-diff {
+  mix-blend-mode: difference;
+}
+
+.mix-exclusion {
+  mix-blend-mode: exclusion;
 }
 
