@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { 
   motion, 
   useScroll, 
   useTransform, 
-  useSpring
+  useSpring,
+  AnimatePresence,
+  useMotionValue
 } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { SiteHeader } from "@/components/landing/site-header";
@@ -19,42 +21,10 @@ import { ScrollIndicator } from "@/components/ui/ScrollIndicator";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hapticSpring = { type: "spring", stiffness: 400, damping: 25 } as any;
 
-/**
- * 3D Cover Flow Card Container
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CoverFlowCard = ({ children, i, scrollXProgress, total }: { children: React.ReactNode, i: number, scrollXProgress: any, total: number }) => {
-  const step = 1 / (total - 1);
-  const center = i * step;
-  
-  // Clamping to [0, 1] range to satisfy WAAPI/Scroll-Timeline offsets
-  const range = [
-    Math.max(0, center - step),
-    center,
-    Math.min(1, center + step)
-  ];
-  
-  const transform = useTransform(scrollXProgress, range, [
-    "perspective(1200px) rotateY(45deg) scale(0.8) translateZ(-200px)",
-    "perspective(1200px) rotateY(0deg) scale(1.05) translateZ(100px)",
-    "perspective(1200px) rotateY(-45deg) scale(0.8) translateZ(-200px)"
-  ]);
-  
-  const opacity = useTransform(scrollXProgress, range, [0.4, 1, 0.4]);
-
-  return (
-    <motion.div
-      style={{ transform, opacity, transformStyle: "preserve-3d" }}
-      className="flex-shrink-0"
-    >
-      {children}
-    </motion.div>
-  );
-};
+// No extra container components needed for the Bento Grid.
 
 export default function TemplatesPage() {
   const router = useRouter();
-  const targetRef = useRef<HTMLDivElement>(null);
   const [activeTheme, setActiveTheme] = useState<InviteTheme>("hindu");
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -62,27 +32,27 @@ export default function TemplatesPage() {
 
   const templates = useMemo(() => themeOptions.filter(t => t.value !== "minimal"), []);
 
-  const { scrollYProgress } = useScroll(); // Use global window scroll for full tracking accuracy
-
-  // Deeply Calibrated Velocity (1200vh vertical distance / 0.1 to 0.85 window)
-  const xNum = useTransform(scrollYProgress, [0.1, 0.85], [0, -280]); 
-  const springX = useSpring(xNum, { stiffness: 40, damping: 20 });
-  const x = useTransform(springX, (v) => `${v}vw`);
-
-  useEffect(() => {
-    return scrollYProgress.on("change", (v) => {
-      // Map scroll progress (0.1 to 0.85) to template index (0 to 6)
-      const start = 0.1;
-      const end = 0.85;
-      const progress = Math.max(0, Math.min(1, (v - start) / (end - start)));
-      const index = Math.min(Math.floor(progress * templates.length), templates.length - 1);
-      
-      const currentTheme = templates[index]?.value;
-      if (currentTheme && currentTheme !== activeTheme) {
-        setActiveTheme(currentTheme);
+  // Grid Stagger Animation
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.5
       }
-    });
-  }, [scrollYProgress, templates, activeTheme]);
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { type: "spring" as const, stiffness: 100, damping: 20 }
+    }
+  };
 
   return (
     <main className="page-shell relative bg-ivory selection:bg-gold-accent/30 overflow-x-hidden transition-colors duration-1000">
@@ -127,51 +97,31 @@ export default function TemplatesPage() {
         </div>
       </section>
 
-      {/* 3. 3D Cover Flow Scroll Section */}
-      <section ref={targetRef} className="relative h-[1200vh]">
-        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-          <motion.div 
-            style={{ x }}
-            className="flex gap-[15vw] px-[30vw] items-center"
-          >
-            {templates.map((template, i) => (
-               <CoverFlowCard 
-                  key={template.value} 
-                  i={i} 
-                  scrollXProgress={scrollYProgress}
-                  total={templates.length}
-               >
-                 <TraditionCard 
-                    theme={template.value}
-                    title={template.label}
-                    description={template.description}
-                    isActive={activeTheme === template.value}
-                    onNavigate={() => router.push(`/templates/${template.value}`)}
-                 />
-               </CoverFlowCard>
-            ))}
-          </motion.div>
-
-          {/* Luxury Serial Tracker */}
-          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 z-30">
-             <div className="flex gap-4">
-                 {templates.map((t) => (
-                    <motion.div 
-                      key={t.value}
-                      animate={{ 
-                        scale: activeTheme === t.value ? 1.5 : 1,
-                        opacity: activeTheme === t.value ? 1 : 0.2
-                      }}
-                      className="w-1.5 h-1.5 bg-gold-accent rounded-full"
-                    />
-                 ))}
-             </div>
-             <div className="font-mono-lux text-[9px] tracking-[0.6em] text-charcoal/30 flex items-center gap-4">
-                <span>INDEX</span>
-                <span className="text-charcoal/50 font-bold">{String(templates.findIndex(t => t.value === activeTheme) + 1).padStart(2, "0")}</span>
-             </div>
-          </div>
-        </div>
+      {/* 3. Prestige Bento Grid Section */}
+      <section className="relative z-10 max-w-7xl mx-auto py-32 px-8">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate={isLoaded ? "show" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
+        >
+          {templates.map((template) => (
+            <motion.div 
+              key={template.value}
+              variants={item}
+              onMouseEnter={() => setActiveTheme(template.value)}
+              className="group"
+            >
+              <TraditionCard 
+                theme={template.value}
+                title={template.label}
+                description={template.description}
+                isActive={activeTheme === template.value}
+                onNavigate={() => router.push(`/templates/${template.value}`)}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       {/* 4. Bespoke Heritage Closure */}

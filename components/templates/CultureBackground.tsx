@@ -36,10 +36,22 @@ export const CultureBackground = ({ activeTheme }: { activeTheme: InviteTheme | 
            transition={{ duration: 1.5, ease: "circOut" }}
            className="absolute inset-0 overflow-hidden"
         >
-          {/* Central Bloom / Aura */}
-          <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] rounded-full opacity-40 blur-[120px]"
-            style={{ background: `radial-gradient(circle, ${current.accent} 0%, transparent 60%)` }}
+          {/* 2. Ambient Aura Bloom (Breathing Glow) */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ 
+              scale: [0.9, 1.1, 0.9],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ 
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160vw] h-[160vw] rounded-full blur-[140px]"
+            style={{ 
+              background: `radial-gradient(circle, ${current.accent} 0%, transparent 70%)`
+            }}
           />
 
           {current.pattern === "mandala" && (
