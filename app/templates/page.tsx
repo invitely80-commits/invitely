@@ -1,13 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import Link from "next/link";
 import { 
   motion, 
-  useScroll, 
-  useTransform, 
   AnimatePresence,
-  useSpring,
   useMotionValue
 } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
@@ -19,6 +15,7 @@ import { TraditionCard } from "@/components/templates/TraditionCard";
 import { CultureBackground } from "@/components/templates/CultureBackground";
 
 // Physics-Based Spring Constants
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hapticSpring = { type: "spring", stiffness: 500, damping: 15 } as any;
 
 /**
@@ -61,9 +58,6 @@ export default function TemplatesPage() {
 
   // Filter templates (excluding luxury which is our god-tier base)
   const templates = useMemo(() => themeOptions.filter(t => t.value !== "minimal"), []);
-
-  // Scroll Progress logic for 3D transforms
-  const { scrollXProgress } = useScroll({ container: carouselRef });
 
   // Custom Cursor Side Detection
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -140,7 +134,7 @@ export default function TemplatesPage() {
           className="flex gap-16 px-[10vw] sm:px-[25vw] overflow-x-auto overflow-y-hidden no-scrollbar snap-x snap-mandatory py-20 items-center h-[70vh]"
           style={{ perspective: "2000px" }}
         >
-          {templates.map((template, i) => (
+          {templates.map((template) => (
              <div key={template.value} className="snap-center flex-shrink-0">
                <TraditionCard 
                   theme={template.value}
@@ -160,7 +154,7 @@ export default function TemplatesPage() {
         <div className="flex justify-center items-center gap-6 mt-12">
            <LayoutGrid className="size-4 text-white/20" />
            <div className="flex gap-2">
-             {templates.map((t, i) => (
+             {templates.map((t) => (
                 <motion.div 
                    key={t.value}
                    animate={{ 
