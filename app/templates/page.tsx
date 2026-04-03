@@ -71,7 +71,7 @@ export default function TemplatesPage() {
       {/* Templates Grid */}
       <section className="section-shell px-6">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
-          {themeOptions.filter(t => t.value !== 'minimal' && t.value !== 'royal').map((template, i) => {
+          {themeOptions.filter(t => t.value !== 'minimal' && t.value !== 'royal').map((template) => {
             const label = template.label as keyof typeof TraditionIcons;
             const Icon = TraditionIcons[label] || TraditionIcons.Civil;
             return (

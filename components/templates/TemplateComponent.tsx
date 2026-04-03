@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -22,15 +22,14 @@ import {
   Sparkles
 } from "lucide-react";
 
-import { buttonStyles } from "@/components/ui/button";
 import { getGoogleCalendarUrl } from "@/lib/calendar";
 import { getCoupleNames } from "@/lib/invites";
 import { formatDisplayDate } from "@/lib/utils";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 
 // Physics-Based Spring Constants
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hapticSpring = { type: "spring", stiffness: 500, damping: 15 } as any;
-const slowSpring = { type: "spring", stiffness: 100, damping: 30 } as any;
 
 /**
  * Luxury Card with 3D Hover Tilt
