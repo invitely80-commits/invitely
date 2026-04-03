@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { type InviteTheme } from "@/lib/invites";
 import { TraditionCard } from "@/components/templates/TraditionCard";
@@ -13,35 +13,52 @@ interface TemplateData {
   color: string;
 }
 
+const ITEMS_PER_BATCH = 6;
+
 /**
  * TemplatesGrid — Minimal client island for the templates page.
  *
- * This is the ONLY "use client" component on the page.
- * Responsibilities:
- *   1. IntersectionObserver for staggered card reveal (replaces framer stagger)
- *   2. Hover → activeTheme state for CultureBackground
- *   3. router.push for card navigation
- *
- * Everything else (hero, header, footer CTA) is a Server Component.
+ * This component is performance-first:
+ *   1. IntersectionObserver for staggered card reveal.
+ *   2. Support for Load More (Scalability).
+ *   3. LCP priority for above-the-fold cards (Hindu, Muslim, Christian).
  */
 export default function TemplatesGrid({ templates }: { templates: TemplateData[] }) {
   const router = useRouter();
   const gridRef = useRef<HTMLDivElement>(null);
-  const [activeTheme, setActiveTheme] = React.useState<InviteTheme>("hindu");
+  const [activeTheme, setActiveTheme] = useState<InviteTheme>("hindu");
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_BATCH);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // IntersectionObserver for staggered reveal
+  // Pagination simulation (Scalability)
+  const visibleTemplates = useMemo(() => {
+    return templates.slice(0, visibleCount);
+  }, [templates, visibleCount]);
+
+  const loadMore = useCallback(() => {
+    if (visibleCount >= templates.length) return;
+    setIsLoadingMore(true);
+    
+    // Simulating low-overhead network load for scalability demo
+    setTimeout(() => {
+      setVisibleCount(prev => prev + ITEMS_PER_BATCH);
+      setIsLoadingMore(false);
+    }, 400);
+  }, [visibleCount, templates.length]);
+
+  // IntersectionObserver for staggered reveal on new items
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
 
-    const cards = grid.querySelectorAll<HTMLElement>("[data-card]");
+    const cards = grid.querySelectorAll<HTMLElement>("[data-card]:not(.card-reveal-visible)");
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const el = entry.target as HTMLElement;
-            const delay = parseInt(el.dataset.index || "0", 10) * 120;
+            const delay = parseInt(el.dataset.index || "0", 10) % ITEMS_PER_BATCH * 120;
             setTimeout(() => {
               el.classList.remove("card-reveal-hidden");
               el.classList.add("card-reveal-visible");
@@ -56,7 +73,7 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
     cards.forEach((card) => observer.observe(card));
 
     return () => observer.disconnect();
-  }, []);
+  }, [visibleTemplates]);
 
   // Closing section reveal observer
   const closingRef = useRef<HTMLDivElement>(null);
@@ -88,28 +105,24 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
     [router]
   );
 
-  const handleThemeHover = useCallback((theme: InviteTheme) => {
-    setActiveTheme(theme);
-  }, []);
-
   return (
     <>
       {/* Dynamic background (needs client state for activeTheme) */}
       <CultureBackground activeTheme={activeTheme} />
 
       {/* Prestige Grid */}
-      <section className="relative z-10 max-w-7xl mx-auto py-32 px-6 sm:px-8">
+      <section className="relative z-10 max-w-7xl mx-auto py-24 px-6 sm:px-8">
         <div
           ref={gridRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
         >
-          {templates.map((template, index) => (
+          {visibleTemplates.map((template, index) => (
             <div
               key={template.value}
               data-card
               data-index={index}
               className="card-reveal-hidden"
-              onMouseEnter={() => handleThemeHover(template.value)}
+              onMouseEnter={() => setActiveTheme(template.value)}
             >
               <TraditionCard
                 theme={template.value}
@@ -117,9 +130,24 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
                 description={template.description}
                 isActive={activeTheme === template.value}
                 onNavigate={() => handleNavigate(template.value)}
+                priority={index < 3} // Only first row gets priority
               />
             </div>
           ))}
+        </div>
+
+        {/* Scalability: Load More / Skeleton interaction point */}
+        <div className="mt-20 flex justify-center">
+          {visibleCount < templates.length && (
+            <button 
+              onClick={loadMore}
+              disabled={isLoadingMore}
+              className="group relative overflow-hidden h-16 bg-white/5 backdrop-blur-xl border border-white/10 text-charcoal/40 font-mono-lux tracking-[0.4em] uppercase py-2 px-12 rounded-full transition-all hover:bg-gold-accent hover:text-white disabled:opacity-50"
+            >
+              <span className="relative z-10">{isLoadingMore ? "Gathering Heritage..." : "Load More Collections"}</span>
+              <div className="absolute inset-x-0 bottom-0 h-1 bg-gold-accent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            </button>
+          )}
         </div>
       </section>
 

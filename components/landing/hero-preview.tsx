@@ -18,26 +18,27 @@ export function HeroPreview() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-burgundy/20 to-transparent" />
         
-        {/* Floating Micro-Card */}
+        {/* Floating Micro-Card: Vellum Stationery Style */}
         <motion.div 
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="absolute bottom-12 -left-12 surface-card p-6 rounded-3xl w-64 shadow-2xl border-white/40"
+          transition={{ delay: 0.8, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute bottom-16 -left-16 bg-silk/90 backdrop-blur-2xl p-8 rounded-[38px] w-72 shadow-[0_48px_80px_rgba(87,0,19,0.12)] border border-white/60 ring-1 ring-burgundy/5"
         >
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
-              <Heart className="h-5 w-5 fill-current" />
+          <div className="flex flex-col items-center text-center gap-5">
+            <div className="h-12 w-12 rounded-full bg-burgundy/5 flex items-center justify-center text-burgundy/40">
+              <Heart className="h-5 w-5" strokeWidth={1.5} />
             </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Save the Date</p>
-              <p className="text-sm font-bold text-burgundy">12th October 2026</p>
+            <div className="space-y-1.5">
+              <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-stone-400">Honored Guests</p>
+              <h4 className="text-2xl font-serif-lux italic text-burgundy leading-tight">Save the Date</h4>
+              <p className="text-[11px] font-mono-lux tracking-widest text-gold-accent font-bold uppercase pt-2">12 . 10 . 2026</p>
             </div>
+            
+            <div className="h-px w-12 bg-burgundy/10" />
+            
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-burgundy/30">Presence Requested</p>
           </div>
-          <div className="mt-4 h-1.5 w-full bg-stone-100 rounded-full overflow-hidden">
-            <div className="h-full w-2/3 bg-gold rounded-full" />
-          </div>
-          <p className="mt-2 text-[10px] text-stone-400 text-center">85% Guest Response Rate</p>
         </motion.div>
       </div>
     </Parallax>

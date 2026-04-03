@@ -46,7 +46,7 @@ export const FadeIn = ({
       transition={{ 
         duration, 
         delay, 
-        ease: [0.21, 0.47, 0.32, 0.98] 
+        ease: [0.22, 1, 0.36, 1] 
       }}
       {...props}
     >
@@ -76,10 +76,10 @@ export const Parallax = ({ children, offset = 50, ...props }: {
 
 export const ScaleIn = ({ children, delay = 0, ...props }: { children: React.ReactNode; delay?: number } & HTMLMotionProps<"div">) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.96 }}
+    initial={{ opacity: 0, scale: 0.98 }}
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+    transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
     {...props}
   >
     {children}
