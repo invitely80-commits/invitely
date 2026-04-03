@@ -23,18 +23,28 @@ const hapticSpring = { type: "spring", stiffness: 400, damping: 25 } as any;
  * 3D Cover Flow Card Container
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CoverFlowCard = ({ children, i, scrollXProgress }: { children: React.ReactNode, i: number, scrollXProgress: any }) => {
-  const step = 1 / 6; // Normalized step for 7 templates (approx)
-  const range = [ (i - 1) * step, i * step, (i + 1) * step ];
+const CoverFlowCard = ({ children, i, scrollXProgress, total }: { children: React.ReactNode, i: number, scrollXProgress: any, total: number }) => {
+  const step = 1 / (total - 1);
+  const center = i * step;
   
-  const rotateY = useTransform(scrollXProgress, range, [45, 0, -45]);
-  const scale = useTransform(scrollXProgress, range, [0.8, 1.05, 0.8]);
-  const z = useTransform(scrollXProgress, range, [-200, 100, -200]);
+  // Clamping to [0, 1] range to satisfy WAAPI/Scroll-Timeline offsets
+  const range = [
+    Math.max(0, center - step),
+    center,
+    Math.min(1, center + step)
+  ];
+  
+  const transform = useTransform(scrollXProgress, range, [
+    "perspective(1200px) rotateY(45deg) scale(0.8) translateZ(-200px)",
+    "perspective(1200px) rotateY(0deg) scale(1.05) translateZ(100px)",
+    "perspective(1200px) rotateY(-45deg) scale(0.8) translateZ(-200px)"
+  ]);
+  
   const opacity = useTransform(scrollXProgress, range, [0.4, 1, 0.4]);
 
   return (
     <motion.div
-      style={{ rotateY, scale, z, opacity, transformStyle: "preserve-3d" }}
+      style={{ transform, opacity, transformStyle: "preserve-3d" }}
       className="flex-shrink-0"
     >
       {children}
@@ -57,8 +67,10 @@ export default function TemplatesPage() {
     offset: ["start start", "end end"]
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(templates.length - 1) * 80}%`]);
-  const springX = useSpring(x, { stiffness: 80, damping: 25 });
+  // Calculate total translation as a number (percent)
+  const xNum = useTransform(scrollYProgress, [0, 1], [0, -(templates.length - 1) * 80]);
+  const springX = useSpring(xNum, { stiffness: 80, damping: 25 });
+  const x = useTransform(springX, (v) => `${v}%`);
 
   useEffect(() => {
     return scrollYProgress.on("change", (v) => {
@@ -118,11 +130,16 @@ export default function TemplatesPage() {
       <section ref={targetRef} className="relative h-[600vh]">
         <div className="sticky top-0 h-screen flex items-center overflow-hidden">
           <motion.div 
-            style={{ x: springX }}
+            style={{ x }}
             className="flex gap-[15vw] px-[30vw]"
           >
             {templates.map((template, i) => (
-               <CoverFlowCard key={template.value} i={i} scrollXProgress={scrollYProgress}>
+               <CoverFlowCard 
+                  key={template.value} 
+                  i={i} 
+                  scrollXProgress={scrollYProgress}
+                  total={templates.length}
+               >
                  <TraditionCard 
                     theme={template.value}
                     title={template.label}
