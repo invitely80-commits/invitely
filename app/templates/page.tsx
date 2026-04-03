@@ -62,20 +62,21 @@ export default function TemplatesPage() {
 
   const templates = useMemo(() => themeOptions.filter(t => t.value !== "minimal"), []);
 
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll(); // Use global window scroll for full tracking accuracy
 
-  // Calculate total translation as a number (percent)
-  const xNum = useTransform(scrollYProgress, [0, 1], [0, -(templates.length - 1) * 80]);
-  const springX = useSpring(xNum, { stiffness: 80, damping: 25 });
-  const x = useTransform(springX, (v) => `${v}%`);
+  // Deeply Calibrated Velocity (1200vh vertical distance / 0.1 to 0.85 window)
+  const xNum = useTransform(scrollYProgress, [0.1, 0.85], [0, -280]); 
+  const springX = useSpring(xNum, { stiffness: 40, damping: 20 });
+  const x = useTransform(springX, (v) => `${v}vw`);
 
   useEffect(() => {
     return scrollYProgress.on("change", (v) => {
-      const step = 1 / templates.length;
-      const index = Math.min(Math.floor(v / step), templates.length - 1);
+      // Map scroll progress (0.1 to 0.85) to template index (0 to 6)
+      const start = 0.1;
+      const end = 0.85;
+      const progress = Math.max(0, Math.min(1, (v - start) / (end - start)));
+      const index = Math.min(Math.floor(progress * templates.length), templates.length - 1);
+      
       const currentTheme = templates[index]?.value;
       if (currentTheme && currentTheme !== activeTheme) {
         setActiveTheme(currentTheme);
@@ -127,11 +128,11 @@ export default function TemplatesPage() {
       </section>
 
       {/* 3. 3D Cover Flow Scroll Section */}
-      <section ref={targetRef} className="relative h-[600vh]">
+      <section ref={targetRef} className="relative h-[1200vh]">
         <div className="sticky top-0 h-screen flex items-center overflow-hidden">
           <motion.div 
             style={{ x }}
-            className="flex gap-[15vw] px-[30vw]"
+            className="flex gap-[15vw] px-[30vw] items-center"
           >
             {templates.map((template, i) => (
                <CoverFlowCard 
