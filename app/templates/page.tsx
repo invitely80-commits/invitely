@@ -5,9 +5,7 @@ import {
   motion, 
   useScroll, 
   useTransform, 
-  AnimatePresence,
-  useSpring,
-  useMotionValue
+  useSpring
 } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,6 +22,7 @@ const hapticSpring = { type: "spring", stiffness: 400, damping: 25 } as any;
 /**
  * 3D Cover Flow Card Container
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CoverFlowCard = ({ children, i, scrollXProgress }: { children: React.ReactNode, i: number, scrollXProgress: any }) => {
   const step = 1 / 6; // Normalized step for 7 templates (approx)
   const range = [ (i - 1) * step, i * step, (i + 1) * step ];
