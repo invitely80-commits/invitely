@@ -14,19 +14,19 @@ export const signUpSchema = signInSchema.extend({
 
 export const inviteEventSchema = z.object({
   id: z.string().trim().min(1),
-  title: z.string().trim().min(2, "Add an event title."),
+  title: z.string().trim().min(1, "Add an event title."),
   date: z.string().trim().min(1, "Choose an event date."),
   time: z.string().trim().optional().default(""),
-  venue: z.string().trim().min(2, "Add a venue name."),
-  address: z.string().trim().min(5, "Add a venue address."),
+  venue: z.string().trim().min(1, "Add a venue name."),
+  address: z.string().trim().min(1, "Add a venue address."),
   description: z.string().trim().max(240, "Keep event notes under 240 characters.").optional().default(""),
 });
 
 export const inviteDataSchema = z.object({
-  brideName: z.string().trim().min(2, "Bride name is required."),
-  groomName: z.string().trim().min(2, "Groom name is required."),
+  brideName: z.string().trim().min(1, "Bride name is required."),
+  groomName: z.string().trim().min(1, "Groom name is required."),
   weddingDate: z.string().trim().min(1, "Wedding date is required."),
-  description: z.string().trim().min(24, "Add a slightly longer invitation description."),
+  description: z.string().trim().min(1, "Invitation description is required."),
   theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury"]),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
