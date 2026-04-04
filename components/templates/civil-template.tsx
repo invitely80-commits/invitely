@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -110,7 +111,13 @@ export function CivilTemplate({
       {/* ── HERO — full-bleed editorial split ── */}
       <section style={S.hero}>
         <div style={{ ...S.heroImgWrap, transform: `translateY(${scrollY * 0.4}px)` }}>
-          <img src={d.photoUrl} alt="" style={S.heroImg} />
+          <Image
+            src={d.photoUrl}
+            alt="Wedding Hero"
+            fill
+            priority
+            style={{ objectFit: "cover", objectPosition: "center 25%", filter: "grayscale(30%)" }}
+          />
           <div style={S.heroImgOverlay} />
         </div>
         <div style={S.heroLeft}>
@@ -175,7 +182,12 @@ export function CivilTemplate({
       {/* ── PARALLAX ── */}
       <section style={{ position: "relative", minHeight: "70vh", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.3}px)` }}>
-          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop" alt="" style={{ width: "100%", height: "130%", objectFit: "cover", filter: "grayscale(100%)" }} />
+          <Image
+            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop"
+            alt="Wedding Venue"
+            fill
+            style={{ objectFit: "cover", filter: "grayscale(100%)" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 30%, transparent 100%)" }} />
         </div>
         <div ref={f3} style={{ position: "relative", zIndex: 2, padding: "4rem clamp(2rem,6vw,6rem)", width: "100%" }}>
@@ -222,13 +234,13 @@ export function CivilTemplate({
       <section style={{ background: "#000", padding: "6rem clamp(2rem,6vw,6rem)", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: "-2rem", right: "-1rem", opacity: 0.04, fontFamily: "'Space Grotesk',sans-serif", fontSize: "18rem", fontWeight: 700, color: "#fff", lineHeight: 1, userSelect: "none" }}>∞</div>
         <div ref={f5}>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: "1.5rem" }}>You're invited</p>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: "1.5rem" }}>You&apos;re invited</p>
           <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(3rem,8vw,7rem)", fontWeight: 700, color: "#fff", lineHeight: 1, marginBottom: "2rem" }}>
             {d.brideFirstName}<br />&amp; {d.groomFirstName}
           </h2>
           <LineDivider light />
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.95rem", lineHeight: 1.9, maxWidth: "460px", marginBottom: "2.5rem" }}>
-            We'd love for you to be part of our celebration. No RSVP form. No fuss. Just drop us a WhatsApp.
+            We&apos;d love for you to be part of our celebration. No RSVP form. No fuss. Just drop us a WhatsApp.
           </p>
           {!preview && (
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -123,7 +124,13 @@ export function SikhTemplate({
       {/* ── HERO ── */}
       <section style={styles.hero}>
         <div style={{ ...styles.heroBg, transform: `translateY(${scrollY * 0.45}px)` }}>
-          <img src={d.photoUrl} alt="" style={styles.heroBgImg} />
+          <Image
+            src={d.photoUrl}
+            alt="Sikh Wedding Hero"
+            fill
+            priority
+            style={{ objectFit: "cover" }}
+          />
           <div style={styles.heroOverlay} />
         </div>
         <div style={styles.heroContent}>
@@ -193,7 +200,12 @@ export function SikhTemplate({
       {/* ── PARALLAX ── */}
       <section style={{ position: "relative", minHeight: "65vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.28}px)` }}>
-          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1600&auto=format&fit=crop" alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1600&auto=format&fit=crop"
+            alt="Anand Karaj Venue"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(26,46,94,0.75)" }} />
         </div>
         <div ref={f3} style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "4rem 2rem" }}>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -138,7 +139,13 @@ export function MuslimTemplate({
       {/* ── HERO ── */}
       <section style={styles.hero}>
         <div style={{ ...styles.heroBg, transform: `translateY(${scrollY * 0.45}px)` }}>
-          <img src={d.photoUrl} alt="venue" style={styles.heroBgImg} />
+          <Image
+            src={d.photoUrl}
+            alt="Wedding Venue"
+            fill
+            priority
+            style={{ objectFit: "cover" }}
+          />
           <div style={styles.heroOverlay} />
         </div>
         <GeometricBg opacity={0.08} color="#D4AF37" />
@@ -208,7 +215,12 @@ export function MuslimTemplate({
       {/* ── PARALLAX VENUE ── */}
       <section style={{ position: "relative", minHeight: "65vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.3}px)` }}>
-          <img src={d.photoUrl} alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src={d.photoUrl}
+            alt="Event Venue"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(13,61,38,0.7)" }} />
         </div>
         <GeometricBg opacity={0.08} color="#D4AF37" />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -31,22 +32,6 @@ const DEFAULT_DATA = {
   photoUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1600&auto=format&fit=crop",
 };
 
-// ─── PARALLAX HOOK ──────────────────────────────────────────────────────────
-function useParallax(speed = 0.4) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * speed;
-      el.style.transform = `translateY(${offset}px)`;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [speed]);
-  return ref;
-}
 
 // ─── SECTION FADE-IN HOOK ───────────────────────────────────────────────────
 function useFadeIn() {
@@ -114,7 +99,6 @@ function GoldDivider({ wide = false }: { wide?: boolean }) {
 // ─── MAIN COMPONENT ─────────────────────────────────────────────────────────
 export function HinduTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
@@ -172,7 +156,13 @@ export function HinduTemplate({
       {/* ── HERO ──────────────────────────────────────────── */}
       <section style={S.hero}>
         <div style={{ ...S.heroBg, transform: `translateY(${scrollY * 0.45}px)` }}>
-          <img src={d.photoUrl} alt="couple" style={S.heroBgImg} />
+          <Image
+            src={d.photoUrl}
+            alt="couple"
+            fill
+            priority
+            style={{ objectFit: "cover", objectPosition: "center 20%" }}
+          />
           <div style={S.heroOverlay} />
         </div>
         <div style={S.heroContent}>
@@ -240,7 +230,12 @@ export function HinduTemplate({
       {/* ── PARALLAX PHOTO BAND ───────────────────────────── */}
       <section style={S.parallaxBand}>
         <div style={{ ...S.parallaxBandBg, transform: `translateY(${scrollY * 0.25}px)` }}>
-          <img src={d.photoUrl} alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src={d.photoUrl}
+            alt="Wedding Celebration"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(42,8,8,0.55)" }} />
         </div>
         <div ref={fadeRef2} style={S.parallaxBandContent}>
@@ -277,7 +272,12 @@ export function HinduTemplate({
       {/* ── SECOND PARALLAX ───────────────────────────────── */}
       <section style={{ ...S.parallaxBand, minHeight: "40vh" }}>
         <div style={{ ...S.parallaxBandBg, transform: `translateY(${scrollY * 0.15}px)` }}>
-          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1600&auto=format&fit=crop" alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1600&auto=format&fit=crop"
+            alt="Wedding Vows"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(42,8,8,0.6)" }} />
         </div>
         <div ref={fadeRef4} style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "4rem 2rem" }}>

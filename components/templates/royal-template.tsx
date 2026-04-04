@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -147,7 +148,13 @@ export function RoyalTemplate({
       {/* ── HERO ── */}
       <section style={styles.hero}>
         <div style={{ ...styles.heroBg, transform: `translateY(${scrollY * 0.45}px)` }}>
-          <img src={d.photoUrl} alt="" style={styles.heroBgImg} />
+          <Image
+            src={d.photoUrl}
+            alt="Royal Wedding Hero"
+            fill
+            priority
+            style={{ objectFit: "cover", objectPosition: "center 30%" }}
+          />
           <div style={styles.heroOverlay} />
         </div>
         <RoyalPattern opacity={0.1} />
@@ -216,7 +223,12 @@ export function RoyalTemplate({
       {/* ── PARALLAX PALACE ── */}
       <section style={{ position: "relative", minHeight: "70vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.3}px)` }}>
-          <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1600&auto=format&fit=crop" alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1600&auto=format&fit=crop"
+            alt="Palace Venue"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(26,0,0,0.65)" }} />
         </div>
         <RoyalPattern opacity={0.06} />

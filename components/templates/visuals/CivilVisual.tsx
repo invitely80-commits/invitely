@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 export default function CivilVisual({ name, priority }: { name: string; priority?: boolean }) {
-  const [firstName, and, lastName] = name.split(" ");
+  const [firstName, , lastName] = name.split(" ");
   
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#1c1c18]">

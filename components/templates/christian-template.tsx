@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
@@ -77,7 +78,6 @@ function ChampagneDivider() {
 
 export function ChristianTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
@@ -125,7 +125,13 @@ export function ChristianTemplate({
       {/* ── HERO ── */}
       <section style={S.hero}>
         <div style={{ ...S.heroBg, transform: `translateY(${scrollY * 0.4}px)` }}>
-          <img src={d.photoUrl} alt="" style={S.heroBgImg} />
+          <Image
+            src={d.photoUrl}
+            alt="Wedding Hero"
+            fill
+            priority
+            style={{ objectFit: "cover", objectPosition: "center 30%" }}
+          />
           <div style={S.heroOverlay} />
         </div>
         <div style={S.heroContent}>
@@ -188,7 +194,12 @@ export function ChristianTemplate({
       {/* ── PARALLAX CHURCH ── */}
       <section style={{ position: "relative", minHeight: "70vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.3}px)` }}>
-          <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1600&auto=format&fit=crop" alt="" style={{ width: "100%", height: "130%", objectFit: "cover" }} />
+          <Image
+            src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1600&auto=format&fit=crop"
+            alt="Ceremony Venue"
+            fill
+            style={{ objectFit: "cover" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "rgba(250,246,240,0.75)" }} />
         </div>
         <div ref={f3} style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "4rem 2rem" }}>
