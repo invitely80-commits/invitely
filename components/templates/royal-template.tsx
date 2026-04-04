@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Sunday, November 29, 2026",
   city: "Udaipur",
   hashtag: "#TheRoyalUnion",
-  heroImage: "/images/templates/royal/hero_god_tier.png",
-  storyImage: "/images/templates/royal/hero_god_tier.png",
-  ritualsImage: "/images/templates/royal/hero_god_tier.png",
+  heroImage: "/images/templates/royal/mysore_palace_hero.png",
+  storyImage: "/images/templates/royal/rajasthani_palace_exterior.png",
+  ritualsImage: "/images/templates/royal/rajasthani_palace_interior.png",
 };
 
 export function RoyalTemplate({

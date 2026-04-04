@@ -6,7 +6,7 @@ export default function SikhVisual({ name, priority }: { name: string; priority?
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#1e3a8a]">
       <Image
-        src="/images/templates/sikh/hero_god_tier.png"
+        src="/images/templates/sikh/card_thumb.png"
         alt="Sikh Anand Karaj"
         fill
         priority={priority}

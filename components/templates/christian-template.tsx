@@ -13,8 +13,8 @@ const DEFAULT_DATA = {
   city: "Goa",
   hashtag: "#SarahDavidEverAfter",
   heroImage: "/images/templates/christian/hero_god_tier.png",
-  storyImage: "/images/templates/christian/hero_god_tier.png",
-  ritualsImage: "/images/templates/christian/hero_god_tier.png",
+  storyImage: "/images/templates/christian/story_god_tier.png",
+  ritualsImage: "/images/templates/christian/story_god_tier.png",
 };
 
 export function ChristianTemplate({

@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Friday, December 18, 2026",
   city: "Lucknow",
   hashtag: "#ZoyaOmarNikah",
-  heroImage: "/images/templates/muslim/hero_god_tier.png", // Placeholder
-  storyImage: "/images/templates/muslim/hero_god_tier.png",
-  ritualsImage: "/images/templates/muslim/hero_god_tier.png",
+  heroImage: "/images/templates/muslim/hero_god_tier.png",
+  storyImage: "/images/templates/muslim/story_god_tier.png",
+  ritualsImage: "/images/templates/muslim/story_god_tier.png",
 };
 
 export function MuslimTemplate({

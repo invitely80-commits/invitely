@@ -149,7 +149,7 @@ export default async function HomePage() {
             <div className="mt-20 flex flex-col items-center">
               <div className="relative h-28 w-28 overflow-hidden rounded-full ring-8 ring-ivory/50 shadow-2xl transition-transform hover:scale-110 duration-700">
                  <Image 
-                   src="https://images.unsplash.com/photo-1621619012352-0b3294c7b80c?auto=format&fit=crop&w=400&q=80"
+                   src="/images/templates/royal/rajasthani_palace_interior.png"
                    alt="Ananya & Arjun"
                    fill
                    className="object-cover"

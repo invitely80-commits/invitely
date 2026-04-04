@@ -127,3 +127,30 @@ export function AnimatedBirds() {
     </div>
   );
 }
+import Image from "next/image";
+
+export default function SouthIndianVisual({ name, priority }: { name: string; priority?: boolean }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-[#8B1A1A]">
+      <Image
+        src="/images/templates/south-indian/hero_god_tier.png"
+        alt="South Indian Heritage"
+        fill
+        priority={priority}
+        className="object-cover opacity-60 group-hover:scale-110 transition-all duration-1000"
+        sizes="(max-width: 768px) 100vw, 33vw"
+      />
+      
+      <div className="absolute inset-0 bg-gradient-to-br from-[#8B1A1A]/80 to-[#A52A2A]/40 mix-blend-multiply" />
+      <LightRays />
+      
+      <div className="relative z-10 h-full flex flex-col items-center justify-center p-12 text-center space-y-8">
+        <GopuramSilhouette className="text-gold-accent/20 h-48 absolute top-10 left-1/2 -translate-x-1/2 pointer-events-none" />
+        <h3 className="font-serif-lux text-5xl text-gold-accent tracking-tighter uppercase leading-[0.85] drop-shadow-2xl">
+           {name}
+        </h3>
+        <p className="font-mono-lux text-[10px] tracking-[0.5em] text-gold-accent/50 uppercase">Vedic Heirloom</p>
+      </div>
+    </div>
+  );
+}

@@ -112,13 +112,8 @@ export const sampleInvite: InviteData = {
   theme: "minimal",
   contactEmail: "family@invitely.com",
   contactPhone: "+91 98765 43210",
-  gallery: [
-    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1200&q=80",
-  ],
-  heroImage:
-    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1200&q=80",
+  gallery: [],
+  heroImage: "",
   events: [
     {
       id: "mehendi",

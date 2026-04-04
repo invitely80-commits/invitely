@@ -23,7 +23,7 @@ export function FloatingPreview() {
         <div className="relative rounded-[28px] border border-gold/10 bg-white/40 p-4 shadow-sm">
           <div className="relative h-64 overflow-hidden rounded-[24px]">
             <Image
-              src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1200&q=80"
+              src="/images/templates/hindu/hero_god_tier.png"
               alt="Couple portrait preview"
               fill
               className="object-cover"

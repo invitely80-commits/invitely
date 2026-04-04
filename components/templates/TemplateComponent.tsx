@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Saturday, August 15, 2026",
   city: "Monte Carlo",
   hashtag: "#VictoryInLove",
-  heroImage: "/images/templates/luxury/hero_god_tier.png",
-  storyImage: "/images/templates/luxury/hero_god_tier.png",
-  ritualsImage: "/images/templates/luxury/hero_god_tier.png",
+  heroImage: "/images/templates/luxury/hero.png",
+  storyImage: "/images/templates/luxury/story.png",
+  ritualsImage: "/images/templates/luxury/rituals.png",
 };
 
 export function TemplateComponent({

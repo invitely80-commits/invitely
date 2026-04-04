@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Saturday, June 20, 2026",
   city: "Bangalore",
   hashtag: "#AarohiVihaanUnion",
-  heroImage: "/images/templates/civil/hero_god_tier.png", // Using high-end civil as base for minimal
-  storyImage: "/images/templates/south-indian/story.png",
-  ritualsImage: "/images/templates/south-indian/rituals.png",
+  heroImage: "/images/templates/minimal/hero.png",
+  storyImage: "/images/templates/minimal/story.png",
+  ritualsImage: "/images/templates/minimal/rituals.png",
 };
 
 export function MinimalTemplate({

@@ -6,11 +6,11 @@ export default function RoyalVisual({ name, priority }: { name: string; priority
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#5c1530]">
       <Image
-        src="/images/templates/royal/hero_god_tier.png"
+        src="/images/templates/royal/rajasthani_palace_card.png"
         alt="Royal Heritage"
         fill
         priority={priority}
-        className="object-cover opacity-60 group-hover:scale-110 transition-all duration-1000"
+        className="object-cover opacity-80 group-hover:scale-110 transition-all duration-1000"
         sizes="(max-width: 768px) 100vw, 33vw"
       />
       

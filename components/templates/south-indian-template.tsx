@@ -13,7 +13,7 @@ const DEFAULT_DATA = {
   weddingDate: "Sunday, December 15, 2026",
   city: "Chennai",
   hashtag: "#PriyaArjunUnion",
-  heroImage: "/images/templates/south-indian/gopuram_vibrant.png",
+  heroImage: "/images/templates/south-indian/hero_god_tier.png",
   storyImage: "/images/templates/south-indian/story.png",
   ritualsImage: "/images/templates/south-indian/rituals.png",
 };

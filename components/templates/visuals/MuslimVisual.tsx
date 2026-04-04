@@ -6,7 +6,7 @@ export default function MuslimVisual({ name, priority }: { name: string; priorit
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#064e3b]">
       <Image
-        src="/images/templates/muslim/hero_god_tier.png"
+        src="/images/templates/muslim/card_thumb.png"
         alt="Islamic Nikah Architecture"
         fill
         priority={priority}

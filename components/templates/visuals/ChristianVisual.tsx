@@ -6,7 +6,7 @@ export default function ChristianVisual({ name, priority }: { name: string; prio
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#fefefe]">
       <Image
-        src="/images/templates/christian/hero_god_tier.png"
+        src="/images/templates/christian/card_thumb.png"
         alt="Ethereal Christian Wedding"
         fill
         priority={priority}

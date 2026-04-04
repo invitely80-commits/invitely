@@ -13,8 +13,8 @@ const DEFAULT_DATA = {
   city: "Amritsar",
   hashtag: "#GurleenIshwarAnandKaraj",
   heroImage: "/images/templates/sikh/hero_god_tier.png",
-  storyImage: "/images/templates/sikh/hero_god_tier.png",
-  ritualsImage: "/images/templates/sikh/hero_god_tier.png",
+  storyImage: "/images/templates/sikh/story_god_tier.png",
+  ritualsImage: "/images/templates/sikh/story_god_tier.png",
 };
 
 export function SikhTemplate({

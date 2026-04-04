@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Saturday, November 21, 2026",
   city: "Udaipur",
   hashtag: "#AnanyaRohanUnion",
-  heroImage: "/images/templates/hindu/hero_god_tier.png", // Placeholder until Hindu asset generates
+  heroImage: "/images/templates/hindu/hero_god_tier.png",
   storyImage: "/images/templates/hindu/story_god_tier.png",
-  ritualsImage: "/images/templates/south-indian/rituals.png",
+  ritualsImage: "/images/templates/hindu/story_god_tier.png",
 };
 
 export function HinduTemplate({

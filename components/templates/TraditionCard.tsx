@@ -11,6 +11,8 @@ const RoyalVisual = dynamic(() => import("./visuals/RoyalVisual"));
 const SikhVisual = dynamic(() => import("./visuals/SikhVisual"));
 const CivilVisual = dynamic(() => import("./visuals/CivilVisual"));
 const LuxuryVisual = dynamic(() => import("./visuals/LuxuryVisual"));
+const SouthIndianVisual = dynamic(() => import("./visuals/SouthIndianVisual"));
+const MinimalVisual = dynamic(() => import("./visuals/MinimalVisual"));
 
 /**
  * TraditionCard — Redesigned for Unique Style and Persistent Info.
@@ -47,11 +49,11 @@ export const TraditionCard = ({
 
   const renderVisual = () => {
     switch (theme) {
-      case "hindu": 
-      case "south-indian": return <HinduVisual name={name} priority={priority} />;
+      case "hindu": return <HinduVisual name={name} priority={priority} />;
+      case "south-indian": return <SouthIndianVisual name={name} priority={priority} />;
       case "muslim": return <MuslimVisual name={name} priority={priority} />;
-      case "christian": 
-      case "minimal": return <ChristianVisual name={name} priority={priority} />;
+      case "christian": return <ChristianVisual name={name} priority={priority} />;
+      case "minimal": return <MinimalVisual name={name} priority={priority} />;
       case "royal": return <RoyalVisual name={name} priority={priority} />;
       case "sikh": return <SikhVisual name={name} priority={priority} />;
       case "civil": return <CivilVisual name={name} priority={priority} />;

@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
   weddingDate: "Friday, June 12, 2026",
   city: "London",
   hashtag: "#SophieJamesCivilUnion",
-  heroImage: "/images/templates/civil/hero_god_tier.png",
-  storyImage: "/images/templates/civil/hero_god_tier.png",
-  ritualsImage: "/images/templates/civil/hero_god_tier.png",
+  heroImage: "/images/templates/civil/hero.png",
+  storyImage: "/images/templates/civil/story.png",
+  ritualsImage: "/images/templates/civil/rituals.png",
 };
 
 export function CivilTemplate({
