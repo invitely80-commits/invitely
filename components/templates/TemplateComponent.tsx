@@ -1,383 +1,212 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { 
-  motion, 
-  AnimatePresence, 
-  useMotionValue, 
-  useSpring, 
-  useTransform,
-  useScroll
-} from "framer-motion";
-import { 
-  CalendarPlus, 
-  MapPin, 
-  Navigation, 
-  Heart, 
-  Calendar,
-  Share2,
-  ChevronRight,
-  Sparkles
-} from "lucide-react";
-
-import { getGoogleCalendarUrl } from "@/lib/calendar";
-import { getCoupleNames } from "@/lib/invites";
-import { formatDisplayDate } from "@/lib/utils";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
+import { formatDisplayDate } from "@/lib/utils";
 
-// Physics-Based Spring Constants
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hapticSpring = { type: "spring", stiffness: 500, damping: 15 } as any;
-
-/**
- * Luxury Card with 3D Hover Tilt
- */
-const LuxuryCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = (mouseX / width) - 0.5;
-    const yPct = (mouseY / height) - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden ${className}`}
-    >
-      <div style={{ transform: "translateZ(50px)" }} className="relative z-10 h-full w-full">
-        {children}
-      </div>
-    </motion.div>
-  );
+const DEFAULT_DATA = {
+  brideFirstName: "Victoria", brideLastName: "Blackwood",
+  groomFirstName: "Alexander", groomLastName: "Sterling",
+  weddingDate: "Saturday, August 15, 2026",
+  city: "Monte Carlo",
+  hashtag: "#VictoryInLove",
+  heroImage: "/images/templates/luxury/hero_god_tier.png",
+  storyImage: "/images/templates/luxury/hero_god_tier.png",
+  ritualsImage: "/images/templates/luxury/hero_god_tier.png",
 };
 
 export function TemplateComponent({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const coupleNames = getCoupleNames(invite.data);
-  const primaryEvent = invite.data.events[0];
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+  // Parallax transforms
+  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 1.2]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
+  const heroTextY = useTransform(smoothProgress, [0, 0.2], [0, 150]);
   
-  // Ambient SVG scale/rotation based on scroll
-  const ambientRotate = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const d = {
+    ...DEFAULT_DATA,
+    brideFirstName: invite.data.brideName.split(" ")[0],
+    groomFirstName: invite.data.groomName.split(" ")[0],
+    weddingDate: formatDisplayDate(invite.data.weddingDate),
+    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Monte Carlo",
+    hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+  };
 
   return (
-    <div className="relative min-h-screen font-sans selection:bg-gold-accent/30 overflow-x-hidden">
-      {/* 1. Global Grain Texture */}
-      <div className="grain-overlay pointer-events-none" />
-
-      {/* 2. Ambient Rotating Backgrounds */}
-      <motion.div 
-        style={{ rotate: ambientRotate }}
-        className="fixed inset-0 pointer-events-none z-0 opacity-5"
-      >
-        <svg className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] text-charcoal fill-current animate-pulse-slow" viewBox="0 0 100 100">
-           <path d="M50 0 L55 35 L90 40 L60 55 L70 90 L50 70 L30 90 L40 55 L10 40 L45 35 Z" />
-        </svg>
-        <svg className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] text-charcoal fill-current" viewBox="0 0 100 100">
-           <path d="M50 0 L55 35 L90 40 L60 55 L70 90 L50 70 L30 90 L40 55 L10 40 L45 35 Z" opacity="0.5" />
-        </svg>
-      </motion.div>
-
-      {/* 3. Virtual Envelope Reveal */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.8 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal p-6"
-          >
-            <motion.div 
-              layoutId="envelope"
-              className="relative w-full max-w-lg aspect-[4/3] bg-vellum rounded-lg shadow-2xl flex flex-col items-center justify-center text-center p-12 overflow-hidden"
-              style={{ perspective: "1000px" }}
-            >
-               {/* Wax Seal / Button */}
-               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={hapticSpring}
-                onClick={() => setIsOpen(true)}
-                className="group relative z-10 flex flex-col items-center gap-4"
-               >
-                  <div className="w-20 h-20 rounded-full bg-burgundy flex items-center justify-center shadow-[0_0_30px_rgba(87,0,19,0.3)] transition-shadow group-hover:shadow-[0_0_40px_rgba(87,0,19,0.5)]">
-                    <Heart className="text-white fill-white size-8" />
-                  </div>
-                  <span className="font-mono-lux tracking-[0.4em] uppercase text-xs text-charcoal/60">Tap to Unfold</span>
-               </motion.button>
-
-               {/* Envelope Flaps */}
-               <motion.div 
-                className="absolute top-0 inset-x-0 h-1/2 bg-silk/80 origin-top shadow-md z-0"
-                initial={{ rotateX: 0 }}
-                animate={{ rotateX: 0 }}
-               />
-               <div className="absolute inset-0 border-[1.5rem] border-silk/20 pointer-events-none" />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 4. Main Content (The Heirloom) */}
-      <motion.main 
-        initial={{ opacity: 0, y: 40 }}
-        animate={isOpen ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="relative z-10 max-w-[1400px] mx-auto px-6 py-20 lg:py-32"
-      >
-         {/* Hero Header: Bento-Luxury Grid Start */}
-         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-            <div className="lg:col-span-7 space-y-8">
-               <motion.div
-                 initial={{ clipPath: "inset(100% 0 0 0)" }}
-                 animate={isOpen ? { clipPath: "inset(0% 0 0 0)" } : {}}
-                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-               >
-                 <span className="font-mono-lux tracking-[0.5em] uppercase text-xs text-charcoal/40 block mb-6 px-1">
-                   {invite.data.events[0]?.title || "Wedding Invitation"}
-                 </span>
-                 <h1 className="font-serif-lux text-fluid-h1 tracking-tighter text-charcoal leading-[0.9] mix-exclusion">
-                    {coupleNames.split(" & ").map((name, i) => (
-                      <React.Fragment key={name}>
-                        {i > 0 && <span className="block text-gold-accent ml-[0.5ch]">&</span>}
-                        <span className="block">{name}</span>
-                      </React.Fragment>
-                    ))}
-                 </h1>
-               </motion.div>
-               
-               <motion.p 
-                initial={{ opacity: 0 }}
-                animate={isOpen ? { opacity: 1 } : {}}
-                transition={{ delay: 1 }}
-                className="max-w-md text-lg text-charcoal/60 leading-relaxed font-medium mix-blend-difference"
-               >
-                 {invite.data.description}
-               </motion.p>
-            </div>
-
-            <div className="lg:col-span-5 relative">
-               <LuxuryCard className="aspect-[3/4] group">
-                 {invite.data.heroImage ? (
-                   <Image 
-                    src={invite.data.heroImage} 
-                    alt={coupleNames} 
-                    fill 
-                    className="object-cover scale-105 group-hover:scale-100 transition-transform duration-1000"
-                    priority
-                   />
-                 ) : (
-                   <div className="flex h-full items-center justify-center bg-silk">
-                     <Sparkles className="size-12 text-gold-accent" />
-                   </div>
-                 )}
-               </LuxuryCard>
-            </div>
-         </div>
-
-         {/* Core Details Bento Section */}
-         <div className="mt-20 lg:mt-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {/* 5. Date Tile */}
-            <motion.div 
-              whileInView={{ y: -20, opacity: 1 }}
-              initial={{ y: 0, opacity: 0 }}
-              viewport={{ once: true }}
-              className="lg:mt-12"
-            >
-              <LuxuryCard className="p-10 flex flex-col justify-between h-full bg-vellum/90">
-                 <div className="space-y-4">
-                    <Calendar className="size-6 text-burgundy" />
-                    <h3 className="font-mono-lux uppercase tracking-widest text-[10px] text-charcoal/40">The Auspicious Date</h3>
-                    <p className="font-serif-lux text-5xl text-charcoal tracking-tighter">
-                      {formatDisplayDate(invite.data.weddingDate)}
-                    </p>
-                 </div>
-                 {!preview && primaryEvent && (
-                   <Link 
-                    href={getGoogleCalendarUrl(primaryEvent, coupleNames)}
-                    target="_blank"
-                    className="mt-12 inline-flex items-center gap-3 font-mono-lux text-[10px] uppercase tracking-[0.2em] text-burgundy hover:text-charcoal transition-colors group"
-                   >
-                     Add to Calendar <ChevronRight className="size-3 group-hover:translate-x-1 transition-transform" />
-                   </Link>
-                 )}
-              </LuxuryCard>
-            </motion.div>
-
-            {/* 6. Venue Detail (Overlapping) */}
-            <motion.div 
-              whileInView={{ y: 20, opacity: 1 }}
-              initial={{ y: 80, opacity: 0 }}
-              viewport={{ once: true }}
-            >
-              <LuxuryCard className="p-10 bg-charcoal text-silk">
-                 <div className="space-y-6">
-                    <div className="flex justify-between items-start">
-                      <MapPin className="size-6 text-gold-accent" />
-                      <Navigation className="size-5 text-silk/20" />
-                    </div>
-                    <h3 className="font-mono-lux uppercase tracking-widest text-[10px] text-silk/40">The Grand Venue</h3>
-                    <div className="space-y-2">
-                       <p className="font-serif-lux text-4xl tracking-tight leading-none">{primaryEvent?.venue}</p>
-                       <p className="text-sm text-silk/60 leading-relaxed pt-2">{primaryEvent?.address}</p>
-                    </div>
-                    <Link 
-                      href={`https://maps.google.com/maps?q=${encodeURIComponent(primaryEvent?.address || "")}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-4 bg-silk text-charcoal px-6 py-4 rounded-full font-mono-lux text-[10px] uppercase tracking-widest w-full justify-center transition-all hover:bg-gold-accent"
-                    >
-                      Open in Maps
-                    </Link>
-                 </div>
-              </LuxuryCard>
-            </motion.div>
-
-            {/* 7. Gallery Stack (Desktop Only / Mobile Carousel) */}
-            <div className="hidden lg:block lg:mt-24">
-              <div className="relative h-[400px] w-full">
-                {invite.data.gallery.slice(0, 3).map((img, i) => (
-                  <motion.div
-                    key={i}
-                    style={{ 
-                      zIndex: 3 - i,
-                      top: i * 20,
-                      left: i * 20
-                    }}
-                    whileHover={{ scale: 1.05, zIndex: 10, rotate: i % 2 === 0 ? 2 : -2 }}
-                    className="absolute inset-x-0 bottom-0 top-0 rounded-3xl overflow-hidden border-8 border-white shadow-xl"
-                  >
-                    <Image src={img} alt="Gallery" fill className="object-cover" />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-         </div>
-
-         {/* Full Timeline Section */}
-         <section className="mt-40 space-y-20">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-charcoal/10 pb-12">
-               <h2 className="font-serif-lux text-fluid-h2 tracking-tighter text-charcoal">Rituals Of Love</h2>
-               <p className="font-mono-lux text-xs uppercase tracking-[0.3em] text-charcoal/40">Sequence of Events</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-               {invite.data.events.map((event, i) => (
-                 <motion.div 
-                   key={event.id}
-                   initial={{ opacity: 0, y: 30 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   transition={{ delay: i * 0.1 }}
-                   viewport={{ once: true }}
-                   className="space-y-6"
-                 >
-                    <div className="flex items-center gap-4">
-                       <span className="w-12 h-[1px] bg-gold-accent" />
-                       <span className="font-mono-lux text-[10px] uppercase tracking-widest text-charcoal/60">{event.time}</span>
-                    </div>
-                    <div className="space-y-3">
-                       <h4 className="font-serif-lux text-3xl text-charcoal tracking-tight">{event.title}</h4>
-                       <p className="text-sm text-charcoal/50 leading-relaxed font-medium">{event.description}</p>
-                    </div>
-                    <div className="pt-4 flex items-center gap-3 text-charcoal/80">
-                      <MapPin className="size-4 text-burgundy" />
-                      <span className="text-sm font-semibold">{event.venue}</span>
-                    </div>
-                 </motion.div>
-               ))}
-            </div>
-         </section>
-
-         {/* Mobile-Only Gallery Carousel */}
-         <section className="lg:hidden mt-32 -mx-6">
-            <div className="px-6 mb-10">
-               <h2 className="font-serif-lux text-fluid-h2 tracking-tighter text-charcoal">Gallery</h2>
-            </div>
-            <div className="flex overflow-x-auto gap-4 px-6 snap-x no-scrollbar pb-12">
-               {invite.data.gallery.map((img, i) => (
-                 <div key={i} className="min-w-[85vw] snap-center aspect-[3/4] relative rounded-[2rem] overflow-hidden shadow-xl border-4 border-white">
-                    <Image src={img} alt="Gallery" fill className="object-cover" />
-                 </div>
-               ))}
-            </div>
-         </section>
-      </motion.main>
-
-      {/* 8. Floating Bottom Dock (Mobile) */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.nav
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: hapticSpring, delay: 1.5 }}
-            className="fixed bottom-8 inset-x-6 z-50 lg:hidden"
-          >
-            <div className="flex bg-charcoal/90 backdrop-blur-2xl rounded-full p-2 items-center justify-between shadow-2xl border border-white/10">
-               <button className="flex-1 flex flex-col items-center gap-1 py-2 text-silk hover:text-gold-accent transition-colors">
-                  <Heart className="size-5" />
-                  <span className="text-[8px] uppercase tracking-tighter">RSVP</span>
-               </button>
-               <div className="w-[1px] h-8 bg-white/10" />
-               <button 
-                onClick={() => window.open(`https://maps.google.com/maps?q=${encodeURIComponent(primaryEvent?.address || "")}`)}
-                className="flex-1 flex flex-col items-center gap-1 py-2 text-silk hover:text-gold-accent transition-colors"
-               >
-                  <Navigation className="size-5" />
-                  <span className="text-[8px] uppercase tracking-tighter">Navigate</span>
-               </button>
-               <div className="w-[1px] h-8 bg-white/10" />
-               <button 
-                onClick={() => window.open(getGoogleCalendarUrl(primaryEvent!, coupleNames))}
-                className="flex-1 flex flex-col items-center gap-1 py-2 text-silk hover:text-gold-accent transition-colors"
-               >
-                  <CalendarPlus className="size-5" />
-                  <span className="text-[8px] uppercase tracking-tighter">Calendar</span>
-               </button>
-               <div className="w-[1px] h-8 bg-white/10" />
-               <button className="flex-1 flex flex-col items-center gap-1 py-2 text-silk hover:text-gold-accent transition-colors">
-                  <Share2 className="size-5" />
-                  <span className="text-[8px] uppercase tracking-tighter">Share</span>
-               </button>
-            </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
-
-      <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .animate-pulse-slow { animation: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.05; transform: scale(1); } 50% { opacity: 0.08; transform: scale(1.05); } }
+    <div ref={containerRef} className="bg-[#050505] text-[#FDFBF7] overflow-x-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400;500&display=swap');
+        .font-serif { font-family: 'Bodoni Moda', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .tracking-editorial { letter-spacing: 0.6em; }
+        .kerning-loose { letter-spacing: 0.3em; }
+        .text-shadow-lux { 
+          text-shadow: 0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(255,215,0,0.1); 
+        }
       `}</style>
+
+      {/* ── HERO: LUXURY ABSTRACT ─────────────────────────────────── */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+          <Image src={d.heroImage} alt="Luxury Abstract" fill priority className="object-cover opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90" />
+        </motion.div>
+        
+        <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-20">
+          <div className="space-y-8">
+             <div className="flex items-center justify-center gap-10 opacity-30">
+              <div className="w-16 h-px bg-white" />
+              <p className="text-white font-sans text-[8px] uppercase tracking-editorial font-light">The Exclusive Collection</p>
+              <div className="w-16 h-px bg-white" />
+            </div>
+          </div>
+          
+          <h1 className="font-serif italic text-5xl md:text-9xl text-white font-light leading-[0.9] kerning-loose text-shadow-lux">
+            The Art of <br />
+            <span className="opacity-70 italic">Forever</span>
+          </h1>
+
+          <div className="space-y-8 pt-6">
+            <h2 className="font-serif text-3xl md:text-6xl text-[#E8D5A0] kerning-loose font-extralight drop-shadow-2xl">
+              {d.brideFirstName} <span className="opacity-30 italic">&amp;</span> {d.groomFirstName}
+            </h2>
+            <div className="flex flex-col items-center gap-3 text-white/50 font-sans text-[10px] uppercase tracking-editorial font-light">
+              <span className="opacity-40">Witnessed in</span>
+              <span className="text-white opacity-80">{d.weddingDate} <span className="mx-6 text-white/20">|</span> {d.city}</span>
+            </div>
+          </div>
+
+          <motion.div 
+            animate={{ y: [0, 10, 0], opacity: [0.1, 0.4, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-15vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
+          >
+             <div className="w-px h-32 bg-gradient-to-b from-white/20 to-transparent" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ── THE STORY: DARK MINIMALISM ─────────────────────────────── */}
+      <section className="relative py-72 px-6 md:px-24 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-40 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-20"
+          >
+            <h2 className="font-serif italic text-4xl md:text-8xl text-white font-light leading-tight tracking-tighter">
+              A silence <br /> spoken in gold
+            </h2>
+
+            <div className="space-y-12 font-sans text-sm md:text-lg text-white/50 font-extralight leading-relaxed tracking-[0.1em] max-w-xl opacity-90">
+              <p>True luxury is not in what is seen, but in what is felt. A shared glance across a quiet room. The weight of a promise that needs no words.</p>
+              <p>Join Alexander and Victoria for an evening of whispered elegance, where the world fades away and only love remains in focus.</p>
+            </div>
+            
+            <div className="pt-12">
+              <div className="w-32 h-px bg-white/10 mb-10" />
+              <p className="font-serif text-2xl italic text-[#E8D5A0] tracking-widest">{d.hashtag}</p>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 1.02 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 3 }}
+            className="relative"
+          >
+            <div className="absolute -inset-10 border border-white/5 rounded-full blur-3xl -z-10" />
+            <div className="relative aspect-[3/4] overflow-hidden grayscale contrast-125 opacity-70 hover:opacity-100 transition-all duration-1000 shadow-[0_60px_120px_rgba(0,0,0,0.5)]">
+              <Image src={d.storyImage} alt="Luxury Detail" fill className="object-cover scale-110 hover:scale-100 transition-transform duration-[7s]" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── THE EVENING: OBSIDIAN & COLD ───────────────────────────── */}
+      <section className="relative py-64 bg-[#050505] text-[#FDFBF7] overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none scale-125">
+          <Image src={d.heroImage} alt="" fill className="object-cover" />
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-40">
+          <div className="space-y-10">
+            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-30">The Itinerary of Excellence</span>
+            <h2 className="font-serif italic text-4xl md:text-7xl font-light tracking-wide text-[#E8D5A0]">Bespoke Evening</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-32 py-24 text-left border-y border-white/5">
+            {[
+              { title: 'The Arrival', time: '19:00', desc: 'Pre-ceremony aperitifs at the Mirror Lounge.' },
+              { title: 'The Covenant', time: '20:30', desc: 'A service of light and sound in the Obsidian Hall.' },
+              { title: 'The Soiree', time: '22:00', desc: 'Curated dining and jazz under the Mediterranean stars.' },
+              { title: 'The Departure', time: '01:00', desc: 'A moonlit farewell following the formal celebration.' },
+            ].map((event, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.1 }}
+                className="space-y-8 py-10"
+              >
+                <div className="flex items-center justify-between opacity-30 border-b border-white/10 pb-4">
+                  <p className="font-sans text-[10px] tracking-editorial uppercase">{event.time}</p>
+                  <div className="w-1 h-1 bg-white" />
+                </div>
+                <div className="space-y-4">
+                  <h3 className="font-serif text-4xl font-light tracking-tighter text-white opacity-90">{event.title}</h3>
+                  <p className="font-sans text-[11px] opacity-40 font-extralight leading-relaxed max-w-sm tracking-wide">
+                    {event.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FINALE: ETERNAL ABSTRACT ─────────────────────────────── */}
+      <section className="relative h-screen bg-black flex items-center justify-center overflow-hidden">
+        <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-32">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-20"
+          >
+            <div className="flex flex-col items-center gap-12 opacity-40">
+               <div className="w-32 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+               <div className="w-5 h-5 border-[0.5px] border-white rounded-full flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-[#E8D5A0] rounded-full" />
+               </div>
+            </div>
+
+            <h2 className="font-serif italic text-4xl md:text-9xl text-white font-light leading-none tracking-tighter mix-blend-screen">
+              Beyond Time. <br />
+              <span className="opacity-20 italic">Forever Us.</span>
+            </h2>
+
+            <div className="space-y-6 pt-16">
+              <p className="font-sans text-[12px] uppercase tracking-[1em] text-[#E8D5A0] font-medium drop-shadow-xl">{d.brideFirstName} & {d.groomFirstName}</p>
+              <div className="w-16 h-px bg-white/10 mx-auto" />
+              <p className="font-sans text-[8px] uppercase tracking-[1.2em] text-white/10 italic">A Legacy by Invitely</p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }

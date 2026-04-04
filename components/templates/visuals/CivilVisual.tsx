@@ -7,7 +7,7 @@ export default function CivilVisual({ name, priority }: { name: string; priority
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#1c1c18]">
       <Image
-        src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop"
+        src="/images/templates/civil/hero_god_tier.png"
         alt="Civil Wedding Portrait"
         fill
         priority={priority}

@@ -49,14 +49,16 @@ export const TraditionCard = ({
 
   const renderVisual = () => {
     switch (theme) {
-      case "hindu": return <HinduVisual name={name} priority={priority} />;
+      case "hindu": 
+      case "south-indian": return <HinduVisual name={name} priority={priority} />;
       case "muslim": return <MuslimVisual name={name} priority={priority} />;
-      case "christian": return <ChristianVisual name={name} priority={priority} />;
+      case "christian": 
+      case "minimal": return <ChristianVisual name={name} priority={priority} />;
       case "royal": return <RoyalVisual name={name} priority={priority} />;
       case "sikh": return <SikhVisual name={name} priority={priority} />;
       case "civil": return <CivilVisual name={name} priority={priority} />;
       case "luxury": return <LuxuryVisual name={name} priority={priority} />;
-      default: return <div className="bg-charcoal w-full h-full" />;
+      default: return <div className="bg-charcoal w-full h-full opacity-20" />;
     }
   };
 

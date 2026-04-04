@@ -6,7 +6,7 @@ export default function LuxuryVisual({ name, priority }: { name: string; priorit
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#0f0f0f]">
       <Image
-        src="https://images.unsplash.com/photo-1494145942190-6da1150fbf48?q=80&w=1200&auto=format&fit=crop"
+        src="/images/templates/luxury/hero_god_tier.png"
         alt="Luxury Materiality"
         fill
         priority={priority}

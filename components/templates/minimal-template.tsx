@@ -1,151 +1,196 @@
-import Image from "next/image";
-import Link from "next/link";
-import { CalendarPlus, ExternalLink, MapPin } from "lucide-react";
+"use client";
 
-import { buttonStyles } from "@/components/ui/button";
-import { getGoogleCalendarUrl } from "@/lib/calendar";
-import { getCoupleNames } from "@/lib/invites";
+import React, { useRef } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
-import { type TemplateInvite } from "@/components/templates/render-invite";
+const DEFAULT_DATA = {
+  brideFirstName: "Aarohi", brideLastName: "Verma",
+  groomFirstName: "Vihaan", groomLastName: "Reddy",
+  weddingDate: "Saturday, June 20, 2026",
+  city: "Bangalore",
+  hashtag: "#AarohiVihaanUnion",
+  heroImage: "/images/templates/civil/hero_god_tier.png", // Using high-end civil as base for minimal
+  storyImage: "/images/templates/south-indian/story.png",
+  ritualsImage: "/images/templates/south-indian/rituals.png",
+};
 
 export function MinimalTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  const coupleNames = getCoupleNames(invite.data);
-  const primaryEvent = invite.data.events[0];
-  const heroImage = invite.data.heroImage || invite.data.gallery[0];
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+  // Parallax transforms
+  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 1.05]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
+  const heroTextY = useTransform(smoothProgress, [0, 0.2], [0, 50]);
+  
+  const d = {
+    ...DEFAULT_DATA,
+    brideFirstName: invite.data.brideName.split(" ")[0],
+    groomFirstName: invite.data.groomName.split(" ")[0],
+    weddingDate: formatDisplayDate(invite.data.weddingDate),
+    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "India",
+    hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+  };
 
   return (
-    <div className="overflow-hidden rounded-[34px] bg-[linear-gradient(180deg,#fffdf9_0%,#fff3e7_100%)] text-stone-800 shadow-[0_24px_80px_rgba(122,31,61,0.1)]">
-      <section className="relative overflow-hidden px-6 py-10 sm:px-10 sm:py-14">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(246,221,224,0.7),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(201,154,60,0.12),_transparent_30%)]" />
-        <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-maroon/60">
-              Wedding Website
-            </p>
-            <h1 className="mt-5 font-heading text-5xl text-maroon sm:text-6xl">{coupleNames}</h1>
-            <p className="mt-5 text-base leading-8 text-stone-600">{invite.data.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3 text-sm">
-              <div className="rounded-full bg-white/85 px-4 py-3 text-stone-700 ring-1 ring-maroon/10">
-                {formatDisplayDate(invite.data.weddingDate)}
-              </div>
-              {primaryEvent ? (
-                <div className="rounded-full bg-white/85 px-4 py-3 text-stone-700 ring-1 ring-maroon/10">
-                  {primaryEvent.venue}
-                </div>
-              ) : null}
-            </div>
-            {!preview && primaryEvent ? (
-              <Link
-                href={getGoogleCalendarUrl(primaryEvent, coupleNames)}
-                className={buttonStyles({ className: "mt-8" })}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <CalendarPlus className="size-4" />
-                Add to Calendar
-              </Link>
-            ) : null}
+    <div ref={containerRef} className="bg-white text-charcoal overflow-x-hidden selection:bg-black selection:text-white">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400&display=swap');
+        .font-serif { font-family: 'Bodoni Moda', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .tracking-editorial { letter-spacing: 0.6em; }
+        .kerning-loose { letter-spacing: 0.3em; }
+        .text-shadow-ethereal { 
+           text-shadow: 0 4px 20px rgba(255,255,255,0.4), 0 2px 10px rgba(0,0,0,0.05); 
+        }
+      `}</style>
+
+      {/* ── HERO: PURE MINIMAL ──────────────────────────────────── */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+          <Image src={d.heroImage} alt="Minimal" fill priority className="object-cover opacity-30 grayscale" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/50 to-white" />
+        </motion.div>
+        
+        <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-12">
+          <div className="space-y-4">
+             <div className="w-12 h-px bg-black opacity-10 mx-auto" />
+             <p className="text-[10px] uppercase tracking-editorial font-light opacity-40">Modern Minimal Collection</p>
+             <div className="w-12 h-px bg-black opacity-10 mx-auto" />
           </div>
-          <div className="overflow-hidden rounded-[30px] border border-white/60 bg-white/75 p-3 shadow-[0_20px_60px_rgba(122,31,61,0.08)]">
-            {heroImage ? (
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[24px]">
-                <Image src={heroImage} alt={coupleNames} fill className="object-cover" sizes="520px" />
-              </div>
-            ) : (
-              <div className="flex aspect-[4/5] items-center justify-center rounded-[24px] bg-blush text-center text-maroon">
-                Add your first gallery image to personalize this template.
-              </div>
-            )}
+          
+          <h1 className="font-serif italic text-4xl md:text-8xl text-black font-light leading-[1.0] kerning-loose text-shadow-ethereal">
+            Simply, <br />
+            <span className="opacity-40 italic">Ours.</span>
+          </h1>
+
+          <div className="space-y-6 pt-4">
+            <h2 className="font-serif text-3xl md:text-5xl text-black/80 kerning-loose font-extralight">
+              {d.brideFirstName} <span className="opacity-20 italic">&amp;</span> {d.groomFirstName}
+            </h2>
+            <div className="flex flex-col items-center gap-4 text-black/40 font-sans text-[10px] uppercase tracking-editorial font-light">
+              <span>{d.weddingDate}</span>
+              <span>{d.city}</span>
+            </div>
+          </div>
+
+          <motion.div 
+            animate={{ y: [0, 8, 0], opacity: [0.1, 0.3, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-15vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+          >
+             <div className="w-px h-32 bg-black/10" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ── THE STORY: THE VOID & THE LIGHT ─────────────────────────── */}
+      <section className="relative py-64 px-6 md:px-24 bg-white">
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+           <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-12"
+          >
+            <h2 className="font-serif italic text-4xl md:text-6xl text-black font-extralight leading-tight">
+              A love found <br /> in the quiet
+            </h2>
+
+            <div className="space-y-8 font-sans text-sm md:text-base text-black/60 font-light leading-relaxed tracking-widest max-w-lg">
+              <p>In a world of constant motion, they found a stillness in each other. A shared language of quiet mornings and long walks under clear skies.</p>
+              <p>They invite you to be part of their beginning, where every detail is a reflection of a love that was chosen with intentionality and grace.</p>
+            </div>
+            
+            <div className="pt-8">
+              <p className="font-serif text-lg italic text-black/30 tracking-widest uppercase">{d.hashtag}</p>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 3 }}
+            className="relative"
+          >
+            <div className="relative aspect-[3/4] overflow-hidden grayscale contrast-75 bg-black/5">
+              <Image src={d.storyImage} alt="Minimal Detail" fill className="object-cover scale-110 hover:scale-100 transition-transform duration-[8s] opacity-80" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── THE MOMENTS: SILENT GRID ────────────────────────────────── */}
+      <section className="relative py-52 bg-white text-black overflow-hidden border-t border-black/5">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-40">
+          <div className="space-y-10">
+            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-20">The Timeline of Union</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-black/70">The Moments</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-x-24 gap-y-40 py-16">
+            {[
+              { title: 'The Arrival', time: '12:00', desc: 'Guests gather at the Open Hall.' },
+              { title: 'The Vows', time: '13:30', desc: 'A simple exchange of promises.' },
+              { title: 'The Feast', time: '15:00', desc: 'A communal meal for friends and family.' },
+              { title: 'The Sunset', time: '18:00', desc: 'Cherishing the beginning of forever.' },
+            ].map((event, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.98 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5, delay: i * 0.1 }}
+                className="text-left space-y-4"
+              >
+                <div className="flex items-center gap-4 border-b border-black/5 pb-2">
+                   <p className="font-sans text-[8px] tracking-editorial uppercase opacity-30">{event.time}</p>
+                   <div className="w-1 h-1 bg-black/10 rounded-full" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-serif text-2xl font-light tracking-tight text-black/80">{event.title}</h3>
+                  <p className="font-sans text-[10px] opacity-40 font-extralight leading-relaxed max-w-sm tracking-wide">
+                    {event.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="grid gap-8 px-6 pb-10 sm:px-10 lg:grid-cols-[1fr_0.9fr]">
-        <div className="space-y-5">
-          <div className="rounded-[28px] border border-maroon/10 bg-white/80 p-6">
-            <h2 className="font-heading text-3xl text-maroon">Events</h2>
-            <div className="mt-6 space-y-4">
-              {invite.data.events.map((event) => (
-                <div key={event.id} className="rounded-[24px] border border-maroon/10 bg-white px-5 py-5">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <h3 className="font-heading text-2xl text-maroon">{event.title}</h3>
-                      <p className="mt-1 text-sm font-medium text-stone-500">
-                        {formatDisplayDate(event.date)}
-                        {event.time ? ` - ${event.time}` : ""}
-                      </p>
-                    </div>
-                    {!preview ? (
-                      <Link
-                        href={getGoogleCalendarUrl(event, coupleNames)}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-maroon"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Add to calendar
-                        <ExternalLink className="size-4" />
-                      </Link>
-                    ) : null}
-                  </div>
-                  <div className="mt-4 flex items-start gap-3 text-sm text-stone-600">
-                    <MapPin className="mt-0.5 size-4 text-gold" />
-                    <div>
-                      <p className="font-semibold text-stone-800">{event.venue}</p>
-                      <p>{event.address}</p>
-                    </div>
-                  </div>
-                  {event.description ? (
-                    <p className="mt-4 text-sm leading-7 text-stone-600">{event.description}</p>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* ── FINALE: ETERNAL WHITE ─────────────────────────────────── */}
+      <section className="relative h-screen bg-white flex items-center justify-center overflow-hidden">
+        <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-24">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="space-y-16"
+          >
+            <div className="w-px h-40 bg-black/5 mx-auto" />
+            
+            <h2 className="font-serif italic text-4xl md:text-8xl text-black font-light leading-none tracking-tighter mix-blend-multiply opacity-70">
+              One Love. <br />
+              <span className="opacity-10 italic">Pure Silence.</span>
+            </h2>
 
-          {invite.data.gallery.length > 0 ? (
-            <div className="rounded-[28px] border border-maroon/10 bg-white/80 p-6">
-              <h2 className="font-heading text-3xl text-maroon">Gallery</h2>
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                {invite.data.gallery.map((image, index) => (
-                  <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-[22px]">
-                    <Image
-                      src={image}
-                      alt={`${coupleNames} gallery image ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="280px"
-                    />
-                  </div>
-                ))}
-              </div>
+            <div className="space-y-6 pt-16">
+              <p className="font-sans text-[11px] uppercase tracking-[1em] text-black/40 font-light">{d.brideFirstName} & {d.groomFirstName}</p>
+              <p className="font-sans text-[8px] uppercase tracking-[1.2em] text-black/10 italic">Invitely Minimalist</p>
             </div>
-          ) : null}
-        </div>
-
-        <div className="space-y-5">
-          {primaryEvent ? (
-            <div className="rounded-[28px] border border-maroon/10 bg-white/80 p-6">
-              <h2 className="font-heading text-3xl text-maroon">Venue</h2>
-              <p className="mt-2 text-sm leading-7 text-stone-600">
-                Find the celebration at {primaryEvent.venue}.
-              </p>
-              <div className="mt-5 overflow-hidden rounded-[22px] border border-maroon/10">
-                <iframe
-                  title={`Map for ${primaryEvent.venue}`}
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(primaryEvent.address)}&z=15&output=embed`}
-                  className="h-72 w-full border-0"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          ) : null}
+          </motion.div>
         </div>
       </section>
     </div>

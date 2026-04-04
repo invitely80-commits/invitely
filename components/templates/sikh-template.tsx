@@ -1,300 +1,212 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
 const DEFAULT_DATA = {
-  brideFirstName: "Preet",
-  brideLastName: "Kaur",
-  groomFirstName: "Arjun",
-  groomLastName: "Singh",
-  weddingDate: "Sunday, the 8th of March, 2026",
-  weddingDateShort: "08 . 03 . 2026",
-  venue: "Sri Guru Singh Sabha Gurdwara",
-  venueAddress: "Race Course Road, Bengaluru — 560 001",
-  receptionVenue: "The Chancery Pavilion",
-  venueMapsUrl: "https://maps.google.com",
-  whatsappNumber: "919999999999",
-  instagramHandle: "@arjunpreetbliss",
-  events: [
-    { name: "Vatna Ceremony", date: "7 Mar 2026", time: "11:00 AM", venue: "Bride's Residence", icon: "🌼" },
-    { name: "Anand Karaj", date: "8 Mar 2026", time: "9:00 AM", venue: "Sri Guru Singh Sabha", icon: "🙏" },
-    { name: "Milni & Lunch", date: "8 Mar 2026", time: "12:00 PM", venue: "Sri Guru Singh Sabha", icon: "🍛" },
-    { name: "Reception", date: "8 Mar 2026", time: "7:00 PM", venue: "The Chancery Pavilion", icon: "✨" },
-  ],
-  brideFamily: { father: "Gurpreet Singh Kaur", mother: "Manpreet Kaur", siblings: "Harpreet & Simran" },
-  groomFamily: { father: "Balvinder Singh", mother: "Rupinder Kaur", siblings: "Rajveer Singh" },
-  hashtag: "#ArjunPreetDiShaadi",
-  photoUrl: "https://images.unsplash.com/photo-1605648916319-cf082f7524a1?q=80&w=1600&auto=format&fit=crop",
+  brideFirstName: "Gurleen", brideLastName: "Kaur",
+  groomFirstName: "Ishwar", groomLastName: "Singh",
+  weddingDate: "Sunday, December 6, 2026",
+  city: "Amritsar",
+  hashtag: "#GurleenIshwarAnandKaraj",
+  heroImage: "/images/templates/sikh/hero_god_tier.png",
+  storyImage: "/images/templates/sikh/hero_god_tier.png",
+  ritualsImage: "/images/templates/sikh/hero_god_tier.png",
 };
-
-function useFadeIn() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          el.style.opacity = "1";
-          el.style.transform = "translateY(0)";
-        }
-      },
-      { threshold: 0.12 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return ref;
-}
-
-// Khanda SVG symbol
-function KhandaSvg({ size = 80, color = "#F4830A" }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
-      <ellipse cx="50" cy="50" rx="48" ry="48" stroke={color} strokeWidth="1" fill="none" opacity="0.3" />
-      <path d="M50 15 L50 85 M30 28 Q50 20 70 28 M30 72 Q50 80 70 72" stroke={color} strokeWidth="2.5" fill="none" opacity="0.8" />
-      <circle cx="50" cy="50" r="10" fill="none" stroke={color} strokeWidth="2" opacity="0.8" />
-      <path d="M40 40 Q30 50 40 60 Q50 55 50 50 Q50 45 40 40Z" fill={color} opacity="0.5" />
-      <path d="M60 40 Q70 50 60 60 Q50 55 50 50 Q50 45 60 40Z" fill={color} opacity="0.5" />
-    </svg>
-  );
-}
-
-function OrangeDivider() {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "1.5rem auto", maxWidth: "300px" }}>
-      <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, #F4830A)" }} />
-      <KhandaSvg size={28} color="#F4830A" />
-      <div style={{ flex: 1, height: "1px", background: "linear-gradient(to left, transparent, #F4830A)" }} />
-    </div>
-  );
-}
 
 export function SikhTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const h = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", h, { passive: true });
-    return () => window.removeEventListener("scroll", h);
-  }, []);
-  const f1 = useFadeIn(), f2 = useFadeIn(), f3 = useFadeIn(), f4 = useFadeIn(), f5 = useFadeIn();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  // Map invite data to template structure
-  const data = invite.data;
-  const brideParts = data.brideName.split(" ");
-  const groomParts = data.groomName.split(" ");
-
+  // Parallax transforms
+  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 1.15]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
+  const heroTextY = useTransform(smoothProgress, [0, 0.2], [0, 150]);
+  
   const d = {
     ...DEFAULT_DATA,
-    brideFirstName: brideParts[0],
-    brideLastName: brideParts.slice(1).join(" ") || DEFAULT_DATA.brideLastName,
-    groomFirstName: groomParts[0],
-    groomLastName: groomParts.slice(1).join(" ") || DEFAULT_DATA.groomLastName,
-    weddingDate: formatDisplayDate(data.weddingDate),
-    weddingDateShort: data.weddingDate.split("-").reverse().join(" . "),
-    venue: data.events[0]?.venue || DEFAULT_DATA.venue,
-    venueAddress: data.events[0]?.address || DEFAULT_DATA.venueAddress,
-    photoUrl: data.heroImage || data.gallery[0] || DEFAULT_DATA.photoUrl,
-    whatsappNumber: data.contactPhone || DEFAULT_DATA.whatsappNumber,
-    hashtag: data.description.includes("#") ? data.description.match(/#\w+/)?.[0] : DEFAULT_DATA.hashtag,
-    events: data.events.map(ev => ({
-      name: ev.title,
-      date: formatDisplayDate(ev.date),
-      time: ev.time,
-      venue: ev.venue,
-      icon: ev.title.toLowerCase().includes("vatna") ? "🌼" :
-        ev.title.toLowerCase().includes("karaj") ? "🙏" :
-          ev.title.toLowerCase().includes("milni") ? "🍛" : "✨"
-    }))
+    brideFirstName: invite.data.brideName.split(" ")[0],
+    groomFirstName: invite.data.groomName.split(" ")[0],
+    weddingDate: formatDisplayDate(invite.data.weddingDate),
+    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Amritsar",
+    hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
   };
 
   return (
-    <div style={styles.root}>
-      <style>{globalCSS}</style>
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@200;300;400;500&display=swap');
+        .font-serif { font-family: 'Bodoni Moda', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .tracking-editorial { letter-spacing: 0.5em; }
+        .kerning-loose { letter-spacing: 0.15em; }
+        .text-shadow-hero { 
+          text-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.3); 
+        }
+      `}</style>
 
-      {/* ── HERO ── */}
-      <section style={styles.hero}>
-        <div style={{ ...styles.heroBg, transform: `translateY(${scrollY * 0.45}px)` }}>
-          <Image
-            src={d.photoUrl}
-            alt="Sikh Wedding Hero"
-            fill
-            priority
-            style={{ objectFit: "cover" }}
-          />
-          <div style={styles.heroOverlay} />
-        </div>
-        <div style={styles.heroContent}>
-          <div style={{ marginBottom: "1.5rem" }}><KhandaSvg size={70} color="#F4830A" /></div>
-          <p style={styles.heroGurmukhi}>ੴ ਸਤਿ ਨਾਮੁ ਕਰਤਾ ਪੁਰਖੁ</p>
-          <OrangeDivider />
-          <p style={styles.heroInvite}>Together with their families</p>
-          <h1 style={styles.heroNames}>
-            <span style={styles.heroName}>{d.brideFirstName}</span>
-            <span style={styles.heroWeds}>weds</span>
-            <span style={styles.heroName}>{d.groomFirstName}</span>
+      {/* ── HERO: GOLDEN REFLECTION ─────────────────────────────── */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+          <Image src={d.heroImage} alt="Golden Temple" fill priority className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" />
+        </motion.div>
+        
+        <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
+          <div className="space-y-6">
+            <div className="w-24 h-px bg-[#E8D5A0] mx-auto" />
+            <p className="text-white font-sans text-[10px] uppercase tracking-editorial font-medium">Satnam Waheguru</p>
+            <div className="w-24 h-px bg-[#E8D5A0] mx-auto" />
+          </div>
+          
+          <h1 className="font-serif italic text-5xl md:text-8xl text-white font-light leading-[1.0] kerning-loose text-shadow-hero">
+            By His Divine Command, <br />
+            <span className="opacity-90 italic">Two Souls, One Light</span>
           </h1>
-          <OrangeDivider />
-          <p style={styles.heroDate}>{d.weddingDateShort}</p>
-          <p style={styles.heroVenue}>{d.venue}</p>
-          <div style={{ marginTop: "3rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div style={{ width: "1px", height: "50px", background: "linear-gradient(to bottom, transparent, #F4830A)" }} />
-          </div>
-        </div>
-      </section>
 
-      {/* ── GURBANI BAND ── */}
-      <section style={{ background: "#1A2E5E", padding: "3.5rem 2rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.04 }}>
-          {[...Array(6)].map((_, i) => (
-            <div key={i} style={{ position: "absolute", top: `${Math.random() * 80}%`, left: `${Math.random() * 80}%` }}>
-              <KhandaSvg size={120} color="#F4830A" />
+          <div className="space-y-6 pt-6">
+            <h2 className="font-serif text-3xl md:text-5xl text-[#E8D5A0] kerning-loose font-medium text-shadow-hero">
+              {d.brideFirstName} <span className="opacity-60 italic">&amp;</span> {d.groomFirstName}
+            </h2>
+            <div className="flex items-center justify-center gap-6 text-white/80 font-sans text-[10px] uppercase tracking-editorial font-light drop-shadow-md">
+              <span>{d.weddingDate}</span>
+              <div className="w-px h-6 bg-white/20" />
+              <span>{d.city}</span>
             </div>
-          ))}
-        </div>
-        <div ref={f1} style={styles.fadeBlock}>
-          <p style={{ fontFamily: "'Noto Sans Gurmukhi',sans-serif", fontSize: "clamp(1rem,2.5vw,1.5rem)", color: "#F4830A", lineHeight: 2, marginBottom: "0.5rem" }}>
-            ਪਰਮੇਸਰਿ ਆਪਿ ਮਿਲਾਏ ਤਾਂ ਵਿਛੋੜਾ ਕੋ ਨ ਕਰਈ
-          </p>
-          <p style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(0.9rem,2vw,1.2rem)", color: "rgba(244,131,10,0.7)", fontStyle: "italic" }}>
-            &quot;When the Lord Himself unites, no one can separate them.&quot;
-          </p>
-          <p style={{ color: "rgba(244,131,10,0.4)", fontSize: "0.72rem", letterSpacing: "0.12em", marginTop: "0.8rem" }}>— Sri Guru Granth Sahib Ji</p>
+          </div>
+
+          <motion.div 
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-15vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+          >
+            <div className="w-px h-24 bg-gradient-to-b from-[#E8D5A0] to-transparent opacity-40" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ── THE ANAND KARAJ: HERITAGE LAYOUT ───────────────────────── */}
+      <section className="relative py-64 px-6 md:px-24 bg-[#F9F7F5]">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-16"
+          >
+             <div className="flex items-center gap-8">
+              <span className="text-[#B45309] text-[10px] tracking-editorial uppercase font-sans font-bold">The Anand Karaj</span>
+              <div className="w-16 h-px bg-[#B45309]/20" />
+            </div>
+            
+            <h2 className="font-serif italic text-4xl md:text-7xl text-[#1A1A1A] font-light leading-tight">
+              A love that <br /> serves and glows
+            </h2>
+
+            <div className="space-y-10 font-sans text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed tracking-wider opacity-85 max-w-lg">
+              <p>In the presence of the Guru, where the soul finds its ultimate rest, they step into a new chapter—not just as partners, but as companions in service and in love.</p>
+              <p>They invite you to Amritsar, to witness the four circumambulations (Laavan) that bind their destinies in the light of the eternal.</p>
+            </div>
+            
+            <div className="pt-12">
+              <p className="font-serif text-xl italic text-[#B45309]">{d.hashtag}</p>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2.5 }}
+            className="relative"
+          >
+             <div className="absolute inset-0 bg-[#004A7C]/5 translate-x-12 translate-y-12 -z-10" />
+            <div className="relative aspect-[4/5] overflow-hidden grayscale-[40%] hover:grayscale-0 transition-all duration-1000 shadow-2xl">
+              <Image src={d.storyImage} alt="Rituals" fill className="object-cover scale-105 hover:scale-100 transition-transform duration-[6s]" />
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── COUPLE ── */}
-      <section style={{ background: "#F7F4EE", padding: "5rem 2rem", textAlign: "center" }}>
-        <div ref={f2} style={styles.fadeBlock}>
-          <p style={styles.sectionLabel}>The Couple</p>
-          <OrangeDivider />
-          <div style={{ display: "flex", gap: "2rem", justifyContent: "center", alignItems: "center", flexWrap: "wrap", marginTop: "2rem" }}>
+      {/* ── TRADITIONS: SAFFRON & BLUE ─────────────────────────────── */}
+      <section className="relative py-52 bg-[#002B49] text-[#FDFBF7] overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none scale-150">
+          <Image src="/images/templates/south-indian/gopuram_vibrant.png" alt="" fill className="object-cover grayscale brightness-200" />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+          <div className="space-y-8">
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Sacred Vows</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-[#E8D5A0]">Bespoke Traditions</h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-24 py-16">
             {[
-              { name: d.brideFirstName, surname: d.brideLastName, father: d.brideFamily.father, mother: d.brideFamily.mother, icon: "🌸", role: "The Bride" },
-              { name: d.groomFirstName, surname: d.groomLastName, father: d.groomFamily.father, mother: d.groomFamily.mother, icon: "🦅", role: "The Groom" },
-            ].map((p, i) => (
-              <div key={i} style={{ textAlign: "center", flex: 1, minWidth: "220px", maxWidth: "300px" }}>
-                <div style={{ width: "110px", height: "110px", borderRadius: "50%", border: "2px solid #F4830A", background: "rgba(244,131,10,0.06)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", fontSize: "2.5rem" }}>{p.icon}</div>
-                <p style={{ color: "#1A2E5E", fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase" }}>{p.role}</p>
-                <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "2.2rem", fontWeight: 400, color: "#1A2E5E", margin: "0.4rem 0 0.2rem" }}>{p.name}</h2>
-                <p style={{ color: "#F4830A", fontSize: "0.9rem", letterSpacing: "0.06em", marginBottom: "1rem" }}>{p.surname}</p>
-                <div style={{ width: "40px", height: "2px", background: "linear-gradient(to right, #1A2E5E, #F4830A)", margin: "0.8rem auto" }} />
-                <p style={{ color: "#5A6A85", fontSize: "0.8rem", lineHeight: 1.8 }}>
-                  Child of<br /><strong style={{ color: "#1A2E5E" }}>{p.father}</strong><br />&amp; <strong style={{ color: "#1A2E5E" }}>{p.mother}</strong>
+              { title: 'The Baraat', time: '9:00 AM', desc: 'A grand procession of joy and drums.' },
+              { title: 'The Pheras', time: '11:00 AM', desc: 'Sacred circles in the presence of Guru Granth Sahib.' },
+              { title: 'The Langar', time: '1:00 PM', desc: 'A community feast shared in gratitude and humility.' },
+            ].map((event, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.2 }}
+                className="space-y-10 group"
+              >
+                <div className="relative flex justify-center">
+                   <div className="w-12 h-px bg-[#E8D5A0]/20 group-hover:w-20 transition-all duration-700" />
+                </div>
+                <div className="space-y-4">
+                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] font-medium">{event.time}</p>
+                  <h3 className="font-serif text-2xl font-light tracking-widest">{event.title}</h3>
+                </div>
+                <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-[240px] mx-auto tracking-wide">
+                  {event.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PARALLAX ── */}
-      <section style={{ position: "relative", minHeight: "65vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.28}px)` }}>
-          <Image
-            src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1600&auto=format&fit=crop"
-            alt="Anand Karaj Venue"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <div style={{ position: "absolute", inset: 0, background: "rgba(26,46,94,0.75)" }} />
-        </div>
-        <div ref={f3} style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "4rem 2rem" }}>
-          <div style={{ display: "flex", justifyContent: "center" }}><KhandaSvg size={60} color="#F4830A" /></div>
-          <p style={{ color: "#F4830A", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", margin: "1rem 0 0.5rem" }}>Anand Karaj</p>
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(2rem,5vw,3.5rem)", color: "#fff", fontWeight: 300 }}>{d.venue}</h2>
-          <p style={{ color: "rgba(244,131,10,0.8)", fontSize: "0.9rem", marginTop: "0.5rem" }}>{d.venueAddress}</p>
-          <div style={{ margin: "1rem 0", width: "60px", height: "2px", background: "linear-gradient(to right, #1A2E5E, #F4830A)", marginLeft: "auto", marginRight: "auto" }} />
-          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem" }}>{d.weddingDate}</p>
-          {!preview && (
-            <a href={d.venueMapsUrl} target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: "1.5rem", border: "1px solid #F4830A", color: "#F4830A", padding: "0.7rem 2rem", textDecoration: "none", fontSize: "0.8rem", letterSpacing: "0.1em", borderRadius: "2px" }}>
-              Get Directions →
-            </a>
-          )}
-        </div>
-      </section>
-
-      {/* ── EVENTS ── */}
-      <section style={{ background: "#F7F4EE", padding: "5rem 2rem", textAlign: "center" }}>
-        <div ref={f4} style={styles.fadeBlock}>
-          <p style={styles.sectionLabel}>Celebrations</p>
-          <OrangeDivider />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(1.8rem,4vw,3rem)", color: "#1A2E5E", fontWeight: 400, marginBottom: "2.5rem" }}>Schedule of Events</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
-            {d.events.map((ev, i) => (
-              <div key={i} style={{ background: "#fff", borderRadius: "2px", padding: "2rem 1.5rem", textAlign: "left", borderLeft: "3px solid", borderLeftColor: i % 2 === 0 ? "#1A2E5E" : "#F4830A", boxShadow: "0 2px 20px rgba(26,46,94,0.06)" }}>
-                <div style={{ fontSize: "2rem", marginBottom: "0.8rem" }}>{ev.icon}</div>
-                <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: "1.2rem", color: "#1A2E5E" }}>{ev.name}</h3>
-                <div style={{ width: "30px", height: "2px", background: i % 2 === 0 ? "#1A2E5E" : "#F4830A", margin: "0.8rem 0" }} />
-                <p style={{ color: "#F4830A", fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.06em" }}>{ev.date}</p>
-                <p style={{ fontFamily: "'Playfair Display',serif", fontSize: "1.1rem", color: "#1A2E5E" }}>{ev.time}</p>
-                <p style={{ color: "#8A98B0", fontSize: "0.78rem", marginTop: "0.3rem" }}>{ev.venue}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── RSVP ── */}
-      <section style={{ background: "linear-gradient(135deg, #1A2E5E 0%, #0D1E45 100%)", padding: "5rem 2rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "-40px", right: "-40px", opacity: 0.05 }}><KhandaSvg size={300} color="#F4830A" /></div>
-        <div style={{ position: "absolute", bottom: "-40px", left: "-40px", opacity: 0.05 }}><KhandaSvg size={300} color="#F4830A" /></div>
-        <div ref={f5} style={styles.fadeBlock}>
-          <p style={{ color: "#F4830A", fontSize: "0.72rem", letterSpacing: "0.25em", textTransform: "uppercase" }}>You are invited</p>
-          <OrangeDivider />
-          <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(2rem,5vw,3.5rem)", color: "#fff", fontWeight: 300, marginBottom: "1rem" }}>
-            {d.brideFirstName} &amp; {d.groomFirstName}
-          </h2>
-          <p style={{ color: "rgba(244,131,10,0.7)", fontSize: "0.95rem", lineHeight: 1.8, maxWidth: "500px", margin: "0 auto 2.5rem" }}>
-            With the blessings of Waheguru and our families, we humbly invite you to witness our Anand Karaj and share in our joy.
-          </p>
-          {!preview && (
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" style={{ background: "#F4830A", color: "#fff", padding: "0.85rem 2.5rem", textDecoration: "none", fontSize: "0.85rem", letterSpacing: "0.08em", fontWeight: 500, borderRadius: "2px", display: "inline-block" }}>
-                RSVP via WhatsApp
-              </a>
-              <a href={d.venueMapsUrl} target="_blank" rel="noreferrer" style={{ border: "1px solid rgba(244,131,10,0.4)", color: "#F4830A", padding: "0.85rem 2.5rem", textDecoration: "none", fontSize: "0.85rem", letterSpacing: "0.08em", borderRadius: "2px", display: "inline-block" }}>
-                View Venue
-              </a>
+      {/* ── FINALE: ETERNAL PEACE ─────────────────────────────── */}
+      <section className="relative h-screen bg-[#050505] flex items-center justify-center overflow-hidden">
+        <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="space-y-12"
+          >
+            <div className="flex items-center justify-center gap-16 opacity-30">
+              <div className="w-16 h-px bg-white" />
+              <div className="w-3 h-3 rounded-full border border-white" />
+              <div className="w-16 h-px bg-white" />
             </div>
-          )}
-          <OrangeDivider />
-          <p style={{ color: "rgba(244,131,10,0.35)", fontSize: "0.72rem", letterSpacing: "0.1em" }}>{d.hashtag} · {d.weddingDateShort}</p>
+
+            <h2 className="font-serif italic text-4xl md:text-8xl text-white font-light leading-snug tracking-tighter">
+              Joined in faith, <br />
+              <span className="text-[#E8D5A0]/90 italic">Guided by grace.</span>
+            </h2>
+
+            <div className="space-y-4 pt-12">
+              <p className="font-sans text-[11px] uppercase tracking-[0.8em] text-[#E8D5A0]">{d.brideFirstName} & {d.groomFirstName}</p>
+              <p className="font-sans text-[8px] uppercase tracking-[0.6em] text-white/20">Invitely Luxury Heritage</p>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  root: { fontFamily: "'DM Sans',sans-serif", background: "#F7F4EE", color: "#1A2E5E", overflowX: "hidden" },
-  hero: { position: "relative", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  heroBg: { position: "absolute", inset: 0, willChange: "transform" },
-  heroBgImg: { width: "100%", height: "115%", objectFit: "cover" },
-  heroOverlay: { position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(26,46,94,0.7) 0%, rgba(26,46,94,0.45) 50%, rgba(26,46,94,0.85) 100%)" },
-  heroContent: { position: "relative", zIndex: 2, textAlign: "center", padding: "2rem" },
-  heroGurmukhi: { fontFamily: "'Noto Sans Gurmukhi',sans-serif", fontSize: "clamp(1rem,2.5vw,1.4rem)", color: "#F4830A", marginBottom: "0.5rem", lineHeight: 1.8 },
-  heroInvite: { color: "rgba(255,255,255,0.75)", fontSize: "0.9rem", letterSpacing: "0.15em", marginBottom: "1rem" },
-  heroNames: { fontFamily: "'Playfair Display',serif", fontSize: "clamp(3rem,8vw,6rem)", fontWeight: 400, color: "#fff", margin: "0.5rem 0", lineHeight: 1.1 },
-  heroName: { display: "block" },
-  heroWeds: { display: "block", color: "#F4830A", fontSize: "0.35em", letterSpacing: "0.4em", textTransform: "uppercase", margin: "0.2em 0" },
-  heroDate: { color: "#F4830A", fontSize: "1.1rem", letterSpacing: "0.2em", marginTop: "1rem" },
-  heroVenue: { color: "rgba(244,131,10,0.7)", fontSize: "0.85rem", letterSpacing: "0.08em", marginTop: "0.3rem" },
-  fadeBlock: { opacity: 0, transform: "translateY(30px)", transition: "opacity 0.8s ease, transform 0.8s ease" },
-  sectionLabel: { color: "#F4830A", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "0.5rem" },
-};
-
-const globalCSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300&family=Noto+Sans+Gurmukhi:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-`;

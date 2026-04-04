@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { type InviteTheme } from "@/lib/invites";
 
 /**
@@ -31,6 +32,28 @@ export const CultureBackground = ({ activeTheme }: { activeTheme: InviteTheme | 
       className="culture-bg fixed inset-0 z-[-1] pointer-events-none"
       style={{ backgroundColor: current.bg }}
     >
+      {/* Dynamic Cinematic Hero Backdrop (Highly Blurred) */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+        {Object.entries(themeColors).map(([theme, data]) => {
+          if (theme === 'default') return null;
+          const imagePath = `/images/templates/${theme === 'lux' ? 'luxury' : theme}/hero_god_tier.png`;
+          return (
+            <div 
+              key={theme}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${activeTheme === theme ? 'opacity-30' : 'opacity-0'}`}
+            >
+              <Image 
+                src={imagePath}
+                alt=""
+                fill
+                className="object-cover blur-[80px] scale-110"
+                priority={theme === 'hindu' || theme === 'muslim'}
+              />
+            </div>
+          );
+        })}
+      </div>
+
       {/* Static grain overlay (inline data URL, no external fetch) */}
       <div
         className="absolute inset-0 opacity-[0.15] mix-blend-soft-light pointer-events-none"

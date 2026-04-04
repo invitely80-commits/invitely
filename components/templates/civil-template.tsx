@@ -1,285 +1,197 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
 const DEFAULT_DATA = {
-  brideFirstName: "Sam",
-  brideLastName: "Iyer",
-  groomFirstName: "Alex",
-  groomLastName: "Menon",
-  weddingDate: "Saturday, the 21st of March, 2026",
-  weddingDateShort: "21 . 03 . 2026",
-  venue: "The 1522",
-  venueAddress: "15/22 Church Street, Bengaluru — 560 001",
-  venueMapsUrl: "https://maps.google.com",
-  whatsappNumber: "919999999999",
-  instagramHandle: "https://www.instagram.com/samalex2026",
-  events: [
-    { name: "Civil Ceremony", date: "21 Mar 2026", time: "11:00 AM", venue: "The 1522 — Main Hall", icon: "◉" },
-    { name: "Cocktail Hour", date: "21 Mar 2026", time: "1:00 PM", venue: "The 1522 — Rooftop", icon: "◈" },
-    { name: "Dinner & Dancing", date: "21 Mar 2026", time: "7:30 PM", venue: "The 1522 — Loft", icon: "◆" },
-  ],
-  brideFamily: { father: "Kiran Iyer", mother: "Deepa Iyer" },
-  groomFamily: { father: "Thomas Menon", mother: "Leela Menon" },
-  hashtag: "#SamAlexForever",
-  photoUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop",
+  brideFirstName: "Sophie", brideLastName: "Bennett",
+  groomFirstName: "James", groomLastName: "Wilson",
+  weddingDate: "Friday, June 12, 2026",
+  city: "London",
+  hashtag: "#SophieJamesCivilUnion",
+  heroImage: "/images/templates/civil/hero_god_tier.png",
+  storyImage: "/images/templates/civil/hero_god_tier.png",
+  ritualsImage: "/images/templates/civil/hero_god_tier.png",
 };
-
-function useFadeIn(direction = "up") {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.opacity = "0";
-    el.style.transform = direction === "left" ? "translateX(-30px)" : direction === "right" ? "translateX(30px)" : "translateY(30px)";
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          el.style.transition = "opacity 0.9s ease, transform 0.9s ease";
-          el.style.opacity = "1";
-          el.style.transform = "translate(0)";
-        }
-      },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [direction]);
-  return ref;
-}
-
-// Minimal geometric divider
-function LineDivider({ light = false }: { light?: boolean }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "1.5rem 0" }}>
-      <div style={{ flex: 1, height: "1px", background: light ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)" }} />
-      <div style={{ width: "6px", height: "6px", background: light ? "#fff" : "#000", transform: "rotate(45deg)", opacity: 0.4 }} />
-      <div style={{ flex: 1, height: "1px", background: light ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)" }} />
-    </div>
-  );
-}
 
 export function CivilTemplate({
   invite,
-  preview = false,
 }: {
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  const [scrollY, setScrollY] = useState(0);
-  useEffect(() => {
-    const h = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", h, { passive: true });
-    return () => window.removeEventListener("scroll", h);
-  }, []);
-  const f1 = useFadeIn("up"), f3 = useFadeIn("right"), f4 = useFadeIn("up"), f5 = useFadeIn("up");
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  // Map invite data to template structure
-  const data = invite.data;
-  const brideParts = data.brideName.split(" ");
-  const groomParts = data.groomName.split(" ");
-
+  // Parallax transforms
+  const heroScale = useTransform(smoothProgress, [0, 0.2], [1, 1.1]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.15], [1, 0]);
+  const heroTextY = useTransform(smoothProgress, [0, 0.2], [0, 80]);
+  
   const d = {
     ...DEFAULT_DATA,
-    brideFirstName: brideParts[0],
-    brideLastName: brideParts.slice(1).join(" ") || DEFAULT_DATA.brideLastName,
-    groomFirstName: groomParts[0],
-    groomLastName: groomParts.slice(1).join(" ") || DEFAULT_DATA.groomLastName,
-    weddingDate: formatDisplayDate(data.weddingDate),
-    weddingDateShort: data.weddingDate.split("-").reverse().join(" . "),
-    venue: data.events[0]?.venue || DEFAULT_DATA.venue,
-    venueAddress: data.events[0]?.address || DEFAULT_DATA.venueAddress,
-    photoUrl: data.heroImage || data.gallery[0] || DEFAULT_DATA.photoUrl,
-    whatsappNumber: data.contactPhone || DEFAULT_DATA.whatsappNumber,
-    hashtag: data.description.includes("#") ? data.description.match(/#\w+/)?.[0] : DEFAULT_DATA.hashtag,
-    events: data.events.map((ev, i) => ({
-      name: ev.title,
-      date: formatDisplayDate(ev.date),
-      time: ev.time,
-      venue: ev.venue,
-      icon: i === 0 ? "◉" : i === 1 ? "◈" : "◆"
-    }))
+    brideFirstName: invite.data.brideName.split(" ")[0],
+    groomFirstName: invite.data.groomName.split(" ")[0],
+    weddingDate: formatDisplayDate(invite.data.weddingDate),
+    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "London",
+    hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
   };
 
   return (
-    <div style={S.root}>
-      <style>{globalCSS}</style>
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400&display=swap');
+        .font-serif { font-family: 'Bodoni Moda', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .tracking-editorial { letter-spacing: 0.55em; }
+        .kerning-loose { letter-spacing: 0.25em; }
+      `}</style>
 
-      {/* ── HERO — full-bleed editorial split ── */}
-      <section style={S.hero}>
-        <div style={{ ...S.heroImgWrap, transform: `translateY(${scrollY * 0.4}px)` }}>
-          <Image
-            src={d.photoUrl}
-            alt="Wedding Hero"
-            fill
-            priority
-            style={{ objectFit: "cover", objectPosition: "center 25%", filter: "grayscale(30%)" }}
-          />
-          <div style={S.heroImgOverlay} />
-        </div>
-        <div style={S.heroLeft}>
-          <div ref={useFadeIn("left")} style={{ transition: "all 0.9s ease" }}>
-            <p style={S.heroSmallLabel}>Civil Wedding · {d.weddingDateShort}</p>
-            <h1 style={S.heroName}>{d.brideFirstName}</h1>
-            <h1 style={S.heroName}>{d.groomFirstName}</h1>
-            <LineDivider />
-            <p style={S.heroVenueText}>{d.venue}</p>
-            <p style={{ ...S.heroVenueText, opacity: 0.4, fontSize: "0.75rem" }}>{d.venueAddress}</p>
-            {!preview && (
-              <div style={{ marginTop: "2.5rem", display: "flex", gap: "1rem" }}>
-                <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" style={S.heroCtaSolid}>RSVP</a>
-                <a href={d.venueMapsUrl} target="_blank" rel="noreferrer" style={S.heroCtaOutline}>Venue →</a>
-              </div>
-            )}
+      {/* ── HERO: MINIMALIST CHAPEL ─────────────────────────────────── */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+          <Image src={d.heroImage} alt="Chapel" fill priority className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/60" />
+        </motion.div>
+        
+        <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
+          <div className="space-y-6">
+            <p className="text-charcoal/40 font-sans text-[8px] uppercase tracking-editorial font-light">Civil Union Invitation</p>
+            <div className="w-12 h-px bg-charcoal/10 mx-auto" />
           </div>
+          
+          <h1 className="font-serif italic text-5xl md:text-8xl text-charcoal font-light leading-[1.0] kerning-loose">
+            Fine Moments, <br />
+            <span className="opacity-60 italic">Eternal Vows</span>
+          </h1>
+
+          <div className="space-y-6 pt-4">
+            <h2 className="font-serif text-3xl md:text-5xl text-charcoal/80 kerning-loose font-extralight">
+              {d.brideFirstName} <span className="opacity-30 italic">&amp;</span> {d.groomFirstName}
+            </h2>
+            <div className="flex items-center justify-center gap-10 text-charcoal/40 font-sans text-[9px] uppercase tracking-editorial font-light">
+              <span>{d.weddingDate}</span>
+              <div className="w-1 h-1 bg-charcoal/10 rounded-full" />
+              <span>{d.city}</span>
+            </div>
+          </div>
+
+          <motion.div 
+            animate={{ y: [0, 8, 0], opacity: [0.1, 0.3, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-15vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+          >
+            <div className="w-px h-24 bg-gradient-to-b from-charcoal/10 to-transparent" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ── THE JOURNEY: MODERN MINIMALISM ───────────────────────────── */}
+      <section className="relative py-64 px-6 md:px-24 bg-white">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 2 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 bg-[#F5F5F5] translate-x-12 translate-y-12 -z-10" />
+            <div className="relative aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000 shadow-xl">
+              <Image src={d.storyImage} alt="Couple" fill className="object-cover scale-110 hover:scale-100 transition-transform duration-[5s]" />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-16"
+          >
+            <h2 className="font-serif italic text-4xl md:text-7xl text-charcoal font-light leading-tight">
+              A light that <br /> never fades
+            </h2>
+
+            <div className="space-y-10 font-sans text-sm md:text-base text-charcoal/60 font-light leading-relaxed tracking-widest opacity-80 max-w-lg">
+              <p>In a world of noise, they found a quiet clarity in each other. A love that doesn&apos;t demand attention, but naturally commands it.</p>
+              <p>They invite you to witness the beginning of their shared legacy, as they sign their names into a new history, together.</p>
+            </div>
+            
+            <div className="pt-8">
+              <div className="w-24 h-px bg-charcoal/5 mb-8" />
+              <p className="font-serif text-lg italic text-charcoal/30 tracking-widest uppercase">{d.hashtag}</p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── COUNTER BAND ── */}
-      <section style={{ background: "#000", padding: "2rem 4rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", borderTop: "1px solid #111" }}>
-        {[
-          { label: "Celebrations", val: d.events.length.toString() },
-          { label: "Days of Joy", val: "1" },
-          { label: "Guests Invited", val: "∞" },
-          { label: "Years Together", val: "4+" },
-        ].map((item, i) => (
-          <div key={i} style={{ textAlign: "center", flex: 1 }}>
-            <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "2.2rem", fontWeight: 700, color: "#fff", lineHeight: 1 }}>{item.val}</p>
-            <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", marginTop: "0.4rem" }}>{item.label}</p>
+      {/* ── THE LOGISTICS: CLEAN GRID ──────────────────────────────── */}
+      <section className="relative py-52 bg-[#FAFAFA] text-charcoal overflow-hidden border-y border-charcoal/5">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+          <div className="space-y-8">
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">The Order of Day</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-charcoal/70">The Ceremony</h2>
           </div>
-        ))}
-      </section>
 
-      {/* ── COUPLE ── */}
-      <section style={{ background: "#F5F5F3", padding: "5rem clamp(2rem,6vw,6rem)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 0, right: 0, opacity: 0.04, fontFamily: "'Space Grotesk',sans-serif", fontSize: "20rem", fontWeight: 700, lineHeight: 1, color: "#000", userSelect: "none" }}>02</div>
-        <div ref={f1} style={{ position: "relative", zIndex: 1 }}>
-          <p style={S.sectionLabel}>The Couple</p>
-          <LineDivider />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "3rem", alignItems: "center", marginTop: "3rem" }}>
-            <div>
-              <h2 style={S.coupleName}>{d.brideFirstName}</h2>
-              <p style={S.coupleSurname}>{d.brideLastName}</p>
-              <p style={S.coupleFamily}>{d.brideFamily.father} &amp; {d.brideFamily.mother}</p>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ width: "70px", height: "70px", background: "#000", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ color: "#fff", fontSize: "1.5rem", fontWeight: 300 }}>&amp;</span>
-              </div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <h2 style={S.coupleName}>{d.groomFirstName}</h2>
-              <p style={S.coupleSurname}>{d.groomLastName}</p>
-              <p style={S.coupleFamily}>{d.groomFamily.father} &amp; {d.groomFamily.mother}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── PARALLAX ── */}
-      <section style={{ position: "relative", minHeight: "70vh", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, willChange: "transform", transform: `translateY(${scrollY * 0.3}px)` }}>
-          <Image
-            src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop"
-            alt="Wedding Venue"
-            fill
-            style={{ objectFit: "cover", filter: "grayscale(100%)" }}
-          />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 30%, transparent 100%)" }} />
-        </div>
-        <div ref={f3} style={{ position: "relative", zIndex: 2, padding: "4rem clamp(2rem,6vw,6rem)", width: "100%" }}>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: "1rem" }}>The Venue</p>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
-            <div>
-              <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2.5rem,6vw,5rem)", fontWeight: 700, color: "#fff", lineHeight: 1 }}>{d.venue}</h2>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginTop: "0.5rem" }}>{d.venueAddress}</p>
-            </div>
-            {!preview && (
-              <a href={d.venueMapsUrl} target="_blank" rel="noreferrer" style={{ border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "0.75rem 1.5rem", textDecoration: "none", fontSize: "0.78rem", letterSpacing: "0.1em", borderRadius: "2px", whiteSpace: "nowrap" }}>
-                Get Directions →
-              </a>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── EVENTS ── */}
-      <section style={{ background: "#fff", padding: "5rem clamp(2rem,6vw,6rem)" }}>
-        <div ref={f4}>
-          <p style={S.sectionLabel}>Programme</p>
-          <LineDivider />
-          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem,5vw,4rem)", fontWeight: 700, color: "#000", marginBottom: "3rem", lineHeight: 1.1 }}>The Day</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-            {d.events.map((ev, i) => (
-              <div key={i} style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "2rem", alignItems: "center", padding: "2rem 0", borderBottom: "0.5px solid rgba(0,0,0,0.1)" }}>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "3.5rem", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
-                <div>
-                  <h3 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "1.3rem", fontWeight: 600, color: "#000" }}>{ev.name}</h3>
-                  <p style={{ color: "rgba(0,0,0,0.4)", fontSize: "0.8rem", marginTop: "0.2rem" }}>{ev.venue}</p>
+          <div className="grid md:grid-cols-2 gap-x-32 gap-y-40 py-16">
+            {[
+              { title: 'The Exchange', time: '11:00 AM', desc: 'A minimalist exchange of vows at the Riverside Pavilion.' },
+              { title: 'The Cocktail', time: '1:30 PM', desc: 'Crafted drinks and canopy laughter on the terrace.' },
+              { title: 'The Dinner', time: '4:00 PM', desc: 'A candlelit feast celebrating the union of two hearts.' },
+              { title: 'The Toast', time: '6:30 PM', desc: 'Sharing stories and raising a glass to a lifetime of joy.' },
+            ].map((event, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.2 }}
+                className="text-left space-y-6"
+              >
+                <div className="flex items-center gap-6">
+                  <p className="font-sans text-[9px] tracking-editorial uppercase text-charcoal/30">{event.time}</p>
+                  <div className="flex-1 h-px bg-charcoal/5" />
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <p style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "1.1rem", fontWeight: 500, color: "#000" }}>{ev.time}</p>
-                  <p style={{ color: "rgba(0,0,0,0.4)", fontSize: "0.72rem", marginTop: "0.2rem" }}>{ev.date}</p>
+                <div className="space-y-3">
+                  <h3 className="font-serif text-3xl font-light tracking-tight text-charcoal/80">{event.title}</h3>
+                  <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-sm">
+                    {event.desc}
+                  </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── RSVP ── */}
-      <section style={{ background: "#000", padding: "6rem clamp(2rem,6vw,6rem)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", bottom: "-2rem", right: "-1rem", opacity: 0.04, fontFamily: "'Space Grotesk',sans-serif", fontSize: "18rem", fontWeight: 700, color: "#fff", lineHeight: 1, userSelect: "none" }}>∞</div>
-        <div ref={f5}>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: "1.5rem" }}>You&apos;re invited</p>
-          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(3rem,8vw,7rem)", fontWeight: 700, color: "#fff", lineHeight: 1, marginBottom: "2rem" }}>
-            {d.brideFirstName}<br />&amp; {d.groomFirstName}
-          </h2>
-          <LineDivider light />
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.95rem", lineHeight: 1.9, maxWidth: "460px", marginBottom: "2.5rem" }}>
-            We&apos;d love for you to be part of our celebration. No RSVP form. No fuss. Just drop us a WhatsApp.
-          </p>
-          {!preview && (
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <a href={`https://wa.me/${d.whatsappNumber}`} target="_blank" rel="noreferrer" style={{ background: "#fff", color: "#000", padding: "0.9rem 2.5rem", textDecoration: "none", fontSize: "0.85rem", letterSpacing: "0.08em", fontWeight: 600, borderRadius: "2px", display: "inline-block" }}>
-                RSVP via WhatsApp →
-              </a>
-              <a href={d.venueMapsUrl} target="_blank" rel="noreferrer" style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.6)", padding: "0.9rem 2rem", textDecoration: "none", fontSize: "0.85rem", letterSpacing: "0.06em", borderRadius: "2px", display: "inline-block" }}>
-                Venue Map
-              </a>
+      {/* ── FINALE: ETERNAL PEACE ─────────────────────────────── */}
+      <section className="relative h-screen bg-white flex items-center justify-center overflow-hidden">
+        <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-16"
+          >
+            <div className="w-px h-32 bg-charcoal/5 mx-auto" />
+            
+            <h2 className="font-serif italic text-4xl md:text-8xl text-charcoal font-light leading-snug tracking-tighter opacity-80">
+              Two hearts, <br />
+              <span className="opacity-30 italic">one quiet journey.</span>
+            </h2>
+
+            <div className="space-y-4 pt-12">
+              <p className="font-sans text-[11px] uppercase tracking-[0.8em] text-charcoal/30">{d.brideFirstName} & {d.groomFirstName}</p>
+              <p className="font-sans text-[8px] uppercase tracking-[1em] text-charcoal/10 italic">A Boutique Civil Collection</p>
             </div>
-          )}
-          <LineDivider light />
-          <p style={{ color: "rgba(255,255,255,0.15)", fontSize: "0.72rem", letterSpacing: "0.12em" }}>{d.hashtag} · {d.weddingDateShort}</p>
+          </motion.div>
         </div>
       </section>
     </div>
   );
 }
-
-const S: Record<string, React.CSSProperties> = {
-  root: { fontFamily: "'DM Sans',sans-serif", background: "#fff", color: "#000", overflowX: "hidden" },
-  hero: { position: "relative", height: "100vh", display: "flex", alignItems: "stretch", overflow: "hidden" },
-  heroImgWrap: { position: "absolute", inset: 0, willChange: "transform" },
-  heroImg: { width: "100%", height: "115%", objectFit: "cover", objectPosition: "center 25%", filter: "grayscale(30%)" },
-  heroImgOverlay: { position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 100%)" },
-  heroLeft: { position: "relative", zIndex: 2, padding: "0 clamp(2rem,6vw,6rem)", display: "flex", alignItems: "center", flex: "0 0 55%" },
-  heroSmallLabel: { color: "rgba(255,255,255,0.4)", fontSize: "0.68rem", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "1.5rem" },
-  heroName: { fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(3.5rem,9vw,7rem)", fontWeight: 700, color: "#fff", lineHeight: 0.95, display: "block" },
-  heroVenueText: { color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", letterSpacing: "0.05em", marginTop: "0.3rem" },
-  heroCtaSolid: { background: "#fff", color: "#000", padding: "0.75rem 2rem", textDecoration: "none", fontSize: "0.82rem", letterSpacing: "0.08em", fontWeight: 600, borderRadius: "2px" },
-  heroCtaOutline: { border: "1px solid rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.8)", padding: "0.75rem 2rem", textDecoration: "none", fontSize: "0.82rem", letterSpacing: "0.08em", borderRadius: "2px" },
-  sectionLabel: { color: "rgba(0,0,0,0.35)", fontSize: "0.68rem", letterSpacing: "0.25em", textTransform: "uppercase" },
-  coupleName: { fontFamily: "'Space Grotesk',sans-serif", fontSize: "clamp(2rem,5vw,4rem)", fontWeight: 700, color: "#000", lineHeight: 1 },
-  coupleSurname: { color: "rgba(0,0,0,0.4)", fontSize: "1rem", letterSpacing: "0.05em", marginTop: "0.3rem" },
-  coupleFamily: { color: "rgba(0,0,0,0.35)", fontSize: "0.78rem", lineHeight: 1.8, marginTop: "0.8rem" },
-};
-
-const globalCSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-`;

@@ -6,7 +6,7 @@ export default function RoyalVisual({ name, priority }: { name: string; priority
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#5c1530]">
       <Image
-        src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1200&auto=format&fit=crop"
+        src="/images/templates/royal/hero_god_tier.png"
         alt="Royal Heritage"
         fill
         priority={priority}

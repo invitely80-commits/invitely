@@ -6,7 +6,7 @@ export default function HinduVisual({ name, priority }: { name: string; priority
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#570013]">
       <Image
-        src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop"
+        src="/images/templates/hindu/hero_god_tier.png"
         alt="Hindu Wedding Rituals"
         fill
         priority={priority}
