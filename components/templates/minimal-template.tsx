@@ -39,10 +39,12 @@ export function MinimalTemplate({
     weddingDate: formatDisplayDate(invite.data.weddingDate),
     city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "India",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-white text-charcoal overflow-x-hidden selection:bg-black selection:text-white">
+    <div ref={containerRef} className="bg-white text-charcoal overflow-x-hidden w-full min-h-screen selection:bg-black selection:text-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -55,8 +57,8 @@ export function MinimalTemplate({
       `}</style>
 
       {/* ── HERO: PURE MINIMAL ──────────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Minimal" fill priority className="object-cover opacity-30 grayscale" />
           <div className="absolute inset-0 bg-gradient-to-b from-white via-white/50 to-white" />
         </motion.div>
@@ -94,8 +96,8 @@ export function MinimalTemplate({
       </section>
 
       {/* ── THE STORY: THE VOID & THE LIGHT ─────────────────────────── */}
-      <section className="relative py-64 px-6 md:px-24 bg-white">
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+      <section className="relative py-32 md:py-64 px-6 md:px-24 bg-white">
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-32 items-center">
            <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -108,8 +110,9 @@ export function MinimalTemplate({
             </h2>
 
             <div className="space-y-8 font-sans text-sm md:text-base text-black/60 font-light leading-relaxed tracking-widest max-w-lg">
-              <p>In a world of constant motion, they found a stillness in each other. A shared language of quiet mornings and long walks under clear skies.</p>
-              <p>They invite you to be part of their beginning, where every detail is a reflection of a love that was chosen with intentionality and grace.</p>
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
             <div className="pt-8">
@@ -132,20 +135,15 @@ export function MinimalTemplate({
       </section>
 
       {/* ── THE MOMENTS: SILENT GRID ────────────────────────────────── */}
-      <section className="relative py-52 bg-white text-black overflow-hidden border-t border-black/5">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-40">
+      <section className="relative py-32 md:py-52 bg-white text-black overflow-hidden border-t border-black/5">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-40">
           <div className="space-y-10">
             <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-20">The Timeline of Union</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-black/70">The Moments</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-x-24 gap-y-40 py-16">
-            {[
-              { title: 'The Arrival', time: '12:00', desc: 'Guests gather at the Open Hall.' },
-              { title: 'The Vows', time: '13:30', desc: 'A simple exchange of promises.' },
-              { title: 'The Feast', time: '15:00', desc: 'A communal meal for friends and family.' },
-              { title: 'The Sunset', time: '18:00', desc: 'Cherishing the beginning of forever.' },
-            ].map((event, i) => (
+          <div className="grid md:grid-cols-2 gap-x-16 md:gap-x-24 gap-y-24 md:gap-40 py-8 md:py-16">
+            {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, scale: 0.98 }}
@@ -155,13 +153,15 @@ export function MinimalTemplate({
                 className="text-left space-y-4"
               >
                 <div className="flex items-center gap-4 border-b border-black/5 pb-2">
-                   <p className="font-sans text-[8px] tracking-editorial uppercase opacity-30">{event.time}</p>
+                   <p className="font-sans text-[8px] tracking-editorial uppercase opacity-30">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                   </p>
                    <div className="w-1 h-1 bg-black/10 rounded-full" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="font-serif text-2xl font-light tracking-tight text-black/80">{event.title}</h3>
                   <p className="font-sans text-[10px] opacity-40 font-extralight leading-relaxed max-w-sm tracking-wide">
-                    {event.desc}
+                    {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>
               </motion.div>
@@ -169,7 +169,6 @@ export function MinimalTemplate({
           </div>
         </div>
       </section>
-
       {/* ── FINALE: ETERNAL WHITE ─────────────────────────────────── */}
       <section className="relative h-screen bg-white flex items-center justify-center overflow-hidden">
         <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-24">

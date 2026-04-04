@@ -39,10 +39,12 @@ export function ChristianTemplate({
     weddingDate: formatDisplayDate(invite.data.weddingDate),
     city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Goa",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden w-full min-h-screen">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -55,8 +57,8 @@ export function ChristianTemplate({
       `}</style>
 
       {/* ── HERO: ETHEREAL CHAPEL ─────────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Altar" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/5 to-black/30" />
         </motion.div>
@@ -92,25 +94,26 @@ export function ChristianTemplate({
       </section>
 
       {/* ── THE JOURNEY: SILK & PEARL ──────────────────────────────── */}
-      <section className="relative py-64 px-6 md:px-24 bg-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+      <section className="relative py-32 md:py-64 px-6 md:px-24 bg-white">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-32 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-16"
+            className="space-y-12 md:space-y-16"
           >
             <h2 className="font-serif italic text-4xl md:text-7xl text-[#1A1A1A] font-light leading-tight">
               A light that <br /> never fades
             </h2>
 
-            <div className="space-y-10 font-sans text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed tracking-widest opacity-80 max-w-lg">
-              <p>In a world of fleeting moments, they found a love that felt like coming home. A love built on faith, laughter, and the quiet promise of breakfast on Sunday mornings.</p>
-              <p>They invite you to witness the beginning of their forever, where two families become one and a new legacy is born.</p>
+            <div className="space-y-8 font-sans text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed tracking-widest opacity-80 max-w-lg">
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
-            <div className="pt-8">
+            <div className="pt-8 md:pt-12">
               <div className="w-16 h-px bg-charcoal/10 mb-8" />
               <p className="font-serif text-lg italic text-charcoal/40 tracking-widest uppercase">{d.hashtag}</p>
             </div>
@@ -132,20 +135,15 @@ export function ChristianTemplate({
       </section>
 
       {/* ── THE CELEBRATION: MINIMAL ELEGANCE ────────────────────────── */}
-      <section className="relative py-52 bg-[#F9F9F9] text-[#1A1A1A] overflow-hidden">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+      <section className="relative py-32 md:py-52 bg-[#F9F9F9] text-[#1A1A1A] overflow-hidden">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
           <div className="space-y-8">
             <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">The Order of Service</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide">The Celebration</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-x-32 gap-y-40 py-16">
-            {[
-              { title: 'The Ceremony', time: '10:30 AM', desc: 'A sacred exchange of vows at the St. Lawrence Chapel.' },
-              { title: 'The First Dance', time: '1:00 PM', desc: 'Opening the festivities with a dance as husband and wife.' },
-              { title: 'The Toast', time: '2:30 PM', desc: 'Raising a glass to love, laughter, and a lifetime of happiness.' },
-              { title: 'The Send-Off', time: '4:00 PM', desc: 'Beginning the journey into the sunset as a new family.' },
-            ].map((event, i) => (
+          <div className="grid md:grid-cols-2 gap-x-16 md:gap-x-32 gap-y-24 md:gap-y-40 py-8 md:py-16">
+            {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -155,13 +153,15 @@ export function ChristianTemplate({
                 className="text-left space-y-6"
               >
                 <div className="flex items-center gap-6">
-                  <p className="font-sans text-[10px] tracking-editorial uppercase text-charcoal/40">{event.time}</p>
+                  <p className="font-sans text-[10px] tracking-editorial uppercase text-charcoal/40">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                  </p>
                   <div className="flex-1 h-px bg-black/5" />
                 </div>
                 <div className="space-y-3">
-                  <h3 className="font-serif text-3xl font-light tracking-tight">{event.title}</h3>
+                  <h3 className="font-serif text-2xl md:text-3xl font-light tracking-tight">{event.title}</h3>
                   <p className="font-sans text-xs opacity-60 font-extralight leading-relaxed max-w-sm">
-                    {event.desc}
+                    {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>
               </motion.div>
@@ -169,7 +169,6 @@ export function ChristianTemplate({
           </div>
         </div>
       </section>
-
       {/* ── FINALE: ETERNAL PEACE ─────────────────────────────── */}
       <section className="relative h-screen bg-white flex items-center justify-center overflow-hidden">
         <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-24">

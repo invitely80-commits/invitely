@@ -39,10 +39,12 @@ export function CivilTemplate({
     weddingDate: formatDisplayDate(invite.data.weddingDate),
     city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "London",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden w-full min-h-screen">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@100;200;300;400&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -52,8 +54,8 @@ export function CivilTemplate({
       `}</style>
 
       {/* ── HERO: MINIMALIST CHAPEL ─────────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Chapel" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/60" />
         </motion.div>
@@ -91,8 +93,8 @@ export function CivilTemplate({
       </section>
 
       {/* ── THE JOURNEY: MODERN MINIMALISM ───────────────────────────── */}
-      <section className="relative py-64 px-6 md:px-24 bg-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+      <section className="relative py-32 md:py-64 px-6 md:px-24 bg-white">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-32 items-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -111,15 +113,16 @@ export function CivilTemplate({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-16"
+            className="space-y-12 md:space-y-16"
           >
             <h2 className="font-serif italic text-4xl md:text-7xl text-charcoal font-light leading-tight">
               A light that <br /> never fades
             </h2>
 
-            <div className="space-y-10 font-sans text-sm md:text-base text-charcoal/60 font-light leading-relaxed tracking-widest opacity-80 max-w-lg">
-              <p>In a world of noise, they found a quiet clarity in each other. A love that doesn&apos;t demand attention, but naturally commands it.</p>
-              <p>They invite you to witness the beginning of their shared legacy, as they sign their names into a new history, together.</p>
+            <div className="space-y-8 font-sans text-sm md:text-base text-charcoal/60 font-light leading-relaxed tracking-widest opacity-80 max-w-lg">
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
             <div className="pt-8">
@@ -131,20 +134,15 @@ export function CivilTemplate({
       </section>
 
       {/* ── THE LOGISTICS: CLEAN GRID ──────────────────────────────── */}
-      <section className="relative py-52 bg-[#FAFAFA] text-charcoal overflow-hidden border-y border-charcoal/5">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+      <section className="relative py-32 md:py-52 bg-[#FAFAFA] text-charcoal overflow-hidden border-y border-charcoal/5">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
           <div className="space-y-8">
             <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">The Order of Day</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-charcoal/70">The Ceremony</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-x-32 gap-y-40 py-16">
-            {[
-              { title: 'The Exchange', time: '11:00 AM', desc: 'A minimalist exchange of vows at the Riverside Pavilion.' },
-              { title: 'The Cocktail', time: '1:30 PM', desc: 'Crafted drinks and canopy laughter on the terrace.' },
-              { title: 'The Dinner', time: '4:00 PM', desc: 'A candlelit feast celebrating the union of two hearts.' },
-              { title: 'The Toast', time: '6:30 PM', desc: 'Sharing stories and raising a glass to a lifetime of joy.' },
-            ].map((event, i) => (
+          <div className="grid md:grid-cols-2 gap-x-16 md:gap-x-32 gap-y-24 md:gap-y-40 py-8 md:py-16">
+            {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -154,13 +152,15 @@ export function CivilTemplate({
                 className="text-left space-y-6"
               >
                 <div className="flex items-center gap-6">
-                  <p className="font-sans text-[9px] tracking-editorial uppercase text-charcoal/30">{event.time}</p>
+                  <p className="font-sans text-[9px] tracking-editorial uppercase text-charcoal/30">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                  </p>
                   <div className="flex-1 h-px bg-charcoal/5" />
                 </div>
                 <div className="space-y-3">
-                  <h3 className="font-serif text-3xl font-light tracking-tight text-charcoal/80">{event.title}</h3>
+                  <h3 className="font-serif text-2xl md:text-3xl font-light tracking-tight text-charcoal/80">{event.title}</h3>
                   <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-sm">
-                    {event.desc}
+                    {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>
               </motion.div>
@@ -168,7 +168,6 @@ export function CivilTemplate({
           </div>
         </div>
       </section>
-
       {/* ── FINALE: ETERNAL PEACE ─────────────────────────────── */}
       <section className="relative h-screen bg-white flex items-center justify-center overflow-hidden">
         <div className="relative z-20 max-w-4xl mx-auto px-6 text-center space-y-24">

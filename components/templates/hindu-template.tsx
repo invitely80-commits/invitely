@@ -37,12 +37,14 @@ export function HinduTemplate({
     brideFirstName: invite.data.brideName.split(" ")[0],
     groomFirstName: invite.data.groomName.split(" ")[0],
     weddingDate: formatDisplayDate(invite.data.weddingDate),
-    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Rajasthan",
+    city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Udaipur",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden w-full min-h-screen">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@200;300;400;500&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -55,8 +57,8 @@ export function HinduTemplate({
       `}</style>
 
       {/* ── HERO: CINEMATIC MANDAP ─────────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Mandap" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" />
         </motion.div>
@@ -79,7 +81,7 @@ export function HinduTemplate({
             </h2>
             <div className="flex items-center justify-center gap-4 text-white/70 font-sans text-[9px] uppercase tracking-editorial font-light drop-shadow-md">
               <span>{d.weddingDate}</span>
-              <div className="w-1 h-1 bg-gold-accent rounded-full" />
+              <div className="w-1 h-1 bg-[#C9A84C] rounded-full" />
               <span>{d.city}</span>
             </div>
           </div>
@@ -95,14 +97,14 @@ export function HinduTemplate({
       </section>
 
       {/* ── THE SACRED VOWS: EDITORIAL LAYOUT ───────────────────────── */}
-      <section className="relative py-64 px-6 md:px-24 bg-[#FCFAFB]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+      <section className="relative py-32 md:py-64 px-6 md:px-24 bg-[#FCFAFB]">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-32 items-center">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-16"
+            className="space-y-12 md:space-y-16"
           >
             <div className="flex items-center gap-8">
               <span className="text-[#B45309] text-[10px] tracking-editorial uppercase font-sans font-bold">The Vows</span>
@@ -113,12 +115,13 @@ export function HinduTemplate({
               An ancient love <br /> reimagined
             </h2>
 
-            <div className="space-y-10 font-sans text-sm md:text-base text-[#5A4A42] font-light leading-relaxed tracking-wider opacity-90 max-w-lg">
-              <p>Amidst the fragrance of sandalwood and the rising notes of the shehnai, their souls found a rhythm they had known for lifetimes.</p>
-              <p>In the quiet heart of Udaipur, under the vast witness of the sky, they promise to walk together—not as two, but as a single heartbeat.</p>
+            <div className="space-y-8 font-sans text-sm md:text-base text-[#5A4A42] font-light leading-relaxed tracking-wider opacity-90 max-w-lg">
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
-            <div className="pt-12">
+            <div className="pt-8 md:pt-12">
               <p className="font-serif text-xl italic text-[#B45309]">{d.hashtag}</p>
             </div>
           </motion.div>
@@ -139,23 +142,19 @@ export function HinduTemplate({
       </section>
 
       {/* ── AGNI: THE SACred WITNESS ─────────────────────────────── */}
-      <section className="relative py-52 bg-[#2D1B1B] text-[#FEFBF6] overflow-hidden">
+      <section className="relative py-32 md:py-52 bg-[#2D1B1B] text-[#FEFBF6] overflow-hidden">
         <div className="absolute inset-0 opacity-[0.08] pointer-events-none scale-125">
-          <Image src="/images/templates/hindu/hero_god_tier.png" alt="" fill className="object-cover grayscale" />
+          <Image src={d.heroImage} alt="" fill className="object-cover grayscale" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
           <div className="space-y-8">
             <span className="font-sans text-[10px] tracking-editorial uppercase opacity-50">Witnessed by Fire</span>
-            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-silk-gold">Sacred Traditions</h2>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-gold-accent">Sacred Traditions</h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-24">
-            {[
-              { title: 'Ganesh Pooja', time: '9:00 AM', desc: 'Invoking the remover of obstacles to bless our new journey.' },
-              { title: 'The Pheras', time: '11:30 AM', desc: 'Seven sacred circles around the fire, seven vows of eternity.' },
-              { title: ' आशीर्वाद', time: '1:00 PM', desc: 'Receiving the timeless wisdom and blessings of our elders.' },
-            ].map((event, i) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24">
+            {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -166,11 +165,13 @@ export function HinduTemplate({
               >
                 <div className="w-12 h-px bg-[#E8D5A0]/40 mx-auto group-hover:w-20 transition-all duration-500" />
                 <div className="space-y-3">
-                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] opacity-80">{event.time}</p>
+                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] opacity-80">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                  </p>
                   <h3 className="font-serif text-2xl font-light tracking-widest">{event.title}</h3>
                 </div>
                 <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-[240px] mx-auto">
-                  {event.desc}
+                  {event.description || event.address || event.venue}
                 </p>
               </motion.div>
             ))}

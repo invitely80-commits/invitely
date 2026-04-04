@@ -39,10 +39,12 @@ export function MuslimTemplate({
     weddingDate: formatDisplayDate(invite.data.weddingDate),
     city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "Lucknow",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden w-full min-h-screen">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@200;300;400;500&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -55,8 +57,8 @@ export function MuslimTemplate({
       `}</style>
 
       {/* ── HERO: GRAND MOGHUL PALACE ──────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Moghul Palace" fill priority className="object-cover brightness-[0.9]" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
         </motion.div>
@@ -97,8 +99,8 @@ export function MuslimTemplate({
       </section>
 
       {/* ── THE COVENANT: GEOMETRIC LAYOUT ────────────────────────────── */}
-      <section className="relative py-64 px-6 md:px-24 bg-[#FBF9F7]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+      <section className="relative py-32 md:py-64 px-6 md:px-24 bg-[#FBF9F7]">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-32 items-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -117,7 +119,7 @@ export function MuslimTemplate({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="order-1 lg:order-2 space-y-16"
+            className="order-1 lg:order-2 space-y-12 md:space-y-16"
           >
             <div className="flex items-center gap-8">
               <span className="text-[#064E3B] text-[10px] tracking-editorial uppercase font-sans font-bold">The Nikah</span>
@@ -128,12 +130,13 @@ export function MuslimTemplate({
               A promise witnessed <br /> by the stars
             </h2>
 
-            <div className="space-y-10 font-sans text-sm md:text-base text-[#2A3E3A] font-light leading-relaxed tracking-wider opacity-85 max-w-lg">
-              <p>Under the arches of a legacy as ancient as the wind, they offer their &apos;Qubool Hai&apos;—a silent surrender to a love that was written in the heavens before time began.</p>
-              <p>Join them in Lucknow, where the fragrance of attar and the echo of the rubab celebrate a union of two souls and two worlds.</p>
+            <div className="space-y-8 font-sans text-sm md:text-base text-[#2A3E3A] font-light leading-relaxed tracking-wider opacity-85 max-w-lg">
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
-            <div className="pt-12">
+            <div className="pt-8 md:pt-12">
               <div className="w-24 h-px bg-[#E8D5A0]/60 mb-6" />
               <p className="font-serif text-xl italic text-[#064E3B]">{d.hashtag}</p>
             </div>
@@ -142,23 +145,19 @@ export function MuslimTemplate({
       </section>
 
       {/* ── TRADITIONS: EMERALD & GOLD ──────────────────────────────── */}
-      <section className="relative py-52 bg-[#1A2E2A] text-[#FDFBF7] overflow-hidden">
+      <section className="relative py-32 md:py-52 bg-[#1A2E2A] text-[#FDFBF7] overflow-hidden">
         <div className="absolute inset-0 opacity-[0.05] pointer-events-none scale-150">
-          <Image src="/images/templates/muslim/hero_god_tier.png" alt="" fill className="object-cover grayscale brightness-200" />
+          <Image src={d.heroImage} alt="" fill className="object-cover grayscale brightness-200" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-32">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
           <div className="space-y-8">
             <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Sacred Rituals</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-[#E8D5A0]">Bespoke Traditions</h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-24 py-16">
-            {[
-              { title: 'The Baraat', time: '5:00 PM', desc: 'A grand procession of heritage and joy welcoming the groom.' },
-              { title: 'The Nikah', time: '7:30 PM', desc: 'A sacred contract, signed in the presence of loved ones.' },
-              { title: 'Walima Dinner', time: '9:00 PM', desc: 'A feast of gratitude and celebration for our families.' },
-            ].map((event, i) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 py-8 md:py-16">
+            {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -171,18 +170,19 @@ export function MuslimTemplate({
                    <div className="w-12 h-px bg-[#E8D5A0]/20 group-hover:w-20 transition-all duration-700" />
                 </div>
                 <div className="space-y-4">
-                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] font-medium">{event.time}</p>
+                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] font-medium">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                  </p>
                   <h3 className="font-serif text-2xl font-light tracking-widest">{event.title}</h3>
                 </div>
                 <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-[240px] mx-auto">
-                  {event.desc}
+                  {event.description || `${event.venue}, ${event.address}`}
                 </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
       {/* ── FINALE: THE ETERNAL MOON ─────────────────────────────── */}
       <section className="relative h-screen bg-[#0A0F0D] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />

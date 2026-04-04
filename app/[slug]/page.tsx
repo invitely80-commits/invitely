@@ -61,17 +61,15 @@ export default async function PublicInvitePage({ params }: PublicInvitePageProps
   const data = parseInviteData(invite.data);
 
   return (
-    <main className="page-shell min-h-screen px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-6xl">
-        <InviteRenderer
-          invite={{
-            id: invite.id,
-            slug: invite.slug,
-            template: templateToTheme(invite.template),
-            data,
-          }}
-        />
-      </div>
+    <main className="min-h-screen">
+      <InviteRenderer
+        invite={{
+          id: invite.id,
+          slug: invite.slug,
+          template: templateToTheme(invite.template),
+          data,
+        }}
+      />
     </main>
   );
 }

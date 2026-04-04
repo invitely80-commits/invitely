@@ -42,10 +42,12 @@ export function SouthIndianTemplate({
     weddingDate: formatDisplayDate(invite.data.weddingDate),
     city: invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() || "India",
     hashtag: invite.data.description.match(/#\w+/)?.[0] || DEFAULT_DATA.hashtag,
+    heroImage: invite.data.heroImage || invite.data.gallery[0] || DEFAULT_DATA.heroImage,
+    storyImage: invite.data.gallery[0] || DEFAULT_DATA.storyImage,
   };
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#2D2926] overflow-x-hidden w-full min-h-screen">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@200;300;400&display=swap');
         .font-serif { font-family: 'Bodoni Moda', serif; }
@@ -58,8 +60,8 @@ export function SouthIndianTemplate({
       `}</style>
 
       {/* ── HERO: CINEMATIC ENTRY ──────────────────────────────────── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0">
+      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Temple" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80" />
         </motion.div>
@@ -98,8 +100,8 @@ export function SouthIndianTemplate({
       </section>
 
       {/* ── OUR STORY: MINIMAL EDITORIAL ────────────────────────────── */}
-      <section className="relative py-48 px-6 md:px-24 bg-[#FDFBF7]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-24 items-center">
+      <section className="relative py-32 md:py-48 px-6 md:px-24 bg-[#FDFBF7]">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 md:gap-24 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -130,20 +132,56 @@ export function SouthIndianTemplate({
             </h2>
 
             <div className="space-y-8 font-sans text-sm md:text-base text-[#4A4A4A] font-light leading-relaxed tracking-wide opacity-80 max-w-xl">
-              <p>Under the ancient arches of a temple older than memory, their eyes met — not by chance, but by the quiet hand of fate.</p>
-              <p>What began as stolen glances across a crowded kolam grew into whispered conversations, shared laughter over filter coffee, and prayers offered side by side.</p>
-              <p>Now, as jasmine garlands are woven and sacred fires lit, they step into forever — with tradition as their guide and love as their compass.</p>
+              {invite.data.description.split('\n').map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             
-            <div className="w-32 h-px bg-[#C9A84C]/30 pt-16" />
+            <div className="w-32 h-px bg-[#C9A84C]/30 pt-8 md:pt-16" />
           </motion.div>
         </div>
       </section>
 
+      {/* ── THE CELEBRATION: LOGISTICS ─────────────────────────────── */}
+      <section className="relative py-32 md:py-48 bg-white border-t border-black/5 overflow-hidden">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24">
+          <div className="space-y-8">
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Events</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide">The Celebration</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 py-8 md:py-16">
+            {invite.data.events.map((event, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.2 }}
+                className="text-left space-y-6 group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-px bg-[#C9A84C]/40 group-hover:w-12 transition-all duration-700" />
+                  <p className="font-sans text-[10px] tracking-editorial uppercase text-[#8B1A1A] font-medium">
+                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
+                  </p>
+                </div>
+                <div className="space-y-3 pl-12">
+                  <h3 className="font-serif text-2xl font-light tracking-tight">{event.title}</h3>
+                  <p className="font-sans text-xs opacity-60 font-extralight leading-relaxed max-w-sm">
+                    {event.description || `${event.venue}, ${event.address}`}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── HERITAGE: THE DEEP MAROON RITUALS ───────────────────────── */}
-      <section className="relative py-48 bg-[#4A1A1A] text-[#FDFBF7] overflow-hidden">
+      <section className="relative py-32 md:py-48 bg-[#4A1A1A] text-[#FDFBF7] overflow-hidden">
         <div className="absolute inset-0 opacity-15 pointer-events-none scale-110">
-          <Image src="/images/templates/south-indian/gopuram_vibrant.png" alt="" fill className="object-cover" />
+          <Image src={d.heroImage} alt="" fill className="object-cover" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-24">
