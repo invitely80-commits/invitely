@@ -40,4 +40,5 @@ enum InviteTemplate {
   SIKH
   CIVIL
   LUXURY
+  SOUTH_INDIAN
 }

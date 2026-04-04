@@ -1,7 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -57,6 +57,12 @@ export const themeOptions: Array<{
     description: "God-Tier Editorial digital heirloom with 3D Virtual Envelope and bento-luxury architecture.",
     color: "#1c1c18",
   },
+  {
+    value: "south-indian",
+    label: "South Indian Hindu",
+    description: "A God Tier cinematic heritage experience with layered parallax and editorial storytelling.",
+    color: "#8B1A1A",
+  },
 ];
 
 export function themeToTemplate(theme: InviteTheme): InviteTemplate {
@@ -68,6 +74,7 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     case "sikh": return InviteTemplate.SIKH;
     case "civil": return InviteTemplate.CIVIL;
     case "luxury": return InviteTemplate.LUXURY;
+    case "south-indian": return InviteTemplate.SOUTH_INDIAN;
     default: return InviteTemplate.MINIMAL;
   }
 }
@@ -81,6 +88,7 @@ export function templateToTheme(template: InviteTemplate): InviteTheme {
     case InviteTemplate.SIKH: return "sikh";
     case InviteTemplate.CIVIL: return "civil";
     case InviteTemplate.LUXURY: return "luxury";
+    case InviteTemplate.SOUTH_INDIAN: return "south-indian";
     default: return "minimal";
   }
 }

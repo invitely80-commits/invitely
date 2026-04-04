@@ -19,6 +19,7 @@ const themeColors: Record<string, { bg: string; accent: string; pattern: string 
   sikh:      { bg: "oklch(18% 0.06 250)", accent: "oklch(50% 0.10 250)", pattern: "mandala" },
   civil:     { bg: "oklch(15% 0.01 260)", accent: "oklch(40% 0.03 260)", pattern: "grain" },
   luxury:    { bg: "oklch(12% 0.02 260)", accent: "oklch(40% 0.05 265)", pattern: "grain" },
+  "south-indian": { bg: "oklch(18% 0.06 35)", accent: "oklch(55% 0.12 45)",  pattern: "mandala" },
   default:   { bg: "oklch(98% 0.005 70)", accent: "oklch(92% 0.01 75)",  pattern: "" },
 };
 
