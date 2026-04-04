@@ -40,14 +40,15 @@ export const CultureBackground = ({ activeTheme }: { activeTheme: InviteTheme | 
           return (
             <div 
               key={theme}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${activeTheme === theme ? 'opacity-30' : 'opacity-0'}`}
+              className={`absolute inset-0 transition-opacity duration-[1500ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${activeTheme === theme ? 'opacity-40' : 'opacity-0'}`}
             >
               <Image 
                 src={imagePath}
                 alt=""
                 fill
-                className="object-cover blur-[80px] scale-110"
+                className="object-cover blur-[120px] scale-125 transition-transform duration-[3000ms] ease-out"
                 priority={theme === 'hindu' || theme === 'muslim'}
+                style={{ transform: activeTheme === theme ? 'scale(1.1)' : 'scale(1.25)' }}
               />
             </div>
           );

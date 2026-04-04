@@ -30,7 +30,6 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_BATCH);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Pagination simulation (Scalability)
   const visibleTemplates = useMemo(() => {
     return templates.slice(0, visibleCount);
   }, [templates, visibleCount]);
@@ -39,14 +38,12 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
     if (visibleCount >= templates.length) return;
     setIsLoadingMore(true);
     
-    // Simulating low-overhead network load for scalability demo
     setTimeout(() => {
-      setVisibleCount(prev => prev + ITEMS_PER_BATCH);
+      setVisibleCount(prev => prev + 3);
       setIsLoadingMore(false);
-    }, 400);
+    }, 600);
   }, [visibleCount, templates.length]);
 
-  // IntersectionObserver for staggered reveal on new items
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
@@ -58,7 +55,8 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const el = entry.target as HTMLElement;
-            const delay = parseInt(el.dataset.index || "0", 10) % ITEMS_PER_BATCH * 120;
+            const indexAttribute = el.dataset.index || "0";
+            const delay = (parseInt(indexAttribute, 10) % 3) * 150;
             setTimeout(() => {
               el.classList.remove("card-reveal-hidden");
               el.classList.add("card-reveal-visible");
@@ -67,15 +65,13 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -100px 0px" }
     );
 
     cards.forEach((card) => observer.observe(card));
-
     return () => observer.disconnect();
   }, [visibleTemplates]);
 
-  // Closing section reveal observer
   const closingRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = closingRef.current;
@@ -107,69 +103,78 @@ export default function TemplatesGrid({ templates }: { templates: TemplateData[]
 
   return (
     <>
-      {/* Dynamic background (needs client state for activeTheme) */}
       <CultureBackground activeTheme={activeTheme} />
 
-      {/* Prestige Grid */}
-      <section className="relative z-10 max-w-7xl mx-auto py-24 px-6 sm:px-8">
+      <section className="relative z-10 max-w-[1400px] mx-auto py-32 px-6 sm:px-12">
         <div
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
+          className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10"
         >
-          {visibleTemplates.map((template, index) => (
-            <div
-              key={template.value}
-              data-card
-              data-index={index}
-              className="card-reveal-hidden"
-              onMouseEnter={() => setActiveTheme(template.value)}
-            >
-              <TraditionCard
-                theme={template.value}
-                title={template.label}
-                description={template.description}
-                isActive={activeTheme === template.value}
-                onNavigate={() => handleNavigate(template.value)}
-                priority={index < 3} // Only first row gets priority
-              />
-            </div>
-          ))}
+          {visibleTemplates.map((template, index) => {
+            const isFeatured = index % 5 === 0;
+            const gridSpan = isFeatured ? "md:col-span-8 lg:col-span-7" : "md:col-span-4 lg:col-span-5";
+            
+            return (
+              <div
+                key={template.value}
+                data-card
+                data-index={index}
+                className={`card-reveal-hidden ${gridSpan} ${index % 2 === 1 ? 'md:mt-12' : ''}`}
+                onMouseEnter={() => setActiveTheme(template.value)}
+              >
+                <TraditionCard
+                  theme={template.value}
+                  title={template.label}
+                  description={template.description}
+                  isActive={activeTheme === template.value}
+                  onNavigate={() => handleNavigate(template.value)}
+                  priority={index < 4}
+                />
+              </div>
+            );
+          })}
         </div>
 
-        {/* Scalability: Load More / Skeleton interaction point */}
-        <div className="mt-20 flex justify-center">
+        <div className="mt-32 flex flex-col items-center gap-8">
+          <div className="w-px h-24 bg-gradient-to-b from-white/20 to-transparent" />
           {visibleCount < templates.length && (
             <button 
               onClick={loadMore}
               disabled={isLoadingMore}
-              className="group relative overflow-hidden h-16 bg-white/5 backdrop-blur-xl border border-white/10 text-charcoal/40 font-mono-lux tracking-[0.4em] uppercase py-2 px-12 rounded-full transition-all hover:bg-gold-accent hover:text-white disabled:opacity-50"
+              className="group relative overflow-hidden h-18 bg-white/5 backdrop-blur-2xl border border-white/10 text-white font-mono-lux text-[10px] tracking-[0.5em] uppercase py-3 px-16 rounded-full transition-all hover:bg-white hover:text-black disabled:opacity-50"
             >
-              <span className="relative z-10">{isLoadingMore ? "Gathering Heritage..." : "Load More Collections"}</span>
-              <div className="absolute inset-x-0 bottom-0 h-1 bg-gold-accent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+              <span className="relative z-10">{isLoadingMore ? "Gathering Heritage..." : "Discover More"}</span>
+              <div className="absolute inset-0 bg-gold-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </button>
           )}
         </div>
       </section>
 
-      {/* Bespoke Heritage Closure */}
-      <section className="px-6 sm:px-8 py-32 sm:py-52 z-10 relative bg-black">
+      <section className="px-6 sm:px-8 py-32 sm:py-64 z-10 relative bg-black">
         <div
           ref={closingRef}
-          className="section-reveal-hidden max-w-7xl mx-auto rounded-[48px] sm:rounded-[80px] border border-white/5 p-12 sm:p-20 lg:p-32 text-center overflow-hidden relative bg-white/[0.01]"
+          className="section-reveal-hidden max-w-[1400px] mx-auto rounded-[64px] border border-white/5 p-12 sm:p-24 lg:p-40 text-center overflow-hidden relative bg-white/[0.01]"
         >
-          <div className="absolute inset-0 bg-mandala opacity-[0.01] scale-150 rotate-45" />
+          <div className="absolute inset-0 bg-mandala opacity-[0.02] scale-150 -rotate-12" />
 
-          <div className="relative z-10 space-y-10 sm:space-y-12">
-            <h2 className="font-serif-lux text-5xl sm:text-6xl lg:text-8xl tracking-tighter text-silk">
-              Bespoke Lineage
-            </h2>
-            <p className="mt-6 sm:mt-8 text-lg sm:text-xl text-silk/20 max-w-3xl mx-auto leading-relaxed">
-              Our creative engineers can orchestrate a unique architecture for unions that demand
-              a one-of-a-kind digital translation.
+          <div className="relative z-10 space-y-12">
+            <div className="space-y-6">
+              <span className="font-mono-lux text-[9px] tracking-[0.6em] text-gold-accent uppercase font-bold">Unparalleled Service</span>
+              <h2 className="font-serif-lux text-5xl sm:text-7xl lg:text-[8rem] tracking-tighter text-white leading-[0.8]">
+                Bespoke <br /> <span className="italic font-light opacity-80">Lineage</span>
+              </h2>
+            </div>
+            
+            <p className="mt-8 text-lg sm:text-xl text-white/30 max-w-2xl mx-auto leading-relaxed font-medium">
+              For unions requiring a one-of-a-kind digital architect, our creative 
+              engineers design bespoke experiences from the ground up.
             </p>
-            <button className="cta-button-static mt-10 sm:mt-12 h-16 sm:h-18 bg-silk text-charcoal rounded-full px-12 sm:px-16 text-[10px] font-mono-lux font-bold uppercase tracking-[0.5em] shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
-              Request Bespoke Collection
-            </button>
+
+            <div className="pt-12">
+              <button className="h-18 px-16 bg-white text-black rounded-full text-[10px] font-mono-lux font-bold uppercase tracking-[0.6em] hover:bg-gold-accent hover:text-white transition-all shadow-[0_40px_80px_rgba(0,0,0,0.8)]">
+                Inquire for Bespoke
+              </button>
+            </div>
           </div>
         </div>
       </section>
