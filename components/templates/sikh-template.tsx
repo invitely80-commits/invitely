@@ -52,7 +52,7 @@ export function SikhTemplate({
         .tracking-editorial { letter-spacing: 0.5em; }
         .kerning-loose { letter-spacing: 0.15em; }
         .text-shadow-hero { 
-          text-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.3); 
+          text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6); 
         }
       `}</style>
 
@@ -60,28 +60,28 @@ export function SikhTemplate({
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Golden Temple" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/90" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
           <div className="space-y-6">
             <div className="w-24 h-px bg-[#E8D5A0] mx-auto" />
-            <p className="text-white font-sans text-[10px] uppercase tracking-editorial font-medium">Satnam Waheguru</p>
+            <p className="text-white font-sans text-[11px] uppercase tracking-editorial font-bold text-shadow-hero">Satnam Waheguru</p>
             <div className="w-24 h-px bg-[#E8D5A0] mx-auto" />
           </div>
           
-          <h1 className="font-serif italic text-5xl md:text-8xl text-white font-light leading-[1.0] kerning-loose text-shadow-hero">
+          <h1 className="font-serif italic text-5xl md:text-[5.5rem] lg:text-[7rem] text-white font-normal leading-[1.0] kerning-loose text-shadow-hero">
             By His Divine Command, <br />
-            <span className="opacity-90 italic">Two Souls, One Light</span>
+            <span className="opacity-95 italic text-[#FDFBF7]">Two Souls, One Light</span>
           </h1>
 
-          <div className="space-y-6 pt-6">
-            <h2 className="font-serif text-3xl md:text-5xl text-[#E8D5A0] kerning-loose font-medium text-shadow-hero">
+          <div className="space-y-8 pt-6">
+            <h2 className="font-serif text-3xl md:text-[4rem] text-[#E8D5A0] kerning-loose font-medium text-shadow-hero tracking-tight">
               {d.brideFirstName} <span className="opacity-60 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <div className="flex items-center justify-center gap-6 text-white/80 font-sans text-[10px] uppercase tracking-editorial font-light drop-shadow-md">
+            <div className="flex items-center justify-center gap-8 text-white/90 font-sans text-[11px] uppercase tracking-editorial font-medium drop-shadow-2xl">
               <span>{d.weddingDate}</span>
-              <div className="w-px h-6 bg-white/20" />
+              <div className="w-px h-8 bg-white/40" />
               <span>{d.city}</span>
             </div>
           </div>
@@ -164,15 +164,15 @@ export function SikhTemplate({
                 className="space-y-10 group"
               >
                 <div className="relative flex justify-center">
-                   <div className="w-12 h-px bg-[#E8D5A0]/20 group-hover:w-20 transition-all duration-700" />
+                   <div className="w-12 h-px bg-[#E8D5A0]/40 group-hover:w-20 transition-all duration-700" />
                 </div>
                 <div className="space-y-4">
-                  <p className="font-sans text-[9px] tracking-editorial uppercase text-[#E8D5A0] font-medium">
+                  <p className="font-sans text-[11px] tracking-editorial uppercase text-[#E8D5A0] font-bold">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                   </p>
-                  <h3 className="font-serif text-2xl font-light tracking-widest">{event.title}</h3>
+                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-widest text-white">{event.title}</h3>
                 </div>
-                <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-[240px] mx-auto tracking-wide">
+                <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-[240px] mx-auto tracking-wide">
                   {event.description || `${event.venue}, ${event.address}`}
                 </p>
               </motion.div>

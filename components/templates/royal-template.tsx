@@ -52,7 +52,7 @@ export function RoyalTemplate({
         .tracking-editorial { letter-spacing: 0.5em; }
         .kerning-loose { letter-spacing: 0.15em; }
         .text-shadow-royal { 
-          text-shadow: 0 4px 15px rgba(0,0,0,0.6), 0 2px 5px rgba(0,0,0,0.4); 
+          text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6); 
         }
       `}</style>
 
@@ -60,28 +60,28 @@ export function RoyalTemplate({
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Palace" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/90" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
           <div className="space-y-6">
             <div className="w-24 h-px bg-[#C9A84C] mx-auto" />
-            <p className="text-[#E8D5A0] font-sans text-[10px] uppercase tracking-editorial font-bold shadow-sm">Imperial Collection</p>
+            <p className="text-[#E8D5A0] font-sans text-[11px] uppercase tracking-editorial font-bold drop-shadow-xl">Imperial Collection</p>
             <div className="w-24 h-px bg-[#C9A84C] mx-auto" />
           </div>
           
-          <h1 className="font-serif italic text-5xl md:text-8xl text-white font-light leading-[1.0] kerning-loose text-shadow-royal">
+          <h1 className="font-serif italic text-5xl md:text-[6rem] lg:text-[7.5rem] text-white font-normal leading-[1.0] kerning-loose text-shadow-royal">
             A Legacy of Crowns, <br />
-            <span className="opacity-90 italic">A Covenant of Hearts</span>
+            <span className="opacity-95 italic text-[#FDFBF7]">A Covenant of Hearts</span>
           </h1>
 
-          <div className="space-y-6 pt-6">
-            <h2 className="font-serif text-3xl md:text-5xl text-[#E8D5A0] kerning-loose font-medium drop-shadow-2xl">
+          <div className="space-y-8 pt-6">
+            <h2 className="font-serif text-3xl md:text-[4rem] text-[#E8D5A0] kerning-loose font-medium text-shadow-royal tracking-tight">
               {d.brideFirstName} <span className="opacity-60 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <div className="flex items-center justify-center gap-6 text-white/70 font-sans text-[10px] uppercase tracking-editorial font-light drop-shadow-md">
+            <div className="flex items-center justify-center gap-8 text-white/90 font-sans text-[11px] uppercase tracking-editorial font-medium drop-shadow-2xl">
               <span>{d.weddingDate}</span>
-              <div className="w-1.5 h-1.5 bg-[#C9A84C] rotate-45" />
+              <div className="w-2 h-2 bg-[#C9A84C] rotate-45 shadow-[0_0_10px_rgba(201,168,76,0.6)]" />
               <span>{d.city}</span>
             </div>
           </div>
@@ -166,18 +166,18 @@ export function RoyalTemplate({
                 className="space-y-10 group"
               >
                 <div className="flex flex-col items-center">
-                   <p className="font-serif text-[20px] md:text-[24px] tracking-widest text-[#E8D5A0] opacity-50 font-thin italic">
+                   <p className="font-serif text-[22px] md:text-[26px] tracking-widest text-[#E8D5A0] opacity-80 font-thin italic">
                      {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                    </p>
-                   <div className="w-px h-12 bg-[#E8D5A0]/20 my-4" />
+                   <div className="w-px h-12 bg-[#E8D5A0]/40 my-4" />
                 </div>
                 <div className="space-y-4 text-center">
-                  <h3 className="font-serif text-2xl md:text-3xl font-light tracking-widest uppercase">{event.title}</h3>
-                  <div className="space-y-2">
-                    <p className="font-sans text-[10px] text-[#E8D5A0] tracking-widest uppercase opacity-60">
+                   <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-widest uppercase text-white">{event.title}</h3>
+                  <div className="space-y-3">
+                    <p className="font-sans text-[11px] text-[#E8D5A0] tracking-widest uppercase font-medium">
                       {event.time} @ {event.venue}
                     </p>
-                    <p className="font-sans text-[11px] opacity-40 font-extralight leading-relaxed max-w-[240px] mx-auto tracking-wide">
+                    <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-[260px] mx-auto tracking-wide">
                       {event.description || event.address}
                     </p>
                   </div>

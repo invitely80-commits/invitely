@@ -52,7 +52,7 @@ export function ChristianTemplate({
         .tracking-editorial { letter-spacing: 0.5em; }
         .kerning-loose { letter-spacing: 0.2em; }
         .text-shadow-ethereal { 
-          text-shadow: 0 4px 20px rgba(255,255,255,0.4), 0 2px 10px rgba(0,0,0,0.1); 
+          text-shadow: 0 2px 10px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1); 
         }
       `}</style>
 
@@ -60,26 +60,26 @@ export function ChristianTemplate({
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Altar" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-white/5 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/10 to-white/60" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
           <div className="space-y-6">
-            <p className="text-charcoal/60 font-sans text-[9px] uppercase tracking-editorial font-medium">Sacred Union</p>
-            <div className="w-12 h-px bg-charcoal/20 mx-auto" />
+            <p className="text-charcoal/60 font-sans text-[10px] uppercase tracking-editorial font-bold">Sacred Union</p>
+            <div className="w-12 h-px bg-charcoal/30 mx-auto" />
           </div>
           
-          <h1 className="font-serif italic text-5xl md:text-8xl text-[#1A1A1A] font-light leading-[1.0] kerning-loose text-shadow-ethereal">
+          <h1 className="font-serif italic text-5xl md:text-[5.5rem] lg:text-[7rem] text-[#1A1A1A] font-normal leading-[1.1] kerning-loose text-shadow-ethereal">
             Grace Found Us, <br />
-            <span className="opacity-80 italic">Love Bound Us</span>
+            <span className="opacity-70 italic text-[#2F4F4F]">Love Bound Us</span>
           </h1>
 
-          <div className="space-y-6 pt-4">
-            <h2 className="font-serif text-3xl md:text-5xl text-[#2F4F4F] kerning-loose font-light">
+          <div className="space-y-8 pt-4">
+            <h2 className="font-serif text-3xl md:text-5xl text-[#2F4F4F] kerning-loose font-medium">
               {d.brideFirstName} <span className="opacity-40 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <p className="font-sans text-[10px] uppercase tracking-editorial text-charcoal/50 font-light">
-              {d.weddingDate} <span className="mx-4 opacity-20">|</span> {d.city}
+            <p className="font-sans text-[11px] uppercase tracking-editorial text-charcoal/60 font-medium">
+              {d.weddingDate} <span className="mx-6 opacity-30">|</span> {d.city}
             </p>
           </div>
 
@@ -153,14 +153,14 @@ export function ChristianTemplate({
                 className="text-left space-y-6"
               >
                 <div className="flex items-center gap-6">
-                  <p className="font-sans text-[10px] tracking-editorial uppercase text-charcoal/40">
+                  <p className="font-sans text-[11px] tracking-editorial uppercase text-charcoal/60 font-medium">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                   </p>
-                  <div className="flex-1 h-px bg-black/5" />
+                  <div className="flex-1 h-px bg-black/10" />
                 </div>
-                <div className="space-y-3">
-                  <h3 className="font-serif text-2xl md:text-3xl font-light tracking-tight">{event.title}</h3>
-                  <p className="font-sans text-xs opacity-60 font-extralight leading-relaxed max-w-sm">
+                <div className="space-y-4">
+                  <h3 className="font-serif text-2xl md:text-[2.25rem] font-normal tracking-tight text-[#1A1A1A]">{event.title}</h3>
+                  <p className="font-sans text-[13px] text-charcoal/70 font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>

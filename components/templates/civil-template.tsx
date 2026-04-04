@@ -51,33 +51,36 @@ export function CivilTemplate({
         .font-sans { font-family: 'Inter', sans-serif; }
         .tracking-editorial { letter-spacing: 0.55em; }
         .kerning-loose { letter-spacing: 0.25em; }
+        .text-shadow-ethereal { 
+           text-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.05); 
+        }
       `}</style>
 
       {/* ── HERO: MINIMALIST CHAPEL ─────────────────────────────────── */}
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
-          <Image src={d.heroImage} alt="Chapel" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/60" />
+          <Image src={d.heroImage} alt="Chapel" fill priority className="object-cover opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-white/80" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-16">
           <div className="space-y-6">
-            <p className="text-charcoal/40 font-sans text-[8px] uppercase tracking-editorial font-light">Civil Union Invitation</p>
-            <div className="w-12 h-px bg-charcoal/10 mx-auto" />
+            <p className="text-charcoal/60 font-sans text-[11px] uppercase tracking-editorial font-bold">Civil Union Invitation</p>
+            <div className="w-12 h-px bg-charcoal/30 mx-auto" />
           </div>
           
-          <h1 className="font-serif italic text-5xl md:text-8xl text-charcoal font-light leading-[1.0] kerning-loose">
+          <h1 className="font-serif italic text-5xl md:text-[6rem] lg:text-[7.5rem] text-charcoal font-normal leading-[1.0] kerning-loose text-shadow-ethereal">
             Fine Moments, <br />
-            <span className="opacity-60 italic">Eternal Vows</span>
+            <span className="opacity-70 italic text-[#2D2926]">Eternal Vows</span>
           </h1>
 
-          <div className="space-y-6 pt-4">
-            <h2 className="font-serif text-3xl md:text-5xl text-charcoal/80 kerning-loose font-extralight">
-              {d.brideFirstName} <span className="opacity-30 italic">&amp;</span> {d.groomFirstName}
+          <div className="space-y-8 pt-4">
+            <h2 className="font-serif text-3xl md:text-[3.5rem] text-charcoal/90 kerning-loose font-medium">
+              {d.brideFirstName} <span className="opacity-40 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <div className="flex items-center justify-center gap-10 text-charcoal/40 font-sans text-[9px] uppercase tracking-editorial font-light">
+            <div className="flex items-center justify-center gap-12 text-charcoal/60 font-sans text-[11px] uppercase tracking-editorial font-medium">
               <span>{d.weddingDate}</span>
-              <div className="w-1 h-1 bg-charcoal/10 rounded-full" />
+              <div className="w-1.5 h-1.5 bg-charcoal/20 rounded-full" />
               <span>{d.city}</span>
             </div>
           </div>
@@ -152,14 +155,14 @@ export function CivilTemplate({
                 className="text-left space-y-6"
               >
                 <div className="flex items-center gap-6">
-                  <p className="font-sans text-[9px] tracking-editorial uppercase text-charcoal/30">
+                  <p className="font-sans text-[11px] font-bold tracking-editorial uppercase text-charcoal/60">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                   </p>
-                  <div className="flex-1 h-px bg-charcoal/5" />
+                  <div className="flex-1 h-px bg-charcoal/20" />
                 </div>
-                <div className="space-y-3">
-                  <h3 className="font-serif text-2xl md:text-3xl font-light tracking-tight text-charcoal/80">{event.title}</h3>
-                  <p className="font-sans text-xs opacity-50 font-extralight leading-relaxed max-w-sm">
+                <div className="space-y-4">
+                  <h3 className="font-serif text-2xl md:text-4xl font-normal tracking-tight text-charcoal">{event.title}</h3>
+                  <p className="font-sans text-[13px] text-charcoal/70 font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>

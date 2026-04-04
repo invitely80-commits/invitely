@@ -55,7 +55,7 @@ export function SouthIndianTemplate({
         .tracking-editorial { letter-spacing: 0.4em; }
         .kerning-loose { letter-spacing: 0.15em; }
         .text-shadow-cinematic { 
-          text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.2); 
+          text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6); 
         }
       `}</style>
 
@@ -63,27 +63,27 @@ export function SouthIndianTemplate({
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Temple" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/90" />
         </motion.div>
         <LightRays />
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-12">
           <div className="space-y-4">
-            <div className="w-24 h-px bg-white/60 mx-auto" />
-            <p className="text-white font-sans text-[10px] uppercase tracking-editorial font-medium text-shadow-cinematic">Wedding Invitation</p>
-            <div className="w-24 h-px bg-white/60 mx-auto" />
+            <div className="w-24 h-px bg-white/80 mx-auto shadow-sm" />
+            <p className="text-white font-sans text-[11px] uppercase tracking-editorial font-bold text-shadow-cinematic">Wedding Invitation</p>
+            <div className="w-24 h-px bg-white/80 mx-auto shadow-sm" />
           </div>
           
-          <h1 className="font-serif italic text-4xl md:text-7xl lg:text-8xl text-white font-medium leading-[1.1] kerning-loose text-shadow-cinematic">
+          <h1 className="font-serif italic text-4xl md:text-[5rem] lg:text-[7rem] text-white font-normal leading-[1.1] kerning-loose text-shadow-cinematic">
             A union written in tradition, <br />
-            <span className="">celebrated in love</span>
+            <span className="opacity-95 text-[#FDFBF7]">celebrated in love</span>
           </h1>
 
-          <div className="space-y-3 pt-8">
-            <h2 className="font-serif text-3xl md:text-4xl text-[#E8D5A0] kerning-loose font-semibold text-shadow-cinematic">
+          <div className="space-y-6 pt-8">
+            <h2 className="font-serif text-3xl md:text-6xl text-[#E8D5A0] kerning-loose font-medium text-shadow-cinematic tracking-tight">
               {d.brideFirstName} <span className="opacity-60 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <p className="font-sans text-xs md:text-sm text-white font-medium uppercase tracking-editorial pt-2 text-shadow-cinematic">
+            <p className="font-sans text-xs md:text-[13px] text-white/90 font-bold uppercase tracking-editorial pt-2 text-shadow-cinematic drop-shadow-2xl">
               {d.weddingDate}
             </p>
           </div>
@@ -161,14 +161,14 @@ export function SouthIndianTemplate({
                 className="text-left space-y-6 group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-8 h-px bg-[#C9A84C]/40 group-hover:w-12 transition-all duration-700" />
-                  <p className="font-sans text-[10px] tracking-editorial uppercase text-[#8B1A1A] font-medium">
+                  <div className="w-8 h-px bg-[#C9A84C]/60 group-hover:w-12 transition-all duration-700" />
+                  <p className="font-sans text-[11px] tracking-editorial uppercase text-[#8B1A1A] font-bold">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                   </p>
                 </div>
-                <div className="space-y-3 pl-12">
-                  <h3 className="font-serif text-2xl font-light tracking-tight">{event.title}</h3>
-                  <p className="font-sans text-xs opacity-60 font-extralight leading-relaxed max-w-sm">
+                <div className="space-y-4 pl-12">
+                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-tight text-[#2D1B1B]">{event.title}</h3>
+                  <p className="font-sans text-[13px] text-[#4A4A4A] font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>
@@ -180,8 +180,8 @@ export function SouthIndianTemplate({
 
       {/* ── HERITAGE: THE DEEP MAROON RITUALS ───────────────────────── */}
       <section className="relative py-32 md:py-48 bg-[#4A1A1A] text-[#FDFBF7] overflow-hidden">
-        <div className="absolute inset-0 opacity-15 pointer-events-none scale-110">
-          <Image src={d.heroImage} alt="" fill className="object-cover" />
+        <div className="absolute inset-0 opacity-20 pointer-events-none scale-110">
+          <Image src={d.heroImage} alt="" fill className="object-cover grayscale brightness-50" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-24">
@@ -191,9 +191,9 @@ export function SouthIndianTemplate({
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-60">Heritage</span>
-            <h2 className="font-serif italic text-4xl md:text-6xl font-light">Rooted in Tradition</h2>
-            <p className="font-sans text-sm md:text-base opacity-70 tracking-wide max-w-2xl mx-auto leading-relaxed">
+            <span className="font-sans text-[11px] tracking-editorial uppercase text-[#E8D5A0] font-bold">Heritage</span>
+            <h2 className="font-serif italic text-4xl md:text-7xl font-normal text-white">Rooted in Tradition</h2>
+            <p className="font-sans text-[15px] md:text-lg text-white/80 tracking-wide max-w-2xl mx-auto leading-relaxed font-light">
               Each ritual carries the weight of centuries — a sacred language <br /> spoken through fire, flowers, and song.
             </p>
           </motion.div>
@@ -214,13 +214,13 @@ export function SouthIndianTemplate({
                 className="flex flex-col items-center gap-8 group"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 blur-2xl bg-[#C9A84C]/10 scale-0 group-hover:scale-150 transition-transform duration-700" />
+                  <div className="absolute inset-0 blur-2xl bg-[#C9A84C]/20 scale-0 group-hover:scale-150 transition-transform duration-700" />
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   <RitualIcon type={r.type as any} size={80} />
                 </div>
-                <div className="space-y-3">
-                  <h3 className="font-serif text-2xl font-light text-[#E8D5A0] kerning-loose">{r.title}</h3>
-                  <p className="font-sans text-xs md:text-sm opacity-60 font-extralight tracking-wide leading-relaxed max-w-[280px]">
+                <div className="space-y-4">
+                  <h3 className="font-serif text-2xl md:text-3xl font-normal text-[#E8D5A0] kerning-loose">{r.title}</h3>
+                  <p className="font-sans text-[13px] md:text-sm text-white/70 font-light tracking-wide leading-relaxed max-w-[280px] mx-auto">
                     {r.desc}
                   </p>
                 </div>

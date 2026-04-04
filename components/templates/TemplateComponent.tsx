@@ -52,38 +52,38 @@ export function TemplateComponent({
         .tracking-editorial { letter-spacing: 0.6em; }
         .kerning-loose { letter-spacing: 0.3em; }
         .text-shadow-lux { 
-          text-shadow: 0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(255,215,0,0.1); 
+          text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6); 
         }
       `}</style>
 
       {/* ── HERO: LUXURY ABSTRACT ─────────────────────────────────── */}
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden bg-black">
-        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
-          <Image src={d.heroImage} alt="Luxury Abstract" fill priority className="object-cover opacity-80" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90" />
+        <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full opacity-60">
+          <Image src={d.heroImage} alt="Luxury Abstract" fill priority className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-20">
           <div className="space-y-8">
-             <div className="flex items-center justify-center gap-10 opacity-30">
-              <div className="w-16 h-px bg-white" />
-              <p className="text-white font-sans text-[8px] uppercase tracking-editorial font-light">The Exclusive Collection</p>
-              <div className="w-16 h-px bg-white" />
+             <div className="flex items-center justify-center gap-10">
+              <div className="w-16 h-px bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+              <p className="text-white font-sans text-[11px] uppercase tracking-editorial font-bold text-shadow-lux">The Exclusive Collection</p>
+              <div className="w-16 h-px bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
             </div>
           </div>
           
-          <h1 className="font-serif italic text-5xl md:text-9xl text-white font-light leading-[0.9] kerning-loose text-shadow-lux">
+          <h1 className="font-serif italic text-5xl md:text-[6.5rem] lg:text-[8.5rem] text-white font-normal leading-[0.9] kerning-loose text-shadow-lux">
             The Art of <br />
-            <span className="opacity-70 italic">Forever</span>
+            <span className="opacity-95 italic text-[#FDFBF7]">Forever</span>
           </h1>
 
           <div className="space-y-8 pt-6">
-            <h2 className="font-serif text-3xl md:text-6xl text-[#E8D5A0] kerning-loose font-extralight drop-shadow-2xl">
-              {d.brideFirstName} <span className="opacity-30 italic">&amp;</span> {d.groomFirstName}
+            <h2 className="font-serif text-3xl md:text-[4rem] text-[#E8D5A0] kerning-loose font-medium text-shadow-lux tracking-tight">
+              {d.brideFirstName} <span className="opacity-60 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <div className="flex flex-col items-center gap-3 text-white/50 font-sans text-[10px] uppercase tracking-editorial font-light">
-              <span className="opacity-40">Witnessed in</span>
-              <span className="text-white opacity-80">{d.weddingDate} <span className="mx-6 text-white/20">|</span> {d.city}</span>
+            <div className="flex flex-col items-center gap-4 text-white/90 font-sans text-[11px] uppercase tracking-editorial font-medium">
+              <span className="opacity-60 drop-shadow-lg">Witnessed in</span>
+              <span className="text-white drop-shadow-2xl">{d.weddingDate} <span className="mx-6 text-[#C9A84C]">|</span> {d.city}</span>
             </div>
           </div>
 
@@ -150,25 +150,25 @@ export function TemplateComponent({
             <h2 className="font-serif italic text-4xl md:text-7xl font-light tracking-wide text-[#E8D5A0]">Bespoke Evening</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-16 md:gap-32 py-12 md:py-24 text-left border-y border-white/5">
+          <div className="grid md:grid-cols-2 gap-16 md:gap-32 py-12 md:py-24 text-left border-y border-white/10">
             {invite.data.events.map((event, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1, delay: i * 0.1 }}
-                className="space-y-8 py-10"
+                className="space-y-8 py-10 group"
               >
-                <div className="flex items-center justify-between opacity-30 border-b border-white/10 pb-4">
-                  <p className="font-sans text-[10px] tracking-editorial uppercase">
+                <div className="flex items-center justify-between border-b border-white/20 pb-4">
+                  <p className="font-sans text-[11px] tracking-editorial uppercase font-bold text-[#E8D5A0]">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                   </p>
-                  <div className="w-1 h-1 bg-white" />
+                  <div className="w-1.5 h-1.5 bg-[#C9A84C] rotate-45 shadow-[0_0_10px_rgba(201,168,76,0.6)]" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-serif text-3xl md:text-4xl font-light tracking-tighter text-white opacity-90">{event.title}</h3>
-                  <p className="font-sans text-[11px] opacity-40 font-extralight leading-relaxed max-w-sm tracking-wide">
+                  <h3 className="font-serif text-3xl md:text-5xl font-normal tracking-tight text-white">{event.title}</h3>
+                  <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>

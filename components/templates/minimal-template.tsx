@@ -52,36 +52,36 @@ export function MinimalTemplate({
         .tracking-editorial { letter-spacing: 0.6em; }
         .kerning-loose { letter-spacing: 0.3em; }
         .text-shadow-ethereal { 
-           text-shadow: 0 4px 20px rgba(255,255,255,0.4), 0 2px 10px rgba(0,0,0,0.05); 
+           text-shadow: 0 2px 10px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02); 
         }
       `}</style>
 
       {/* ── HERO: PURE MINIMAL ──────────────────────────────────── */}
       <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
-          <Image src={d.heroImage} alt="Minimal" fill priority className="object-cover opacity-30 grayscale" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/50 to-white" />
+          <Image src={d.heroImage} alt="Minimal" fill priority className="object-cover opacity-40 grayscale" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-white/80" />
         </motion.div>
         
         <motion.div style={{ opacity: heroOpacity, y: heroTextY }} className="relative z-10 text-center px-6 max-w-5xl space-y-12">
           <div className="space-y-4">
-             <div className="w-12 h-px bg-black opacity-10 mx-auto" />
-             <p className="text-[10px] uppercase tracking-editorial font-light opacity-40">Modern Minimal Collection</p>
-             <div className="w-12 h-px bg-black opacity-10 mx-auto" />
+             <div className="w-12 h-px bg-black/20 mx-auto" />
+             <p className="text-[11px] uppercase tracking-editorial font-bold opacity-60 text-black">Modern Minimal Collection</p>
+             <div className="w-12 h-px bg-black/20 mx-auto" />
           </div>
           
-          <h1 className="font-serif italic text-4xl md:text-8xl text-black font-light leading-[1.0] kerning-loose text-shadow-ethereal">
+          <h1 className="font-serif italic text-5xl md:text-[6rem] lg:text-[8rem] text-black font-normal leading-[1.0] kerning-loose text-shadow-ethereal">
             Simply, <br />
-            <span className="opacity-40 italic">Ours.</span>
+            <span className="opacity-60 italic">Ours.</span>
           </h1>
 
-          <div className="space-y-6 pt-4">
-            <h2 className="font-serif text-3xl md:text-5xl text-black/80 kerning-loose font-extralight">
-              {d.brideFirstName} <span className="opacity-20 italic">&amp;</span> {d.groomFirstName}
+          <div className="space-y-8 pt-4">
+            <h2 className="font-serif text-3xl md:text-6xl text-black/90 kerning-loose font-light">
+              {d.brideFirstName} <span className="opacity-30 italic">&amp;</span> {d.groomFirstName}
             </h2>
-            <div className="flex flex-col items-center gap-4 text-black/40 font-sans text-[10px] uppercase tracking-editorial font-light">
+            <div className="flex flex-col items-center gap-6 text-black/60 font-sans text-[11px] uppercase tracking-editorial font-medium">
               <span>{d.weddingDate}</span>
-              <span>{d.city}</span>
+              <span className="opacity-40">{d.city}</span>
             </div>
           </div>
 
@@ -152,15 +152,15 @@ export function MinimalTemplate({
                 transition={{ duration: 1.5, delay: i * 0.1 }}
                 className="text-left space-y-4"
               >
-                <div className="flex items-center gap-4 border-b border-black/5 pb-2">
-                   <p className="font-sans text-[8px] tracking-editorial uppercase opacity-30">
+                <div className="flex items-center gap-4 border-b border-black/10 pb-2">
+                   <p className="font-sans text-[11px] tracking-editorial uppercase opacity-60 text-black font-medium">
                     {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
                    </p>
-                   <div className="w-1 h-1 bg-black/10 rounded-full" />
+                   <div className="w-1.5 h-1.5 bg-black/20 rounded-full" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-serif text-2xl font-light tracking-tight text-black/80">{event.title}</h3>
-                  <p className="font-sans text-[10px] opacity-40 font-extralight leading-relaxed max-w-sm tracking-wide">
+                <div className="space-y-3">
+                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-tight text-black">{event.title}</h3>
+                  <p className="font-sans text-[13px] text-black/60 font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
                 </div>
