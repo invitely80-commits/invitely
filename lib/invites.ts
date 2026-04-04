@@ -74,7 +74,8 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     case "sikh": return InviteTemplate.SIKH;
     case "civil": return InviteTemplate.CIVIL;
     case "luxury": return InviteTemplate.LUXURY;
-    case "south-indian": return ("SOUTH_INDIAN" as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case "south-indian": return (InviteTemplate as any).SOUTH_INDIAN;
     default: return InviteTemplate.MINIMAL;
   }
 }
@@ -88,7 +89,8 @@ export function templateToTheme(template: InviteTemplate): InviteTheme {
     case InviteTemplate.SIKH: return "sikh";
     case InviteTemplate.CIVIL: return "civil";
     case InviteTemplate.LUXURY: return "luxury";
-    case "SOUTH_INDIAN" as any: return "south-indian";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case (InviteTemplate as any).SOUTH_INDIAN: return "south-indian";
     default: return "minimal";
   }
 }

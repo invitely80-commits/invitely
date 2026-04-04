@@ -34,7 +34,7 @@ export const CultureBackground = ({ activeTheme }: { activeTheme: InviteTheme | 
     >
       {/* Dynamic Cinematic Hero Backdrop (Highly Blurred) */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-black">
-        {Object.entries(themeColors).map(([theme, data]) => {
+        {Object.entries(themeColors).map(([theme]) => {
           if (theme === 'default') return null;
           const imagePath = `/images/templates/${theme === 'lux' ? 'luxury' : theme}/hero_god_tier.png`;
           return (

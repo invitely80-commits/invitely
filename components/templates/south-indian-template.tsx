@@ -34,7 +34,6 @@ export function SouthIndianTemplate({
   const heroTextY = useTransform(smoothProgress, [0, 0.2], [0, 150]);
   
   const gopuramY = useTransform(smoothProgress, [0.7, 1], [100, -50]);
-  const birdY = useTransform(smoothProgress, [0.8, 1], [0, -100]);
 
   const d = {
     ...DEFAULT_DATA,
@@ -178,6 +177,7 @@ export function SouthIndianTemplate({
               >
                 <div className="relative">
                   <div className="absolute inset-0 blur-2xl bg-[#C9A84C]/10 scale-0 group-hover:scale-150 transition-transform duration-700" />
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   <RitualIcon type={r.type as any} size={80} />
                 </div>
                 <div className="space-y-3">
