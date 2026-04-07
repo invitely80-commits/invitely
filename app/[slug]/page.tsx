@@ -5,13 +5,26 @@ import { notFound } from "next/navigation";
 import { InviteRenderer } from "@/components/templates/render-invite";
 import { getCoupleNames, parseInviteData, templateToTheme } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
+import { inviteCache } from "@/lib/redis";
 
 const getInviteBySlug = cache(async (slug: string) => {
-  return prisma.invite.findUnique({
+  // Try Redis first
+  const cached = await inviteCache.get(slug);
+  if (cached) return cached;
+
+  // Fallback to Prisma
+  const invite = await prisma.invite.findUnique({
     where: {
       slug,
     },
   });
+
+  // Store in Redis for subsequent hits (TTL 600s)
+  if (invite) {
+    await inviteCache.set(slug, invite);
+  }
+
+  return invite;
 });
 
 export const revalidate = 3600; // Cache the invite page for 1 hour

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { uploadInviteImages } from "@/lib/cloudinary";
 import { parseInviteData, themeToTemplate } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
+import { inviteCache } from "@/lib/redis";
 import { requireUser } from "@/lib/session";
 import { generateInviteSlug } from "@/lib/slug";
 import {
@@ -169,6 +170,7 @@ export async function updateInviteAction(
     await prisma.invite.update({
       where: {
         id: inviteId,
+        userId: user.id, // Combined ownership check
       },
       data: {
         template: themeToTemplate(parsed.data.theme),
@@ -178,6 +180,9 @@ export async function updateInviteAction(
         data: inviteData,
       },
     });
+
+    // Proactive Cache Invalidation
+    await inviteCache.delete(existingInvite.slug);
   } catch (error) {
     console.error("Failed to update invite", error);
     return {
