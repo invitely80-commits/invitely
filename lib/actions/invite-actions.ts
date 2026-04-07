@@ -118,6 +118,9 @@ export async function createInviteAction(
         userId: user.id,
         slug,
         template: themeToTemplate(parsed.data.theme),
+        brideName: parsed.data.brideName,
+        groomName: parsed.data.groomName,
+        weddingDate: new Date(parsed.data.weddingDate),
         data: inviteData,
       },
     });
@@ -169,6 +172,9 @@ export async function updateInviteAction(
       },
       data: {
         template: themeToTemplate(parsed.data.theme),
+        brideName: parsed.data.brideName,
+        groomName: parsed.data.groomName,
+        weddingDate: new Date(parsed.data.weddingDate),
         data: inviteData,
       },
     });

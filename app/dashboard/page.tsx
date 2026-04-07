@@ -16,6 +16,16 @@ export default async function DashboardPage() {
     where: {
       userId: user.id,
     },
+    select: {
+      id: true,
+      slug: true,
+      template: true,
+      brideName: true,
+      groomName: true,
+      weddingDate: true,
+      updatedAt: true,
+      data: true,
+    },
     orderBy: {
       updatedAt: "desc",
     },
@@ -23,11 +33,22 @@ export default async function DashboardPage() {
 
   const inviteCards = invites.map((invite) => {
     const data = parseInviteData(invite.data);
+    
+    // Fallback logic for existing data
+    const coupleNames = invite.brideName && invite.groomName 
+      ? `${invite.brideName} & ${invite.groomName}` 
+      : getCoupleNames(data);
+    
+    const weddingDate = invite.weddingDate 
+      ? invite.weddingDate.toISOString().split('T')[0] 
+      : data.weddingDate;
+
     return {
       ...invite,
       data,
       theme: templateToTheme(invite.template),
-      coupleNames: getCoupleNames(data),
+      coupleNames,
+      weddingDate,
     };
   });
 
@@ -80,7 +101,7 @@ export default async function DashboardPage() {
                     </p>
                     <h2 className="mt-3 font-heading text-4xl text-maroon">{invite.coupleNames}</h2>
                     <p className="mt-2 text-sm leading-7 text-stone-600">
-                      Wedding date: {formatShortDate(invite.data.weddingDate)}
+                      Wedding date: {formatShortDate(invite.weddingDate)}
                     </p>
                     <p className="mt-1 text-sm leading-7 text-stone-600">Invite link: /{invite.slug}</p>
                   </div>

@@ -22,13 +22,18 @@ model Invite {
   id        String         @id @default(cuid())
   userId    String
   slug      String         @unique
-  template  InviteTemplate
-  data      Json
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brideName   String?
+  groomName   String?
+  weddingDate DateTime?
+  views       Int            @default(0)
+  data        Json
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([updatedAt])
+  @@index([weddingDate])
 }
 
 enum InviteTemplate {
