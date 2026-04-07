@@ -19,7 +19,7 @@ export const inviteCache = {
   /**
    * Set cache with a 10-minute TTL (600s)
    */
-  async set(slug: string, data: any) {
+  async set(slug: string, data: unknown) {
     try {
       await redis.set(this.key(slug), JSON.stringify(data), {
         ex: 600,
