@@ -12,14 +12,13 @@ async function syncInvites() {
     let updatedCount = 0;
 
     for (const invite of invites) {
-      // Only sync if new fields are missing
-      if (!invite.brideName || !invite.groomName || !invite.weddingDate) {
-        try {
+      try {
           const data = invite.data as any;
           
           await prisma.invite.update({
             where: { id: invite.id },
             data: {
+              template: data.template ? data.template.toUpperCase() : invite.template,
               brideName: data.brideName,
               groomName: data.groomName,
               weddingDate: data.weddingDate ? new Date(data.weddingDate) : null,
@@ -31,7 +30,6 @@ async function syncInvites() {
         } catch (error) {
           console.error(`Failed to update invite ${invite.slug}:`, error);
         }
-      }
     }
 
     console.log(`Successfully synchronized ${updatedCount} invitations.`);
