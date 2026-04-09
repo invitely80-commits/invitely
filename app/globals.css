@@ -3,20 +3,23 @@
 @theme {
   --color-ivory: #fcf9f2;
   --color-burgundy: #570013;
-  /* Luxury Palette (OKLCH) */
-  --color-vellum: oklch(98% 0.01 70);
-  --color-silk: oklch(94% 0.02 50);
-  --color-charcoal: oklch(25% 0.02 260);
-  --color-gold-accent: oklch(85% 0.12 90);
-  --color-gold: var(--color-gold-accent);
+  --color-ink: #1c1c18;
+  --color-vellum: #fcf9f2;
+  --color-silk: #f4f1ea;
+  --color-gold: #9a7f3f;
+  --color-gold-muted: rgba(154, 127, 63, 0.4);
   
   --font-sans: var(--font-plus-jakarta);
-  --font-heading: var(--font-noto);
+  --font-heading: var(--font-plus-jakarta);
   --font-serif-lux: var(--font-cormorant);
   --font-mono-lux: var(--font-geist-mono);
 
   /* Luxury Transition Timing */
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Shadow Scale */
+  --shadow-lux: 0 40px 100px -20px rgba(0, 0, 0, 0.1), 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  --shadow-gold: 0 20px 40px -10px rgba(154, 127, 63, 0.2);
 }
 
 :root {
@@ -68,22 +71,22 @@ a {
 
 /* The Heritage Modernist: No-Line Cards */
 .surface-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
-  backdrop-filter: blur(24px);
-  /* Boundary through delicate tonal shift */
-  border: 1px solid rgba(255, 255, 255, 0.6); 
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.02),
-    0 24px 60px -12px rgba(87, 0, 19, 0.04);
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-lux);
   transition: all 0.6s var(--ease-lux);
 }
 
 .surface-card:hover {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 
-    0 10px 15px -3px rgba(0, 0, 0, 0.03),
-    0 40px 80px -20px rgba(87, 0, 19, 0.08);
-  transform: translateY(-4px);
+  transform: translateY(-8px);
+  box-shadow: 0 60px 120px -30px rgba(0, 0, 0, 0.12);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-lux);
 }
 
 .glass-nav {

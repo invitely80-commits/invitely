@@ -20,34 +20,31 @@ export function SiteHeader({
   if (!isMounted) return null;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center py-6 px-6 pointer-events-none">
-      <div className="glass-nav pointer-events-auto flex w-full max-w-5xl items-center justify-between rounded-full border border-white/20 px-6 py-2 shadow-2xl shadow-burgundy/5 transition-all hover:border-white/40">
-        <Link href="/" className="font-heading text-2xl font-bold tracking-tight text-burgundy">
-          Invitely
+    <header className="fixed inset-x-0 top-0 z-[100] flex justify-center py-8 px-6 pointer-events-none">
+      <div className="glass-nav pointer-events-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-ink/5 bg-white/70 px-8 py-3 backdrop-blur-xl shadow-2xl transition-all hover:border-ink/10">
+        <Link href="/" className="font-heading text-2xl font-bold tracking-[-0.04em] text-ink">
+          Invitely<span className="text-gold">.</span>
         </Link>
         
-        <nav className="hidden items-center gap-10 text-[11px] font-bold uppercase tracking-[.25em] text-stone-400 md:flex">
+        <nav className="hidden items-center gap-12 text-[11px] font-bold uppercase tracking-[0.3em] text-ink/40 md:flex">
           <Link href="/templates" className="transition hover:text-burgundy">
-            Templates
+            Collection
           </Link>
           <Link href="#features" className="transition hover:text-burgundy">
-            Features
+            Aesthetics
           </Link>
           <Link href="#story" className="transition hover:text-burgundy">
-            Our Story
+            Rituals
           </Link>
         </nav>
-
-        <div className="flex items-center gap-6">
-          <Link href="/sign-in" className="hidden text-[11px] font-bold uppercase tracking-widest text-burgundy transition hover:opacity-60 lg:block">
-            Login
+ 
+        <div className="flex items-center gap-8">
+          <Link href="/sign-in" className="hidden text-[11px] font-bold uppercase tracking-widest text-ink transition hover:text-gold lg:block">
+            Sign In
           </Link>
           <Link 
             href={ctaHref} 
-            className={buttonStyles({ 
-              size: "sm", 
-              className: "rounded-xl bg-burgundy px-5 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-burgundy/90 shadow-lg shadow-burgundy/10 transition-all active:scale-95" 
-            })}
+            className="flex h-12 items-center justify-center rounded-full bg-ink px-8 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:bg-gold hover:scale-105 active:scale-95 shadow-xl shadow-ink/10"
           >
             {ctaLabel}
           </Link>
