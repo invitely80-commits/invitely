@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
+import { MapSection } from "@/components/templates/map-section";
 
 const DEFAULT_DATA = {
   brideFirstName: "Meera", brideLastName: "Rathore",
@@ -180,6 +181,11 @@ export function RoyalTemplate({
                     <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-[260px] mx-auto tracking-wide">
                       {event.description || event.address}
                     </p>
+                    <MapSection 
+                      address={event.address} 
+                      mapUrl={event.mapUrl} 
+                      buttonClassName="border-[#E8D5A0]/20 text-[#E8D5A0]/60 hover:border-[#E8D5A0]/40"
+                    />
                   </div>
                 </div>
               </motion.div>

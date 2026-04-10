@@ -19,6 +19,7 @@ export const inviteEventSchema = z.object({
   time: z.string().trim().optional().default(""),
   venue: z.string().trim().min(1, "Add a venue name."),
   address: z.string().trim().min(1, "Add a venue address."),
+  mapUrl: z.string().trim().url("Enter a valid URL").or(z.literal("")).optional(),
   description: z.string().trim().max(240, "Keep event notes under 240 characters.").optional().default(""),
 });
 

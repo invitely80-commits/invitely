@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
+import { MapSection } from "@/components/templates/map-section";
 import { LightRays, GopuramSilhouette, RitualIcon, AnimatedBirds } from "./visuals/SouthIndianVisual";
 
 const DEFAULT_DATA = {
@@ -171,6 +172,11 @@ export function SouthIndianTemplate({
                   <p className="font-sans text-[13px] text-[#4A4A4A] font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
+                  <MapSection 
+                    address={event.address} 
+                    mapUrl={event.mapUrl} 
+                    buttonClassName="border-[#C9A84C]/20 text-[#8B1A1A]/60 hover:border-[#C9A84C]/40"
+                  />
                 </div>
               </motion.div>
             ))}

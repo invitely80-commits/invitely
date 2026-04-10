@@ -29,6 +29,7 @@ function createEvent(partial?: Partial<InviteEvent>): InviteEvent {
     time: partial?.time ?? "",
     venue: partial?.venue ?? "",
     address: partial?.address ?? "",
+    mapUrl: partial?.mapUrl ?? "",
     description: partial?.description ?? "",
   };
 }
@@ -294,6 +295,17 @@ export function InviteEditorForm({
                     value={event.address}
                     onChange={(e) => updateEvent(event.id, "address", e.target.value)}
                   />
+                </div>
+                <div className="md:col-span-2">
+                  <Label>Google Maps Link (Optional)</Label>
+                  <Input
+                    value={event.mapUrl || ""}
+                    placeholder="Paste link from Google Maps (Share -> Copy Link)"
+                    onChange={(e) => updateEvent(event.id, "mapUrl", e.target.value)}
+                  />
+                  <p className="mt-1 text-xs text-stone-500">
+                    Paste a Google Maps share link or embed code (iframe) to show an interactive map.
+                  </p>
                 </div>
                 <div className="md:col-span-2">
                   <Label>Description</Label>

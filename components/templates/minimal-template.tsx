@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
+import { MapSection } from "@/components/templates/map-section";
 
 const DEFAULT_DATA = {
   brideFirstName: "Aarohi", brideLastName: "Verma",
@@ -163,6 +164,11 @@ export function MinimalTemplate({
                   <p className="font-sans text-[13px] text-black/60 font-light leading-relaxed max-w-sm tracking-wide">
                     {event.description || `${event.venue}, ${event.address}`}
                   </p>
+                  <MapSection 
+                    address={event.address} 
+                    mapUrl={event.mapUrl} 
+                    buttonClassName="border-black/10 text-black/60 hover:border-black/30"
+                  />
                 </div>
               </motion.div>
             ))}
