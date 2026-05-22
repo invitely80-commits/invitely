@@ -17,9 +17,10 @@
   /* Luxury Transition Timing */
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Shadow Scale */
-  --shadow-lux: 0 40px 100px -20px rgba(0, 0, 0, 0.1), 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  /* Shadow Scale: Tinted shadows instead of black */
+  --shadow-lux: 0 40px 100px -20px rgba(87, 0, 19, 0.08), 0 20px 40px -15px rgba(154, 127, 63, 0.06);
   --shadow-gold: 0 20px 40px -10px rgba(154, 127, 63, 0.2);
+  --shadow-inner: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
 }
 
 :root {
@@ -36,26 +37,48 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(201, 154, 60, 0.05), transparent 40%),
-    radial-gradient(circle at bottom right, rgba(87, 0, 19, 0.03), transparent 45%),
+    radial-gradient(circle at top left, rgba(201, 154, 60, 0.06), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(87, 0, 19, 0.04), transparent 45%),
     #fcf9f2;
   color: #1c1c18;
   font-family: var(--font-plus-jakarta), sans-serif;
   margin: 0;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium Focus Rings */
+*:focus-visible {
+  outline: 2px solid rgba(154, 127, 63, 0.5);
+  outline-offset: 4px;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.4s var(--ease-lux), opacity 0.4s var(--ease-lux);
 }
 
 ::selection {
-  background: rgba(87, 0, 19, 0.1);
+  background: rgba(154, 127, 63, 0.15);
+  color: #570013;
 }
 
 .text-balance {
   text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.tracking-tight-display {
+  letter-spacing: -0.03em;
+}
+
+.tracking-widest-label {
+  letter-spacing: 0.25em;
 }
 
 .page-shell {
@@ -69,34 +92,74 @@ a {
   padding-inline: 1.5rem;
 }
 
-/* The Heritage Modernist: No-Line Cards */
+/* The Heritage Modernist: Elevated No-Line Cards */
 .surface-card {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: var(--shadow-lux);
-  transition: all 0.6s var(--ease-lux);
+  background: rgba(252, 249, 242, 0.85); /* Tinted off-white, no pure white */
+  backdrop-filter: blur(12px);
+  border: none;
+  box-shadow: 0 1px 3px rgba(87, 0, 19, 0.02), 0 4px 12px rgba(87, 0, 19, 0.03); /* Extremely subtle elevation */
+  transition: transform 0.6s var(--ease-lux), box-shadow 0.6s var(--ease-lux), background-color 0.6s var(--ease-lux);
 }
 
 .surface-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 60px 120px -30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  background: rgba(252, 249, 242, 0.95);
+  box-shadow: 0 20px 40px -10px rgba(87, 0, 19, 0.08), 0 10px 20px -5px rgba(154, 127, 63, 0.05);
 }
 
+/* Glassmorphism: True Refraction Overlay */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: var(--shadow-lux);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-lux), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  transition: all 0.6s var(--ease-lux);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 50px 100px -25px rgba(87, 0, 19, 0.08);
 }
 
 .glass-nav {
-  background: rgba(252, 249, 242, 0.82);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(87, 0, 19, 0.05);
+  background: rgba(252, 249, 242, 0.78);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(87, 0, 19, 0.04);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01), inset 0 -1px 0 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Luxury Interactive Hover State */
+.active-scale {
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.active-scale:active {
+  transform: scale(0.98);
+}
+
+/* Dynamic Spotlight Border effect */
+.spotlight-glow {
+  position: relative;
+  transition: all 0.6s var(--ease-lux);
+}
+
+.spotlight-glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(154, 127, 63, 0.3) 0%, transparent 60%, rgba(87, 0, 19, 0.2) 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-lux);
+}
+
+.spotlight-glow:hover::after {
+  opacity: 1;
 }
 
 .gold-divider {
-  background: linear-gradient(90deg, transparent, rgba(115, 92, 0, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(154, 127, 63, 0.35), transparent);
   height: 1px;
   width: 100%;
 }

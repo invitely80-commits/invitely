@@ -44,7 +44,7 @@ export function SiteHeader({
           </Link>
           <Link 
             href={ctaHref} 
-            className="flex h-12 items-center justify-center rounded-full bg-ink px-8 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:bg-gold hover:scale-105 active:scale-95 shadow-xl shadow-ink/10"
+            className="flex h-12 items-center justify-center rounded-full bg-gold px-8 text-[11px] font-bold uppercase tracking-widest !text-white transition-all hover:bg-ink hover:scale-105 active:scale-95 shadow-lg shadow-gold/20"
           >
             {ctaLabel}
           </Link>

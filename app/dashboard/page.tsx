@@ -53,82 +53,98 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="space-y-8">
-      <section className="grid gap-5 xl:grid-cols-2">
-        <Card>
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-maroon/60">Active invites</p>
+    <div className="space-y-12">
+      <section className="grid gap-6 md:grid-cols-3">
+        <div className="surface-card spotlight-glow p-8 rounded-[28px]">
+          <p className="text-[10px] font-bold uppercase tracking-widest-label text-stone-500">Workspace status</p>
           <div className="mt-4 flex items-center gap-4">
-            <div className="rounded-2xl bg-blush p-3 text-maroon">
+            <div className="rounded-2xl bg-burgundy/5 p-3 text-burgundy">
               <PartyPopper className="size-5" />
             </div>
-            <p className="font-heading text-5xl text-maroon">{inviteCards.length}</p>
+            <div>
+              <p className="font-heading text-4xl font-bold text-burgundy">{inviteCards.length}</p>
+              <p className="text-[11px] text-stone-500 font-semibold uppercase tracking-wider mt-1">Active Invitations</p>
+            </div>
           </div>
-        </Card>
+        </div>
       </section>
 
-      <section className="space-y-5">
-        <div className="flex items-center justify-between gap-4">
+      <section className="space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-gold/10 pb-8">
           <div>
-            <h1 className="font-heading text-5xl text-maroon">Your invites</h1>
-            <p className="mt-3 text-base leading-7 text-stone-600">
-              Create, update, and track every wedding website from one warm, organized workspace.
+            <h1 className="font-heading text-4xl font-bold text-burgundy tracking-tight-display">Your Digital Heirlooms</h1>
+            <p className="mt-3 text-sm leading-relaxed text-stone-500 max-w-xl text-pretty">
+              Create, refine, and orchestrate your wedding portals from a warm, luxury digital studio.
             </p>
           </div>
-          <Link href="/dashboard/invite/new" className={buttonStyles({})}>
+          <Link href="/dashboard/invite/new" className={buttonStyles({ className: "active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] shadow-md" })}>
             Create invite
           </Link>
         </div>
 
         {inviteCards.length === 0 ? (
-          <Card className="rounded-[32px] p-8 text-center">
-            <h2 className="font-heading text-4xl text-maroon">Your first invite starts here</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-stone-600">
-              Set up your couple details, add events, upload your favorite photos, and publish a
-              beautiful invitation website in just a few minutes.
+          <div className="surface-card rounded-[40px] p-16 text-center max-w-3xl mx-auto flex flex-col items-center">
+            <div className="w-20 h-20 rounded-[32px] bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] shadow-lux flex items-center justify-center text-white mx-auto mb-8">
+              <PartyPopper className="size-8" />
+            </div>
+            <h2 className="font-heading text-4xl font-bold text-ink tracking-tight-display text-balance">Your first invite starts here</h2>
+            <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink/60 font-medium text-pretty">
+              Set up your couple details, choose a cultural canvas, orchestrate rituals, and publish a beautiful heirloom portal in minutes.
             </p>
-            <Link href="/dashboard/invite/new" className={buttonStyles({ className: "mt-8" })}>
+            <Link href="/dashboard/invite/new" className={buttonStyles({ className: "mt-10 active-scale uppercase tracking-widest text-[11px] font-bold h-14 px-10 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] shadow-md" })}>
               Create your first invite
             </Link>
-          </Card>
+          </div>
         ) : (
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid gap-8 xl:grid-cols-2">
             {inviteCards.map((invite) => (
-              <Card key={invite.id} className="rounded-[32px]">
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.25em] text-maroon/60">
+              <div key={invite.id} className="surface-card spotlight-glow rounded-[32px] p-10 flex flex-col justify-between hover:shadow-2xl">
+                <div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="inline-flex items-center rounded-full bg-gold/5 border border-gold/15 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">
                       {invite.theme} theme
-                    </p>
-                    <h2 className="mt-3 font-heading text-4xl text-maroon">{invite.coupleNames}</h2>
-                    <p className="mt-2 text-sm leading-7 text-stone-600">
-                      Wedding date: {formatShortDate(invite.weddingDate)}
-                    </p>
-                    <p className="mt-1 text-sm leading-7 text-stone-600">Invite link: /{invite.slug}</p>
+                    </span>
+                    <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-widest">
+                      Studio Canvas
+                    </span>
                   </div>
-                  <div className="grid gap-3 rounded-[24px] bg-cream/70 px-5 py-4 text-sm text-stone-700">
-                    <div className="flex items-center justify-between gap-6">
-                      <span>Updated</span>
-                      <strong className="text-maroon">{formatShortDate(invite.updatedAt)}</strong>
+                  
+                  <h2 className="mt-6 font-heading text-3xl font-bold text-burgundy leading-tight">{invite.coupleNames}</h2>
+                  
+                  <div className="mt-6 grid grid-cols-2 gap-4 border-t border-gold/5 pt-6 text-[11px] font-semibold tracking-wider uppercase text-stone-500">
+                    <div>
+                      <p className="text-[9px] text-stone-400">Wedding Date</p>
+                      <p className="mt-1 text-stone-800 font-bold font-mono-lux tracking-widest">{formatShortDate(invite.weddingDate)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] text-stone-400">Invite Link</p>
+                      <p className="mt-1 text-burgundy font-bold font-mono-lux select-all">/{invite.slug}</p>
                     </div>
                   </div>
                 </div>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href={`/dashboard/invite/${invite.id}/edit`}
-                    className={buttonStyles({ size: "sm" })}
-                  >
-                    Edit invite
-                  </Link>
-                  <Link
-                    href={`/${invite.slug}`}
-                    className={buttonStyles({ variant: "secondary", size: "sm" })}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View public page
-                  </Link>
+
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-gold/5 pt-6">
+                  <div className="text-[10px] font-semibold text-stone-400 uppercase tracking-widest">
+                    Last update: <span className="font-mono-lux text-stone-600 font-bold">{formatShortDate(invite.updatedAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/dashboard/invite/${invite.id}/edit`}
+                      className={buttonStyles({ size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5" })}
+                    >
+                      Edit invite
+                    </Link>
+                    <Link
+                      href={`/${invite.slug}`}
+                      className={buttonStyles({ variant: "secondary", size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5" })}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View page
+                    </Link>
+                  </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}

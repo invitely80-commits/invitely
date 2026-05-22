@@ -39,36 +39,41 @@ export function EditorialHero({ ctaHref, ctaLabel }: EditorialHeroProps) {
               </p>
             </FadeIn>
 
-            <FadeIn direction="up" delay={0.3} className="flex flex-wrap gap-8 pt-8">
+            <FadeIn direction="up" delay={0.3} className="flex flex-wrap gap-6 pt-6">
               <Link 
                 href={ctaHref} 
-                className="group relative inline-flex h-18 items-center justify-center rounded-full bg-burgundy px-12 text-base font-bold !text-white transition-all hover:bg-ink hover:scale-105 active:scale-95 shadow-xl shadow-burgundy/10"
+                className="group relative inline-flex h-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] px-10 text-sm font-bold uppercase tracking-widest !text-white transition-all duration-300 hover:brightness-110 active-scale shadow-[0_20px_50px_rgba(87,0,19,0.22)]"
               >
-                <span className="relative z-10">{ctaLabel}</span>
-                <div className="ml-3 transition-transform duration-500 group-hover:translate-x-2">
-                  <ArrowRight size={20} className="!text-white" />
-                </div>
+                <span className="relative z-10 flex items-center gap-2">
+                  {ctaLabel}
+                  <ArrowRight size={16} className="!text-white transition-transform duration-300 group-hover:translate-x-1.5" />
+                </span>
               </Link>
               
               <Link 
-                href="#preview" 
-                className="inline-flex h-18 items-center justify-center rounded-full border border-ink/10 bg-white/50 px-12 text-base font-bold text-ink backdrop-blur-md transition-all hover:bg-white hover:border-ink/20 shadow-sm"
+                href="/templates" 
+                className="inline-flex h-16 items-center justify-center rounded-full border border-gold/20 bg-white/70 px-10 text-sm font-bold uppercase tracking-widest text-gold backdrop-blur-md transition-all duration-300 hover:bg-white hover:border-gold/40 active-scale shadow-[0_20px_40px_rgba(154,127,63,0.05)]"
               >
                 Explore Collection
               </Link>
             </FadeIn>
 
             {/* Social Proof Mini */}
-            <FadeIn direction="up" delay={0.4} className="flex items-center gap-6 pt-12">
-              <div className="flex -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-12 w-12 rounded-full border-4 border-silk bg-silk overflow-hidden ring-1 ring-ink/5">
-                    <div className="h-full w-full bg-burgundy/10 flex items-center justify-center text-[10px] font-bold text-burgundy/40">U{i}</div>
+            <FadeIn direction="up" delay={0.4} className="flex items-center gap-5 pt-8">
+              <div className="flex -space-x-3.5">
+                {[
+                  { initial: "A", bg: "bg-[#570013]/10", text: "text-[#570013]" },
+                  { initial: "V", bg: "bg-[#9a7f3f]/10", text: "text-[#9a7f3f]" },
+                  { initial: "S", bg: "bg-[#1c1c18]/10", text: "text-[#1c1c18]" },
+                  { initial: "M", bg: "bg-[#570013]/5", text: "text-[#570013]" },
+                ].map((item, i) => (
+                  <div key={i} className={`h-11 w-11 rounded-full border-2 border-[#fcf9f2] ${item.bg} flex items-center justify-center ring-1 ring-ink/5 overflow-hidden transition-transform duration-500 hover:translate-y-[-4px] hover:z-20`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${item.text}`}>{item.initial}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-ink/40">
-                Trusted by <span className="text-ink">15,000+</span> Couples
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-ink/40">
+                Trusted by <span className="text-burgundy font-extrabold">15,000+</span> couples globally
               </p>
             </FadeIn>
           </div>
@@ -80,8 +85,8 @@ export function EditorialHero({ ctaHref, ctaLabel }: EditorialHeroProps) {
       </div>
 
       {/* Background Architectural Elements */}
-      <div className="absolute top-0 right-0 -z-10 w-1/3 h-full bg-silk/30 skew-x-[-12deg] translate-x-20 overflow-hidden">
-         <div className="bg-mandala absolute inset-0 opacity-[0.03] scale-150 rotate-12" />
+      <div className="absolute top-0 right-0 -z-10 w-1/3 h-full bg-silk/45 skew-x-[-12deg] translate-x-20 overflow-hidden">
+         <div className="bg-mandala absolute inset-0 opacity-[0.04] scale-150 rotate-12" />
       </div>
     </section>
   );
