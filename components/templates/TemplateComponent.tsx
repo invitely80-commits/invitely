@@ -58,7 +58,7 @@ export function TemplateComponent({
       `}</style>
 
       {/* ── HERO: LUXURY ABSTRACT ─────────────────────────────────── */}
-      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-black">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full opacity-60">
           <Image src={d.heroImage} alt="Luxury Abstract" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95" />

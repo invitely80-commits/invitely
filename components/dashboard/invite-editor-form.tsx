@@ -374,9 +374,16 @@ export function InviteEditorForm({
         </div>
         
         {/* Render the actual template */}
-        <div className="h-[calc(100%-3rem)] w-full overflow-y-auto bg-stone-100 relative">
+        <div className="h-[calc(100%-3rem)] w-full overflow-y-auto overflow-x-hidden bg-stone-100 relative">
           <div className="pointer-events-none absolute inset-0 z-50 shadow-[inset_0_0_40px_rgba(0,0,0,0.03)]" />
-          <div className="w-full min-h-full">
+          <style>{`
+            .preview-scaler { width: 100%; zoom: 1; }
+            @media (min-width: 1024px) { .preview-scaler { width: 200%; zoom: 0.5; } }
+            @media (min-width: 1280px) { .preview-scaler { width: 160%; zoom: 0.625; } }
+            @media (min-width: 1536px) { .preview-scaler { width: 150%; zoom: 0.66; } }
+            /* Firefox fallback since zoom is technically non-standard, though Firefox 126+ supports it. We use transform for older Firefox if needed, but zoom is fine for modern browsers. */
+          `}</style>
+          <div className="preview-scaler min-h-full origin-top-left">
             <InviteRenderer 
               invite={{
                 id: "preview",

@@ -58,7 +58,7 @@ export function MuslimTemplate({
       `}</style>
 
       {/* ── HERO: GRAND MOGHUL PALACE ──────────────────────────────── */}
-      <section className="relative h-[100dvh] w-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 w-full h-full">
           <Image src={d.heroImage} alt="Moghul Palace" fill priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/90" />
