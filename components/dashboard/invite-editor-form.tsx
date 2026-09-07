@@ -358,7 +358,7 @@ export function InviteEditorForm({
       </div>
 
       {/* RIGHT: LIVE PREVIEW STUDIO (Desktop Sticky, Mobile Absolute overlay when toggled) */}
-      <div className={`lg:col-span-6 xl:col-span-7 h-[100dvh] lg:h-[calc(100vh-2rem)] lg:sticky top-4 lg:block overflow-hidden rounded-[2rem] shadow-2xl border border-stone-200 bg-stone-50 z-40 fixed inset-0 lg:static ${isMobilePreviewOpen ? "block" : "hidden"}`}>
+      <div className={`lg:col-span-6 xl:col-span-7 h-[100dvh] lg:h-[calc(100vh-2rem)] lg:sticky lg:top-4 overflow-hidden rounded-[2rem] shadow-2xl border border-stone-200 bg-stone-50 z-40 fixed inset-0 lg:inset-auto ${isMobilePreviewOpen ? "block" : "hidden lg:block"}`}>
         <div className="h-12 bg-white/90 backdrop-blur-md border-b border-stone-200 flex items-center justify-between px-6 z-50 relative shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">

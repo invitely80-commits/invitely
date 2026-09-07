@@ -15,7 +15,7 @@ export default async function DashboardLayout({
   const user = await requireUser();
 
   return (
-    <main className="page-shell min-h-screen px-6 py-10 bg-vellum selection:bg-gold-accent/20">
+    <main className="min-h-screen px-6 py-10 bg-vellum selection:bg-gold-accent/20">
       <div className="section-shell">
         <header className="glass-card spotlight-glow flex flex-col gap-4 rounded-[32px] px-8 py-6 lg:flex-row lg:items-center lg:justify-between border border-gold/10">
           <div>
