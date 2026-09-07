@@ -8,7 +8,7 @@ export function GsapOrchestrator() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     mm.add("(min-width: 1024px)", () => {
       // Pinning the Traditions section title while the cards scroll up
