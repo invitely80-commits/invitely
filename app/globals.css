@@ -92,19 +92,27 @@ a {
   padding-inline: 1.5rem;
 }
 
-/* The Heritage Modernist: Elevated No-Line Cards */
+/* The Heritage Modernist: Elevated No-Line Cards -> UPGRADED TO DOUBLE BEZEL */
 .surface-card {
   background: rgba(252, 249, 242, 0.85); /* Tinted off-white, no pure white */
-  backdrop-filter: blur(12px);
-  border: none;
-  box-shadow: 0 1px 3px rgba(87, 0, 19, 0.02), 0 4px 12px rgba(87, 0, 19, 0.03); /* Extremely subtle elevation */
+  backdrop-filter: blur(24px) saturate(120%);
+  border: 1px solid rgba(87, 0, 19, 0.04);
+  box-shadow: 
+    0 1px 3px rgba(87, 0, 19, 0.02), 
+    0 10px 40px -15px rgba(87, 0, 19, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   transition: transform 0.6s var(--ease-lux), box-shadow 0.6s var(--ease-lux), background-color 0.6s var(--ease-lux);
 }
 
 .surface-card:hover {
   transform: translateY(-4px);
   background: rgba(252, 249, 242, 0.95);
-  box-shadow: 0 20px 40px -10px rgba(87, 0, 19, 0.08), 0 10px 20px -5px rgba(154, 127, 63, 0.05);
+  box-shadow: 
+    0 20px 40px -10px rgba(87, 0, 19, 0.08), 
+    0 10px 20px -5px rgba(154, 127, 63, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
 /* Glassmorphism: True Refraction Overlay */

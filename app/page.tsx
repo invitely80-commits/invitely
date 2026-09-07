@@ -5,6 +5,7 @@ import { FadeIn, ScaleIn } from "@/components/landing/motion";
 import { SiteHeader } from "@/components/landing/site-header";
 import { EditorialHero } from "@/components/landing/editorial-hero";
 import { TraditionIcons } from "@/components/landing/tradition-icons";
+import { GsapOrchestrator } from "@/components/landing/gsap-orchestrator";
 import { getSessionSafely } from "@/lib/session";
 import Image from "next/image";
 
@@ -14,7 +15,8 @@ export default async function HomePage() {
   const ctaLabel = session?.user?.id ? "Dashboard" : "Start Customizing";
 
   return (
-    <main className="page-shell bg-vellum">
+    <main className="page-shell bg-vellum overflow-x-hidden w-full max-w-full">
+      <GsapOrchestrator />
       <SiteHeader ctaHref={ctaHref} ctaLabel={ctaLabel} />
 
       <EditorialHero ctaHref={ctaHref} ctaLabel={ctaLabel} />
@@ -62,10 +64,10 @@ export default async function HomePage() {
       </section>
 
       {/* Process: The Journey */}
-      <section className="bg-silk pt-32 pb-40 lg:pt-40 lg:pb-56 px-6">
+      <section className="bg-silk pt-32 pb-40 lg:pt-40 lg:pb-56 px-6 gsap-journey-container overflow-hidden">
         <div className="section-shell">
           <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-20 items-center">
-              <FadeIn direction="up" className="space-y-8 lg:pr-12">
+              <FadeIn direction="up" className="space-y-8 lg:pr-12 relative z-10">
                  <span className="text-[11px] font-bold uppercase tracking-widest-label text-gold">How it Works</span>
                  <h2 className="font-heading text-4xl lg:text-6xl font-bold tracking-tight-display text-ink leading-[1.1]">Meticulously Crafted, <br />Effortlessly Launched</h2>
                  <p className="text-lg text-ink/50 font-medium leading-relaxed max-w-md text-pretty">Our intentional design engine ensures every pixel aligns with your heritage, while we handle the complexity of the modern web.</p>
@@ -87,12 +89,12 @@ export default async function HomePage() {
                 </div>
              </FadeIn>
 
-             <FadeIn direction="right" className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-lux">
+             <div className="relative aspect-[4/3] rounded-[48px] overflow-hidden shadow-lux">
                 <Image 
                   src="/images/templates/royal/rajasthani_palace_interior.png"
                   alt="Design Interface"
                   fill
-                  className="object-cover"
+                  className="object-cover scale-125 gsap-journey-image origin-top"
                 />
                 <div className="absolute inset-0 bg-ink/15" />
                 <div className="absolute inset-x-8 bottom-8 glass-card p-8 rounded-[28px] flex items-center justify-between">
@@ -104,22 +106,22 @@ export default async function HomePage() {
                       <ArrowRight className="h-4 w-4" />
                    </div>
                 </div>
-             </FadeIn>
+             </div>
           </div>
         </div>
       </section>
 
       {/* Traditions Section */}
-      <section className="bg-[#121210] pt-32 pb-48 lg:pt-48 lg:pb-64 px-6 relative overflow-hidden text-center text-white">
+      <section className="bg-[#121210] pt-32 pb-48 lg:pt-48 lg:pb-64 px-6 relative overflow-hidden text-center text-white gsap-tradition-container">
         <div className="bg-mandala absolute inset-0 opacity-[0.03] scale-150 rotate-12" />
         <div className="section-shell relative z-10">
-          <FadeIn direction="up" className="max-w-3xl mx-auto space-y-6">
+          <div className="max-w-3xl mx-auto space-y-6 gsap-tradition-title pb-12 lg:pb-0">
             <span className="text-[11px] font-bold uppercase tracking-widest-label text-gold">The Collection</span>
             <h2 className="font-heading text-4xl lg:text-7xl font-bold tracking-tight-display text-balance">Built for Every Tradition</h2>
             <p className="text-lg text-white/40 font-medium leading-relaxed text-pretty">We honor the unique rituals of every heritage with bespoke iconography and meticulous aesthetics curated for your legacy.</p>
-          </FadeIn>
+          </div>
 
-          <div className="mt-24 grid grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="mt-12 lg:mt-64 grid grid-cols-2 lg:grid-cols-5 gap-6 gsap-tradition-cards-wrapper relative z-20">
             {[
               { name: "Hindu", icon: TraditionIcons.Hindu },
               { name: "Muslim", icon: TraditionIcons.Muslim },
@@ -127,10 +129,10 @@ export default async function HomePage() {
               { name: "Sikh", icon: TraditionIcons.Sikh },
               { name: "Civil", icon: TraditionIcons.Civil },
             ].map((tradition, i) => (
-              <FadeIn key={i} delay={i * 0.05} className="group relative bg-white/[0.02] p-10 rounded-[32px] border border-white/5 transition-all hover:bg-white/[0.06] hover:scale-[1.03] active-scale duration-500">
+              <div key={i} className="gsap-tradition-card group relative bg-white/[0.02] p-10 rounded-[32px] border border-white/5 transition-all hover:bg-white/[0.06] hover:-translate-y-4 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] duration-500">
                 <div className="scale-110 mb-2 flex justify-center"><tradition.icon /></div>
                 <p className="mt-6 text-[9px] font-bold uppercase tracking-[0.3em] text-white/30 group-hover:text-gold transition-colors">{tradition.name}</p>
-              </FadeIn>
+              </div>
             ))}
           </div>
           
