@@ -374,25 +374,18 @@ export function InviteEditorForm({
         </div>
         
         {/* Render the actual template */}
-        <div className="h-[calc(100%-3rem)] w-full overflow-y-auto overflow-x-hidden bg-stone-100 relative">
+        {/* Render the actual template */}
+        <div className="h-[calc(100%-3rem)] w-full overflow-hidden bg-stone-100 relative">
           <div className="pointer-events-none absolute inset-0 z-50 shadow-[inset_0_0_40px_rgba(0,0,0,0.03)]" />
-          <style>{`
-            .preview-scaler { width: 100%; zoom: 1; }
-            @media (min-width: 1024px) { .preview-scaler { width: 200%; zoom: 0.5; } }
-            @media (min-width: 1280px) { .preview-scaler { width: 160%; zoom: 0.625; } }
-            @media (min-width: 1536px) { .preview-scaler { width: 150%; zoom: 0.66; } }
-            /* Firefox fallback since zoom is technically non-standard, though Firefox 126+ supports it. We use transform for older Firefox if needed, but zoom is fine for modern browsers. */
-          `}</style>
-          <div className="preview-scaler min-h-full origin-top-left">
-            <InviteRenderer 
-              invite={{
-                id: "preview",
-                slug: "preview",
-                template: theme,
-                data: livePreviewData,
-              }}
-              preview={true}
-            />
+          
+          {/* Mobile view uses standard 100% width and height */}
+          <div className="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden lg:hidden">
+            <InviteRenderer invite={{ id: "preview", slug: "preview", template: theme, data: livePreviewData }} preview={true} />
+          </div>
+
+          {/* Desktop view uses transform: scale to fit the desktop layout into the split panel */}
+          <div className="hidden lg:block absolute top-0 left-0 origin-top-left overflow-y-auto overflow-x-hidden w-[200%] h-[200%] scale-[0.5] xl:w-[171.4%] xl:h-[171.4%] xl:scale-[0.583]">
+            <InviteRenderer invite={{ id: "preview", slug: "preview", template: theme, data: livePreviewData }} preview={true} />
           </div>
         </div>
       </div>
