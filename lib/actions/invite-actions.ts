@@ -107,6 +107,19 @@ export async function createInviteAction(
   formData: FormData,
 ): Promise<InviteActionState> {
   const user = await requireUser();
+
+  const inviteCount = await prisma.invite.count({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  if (inviteCount >= 5) {
+    return {
+      error: "You have reached the maximum limit of 5 invitations per account. Please delete an existing invitation to create a new one.",
+    };
+  }
+
   const parsed = await parseInvitePayload(formData);
 
   if ("error" in parsed) {
@@ -218,4 +231,41 @@ export async function getOwnedInviteOrThrow(inviteId: string, userId: string) {
     ...invite,
     parsedData: parseInviteData(invite.data),
   };
+}
+
+export async function deleteInviteAction(inviteId: string): Promise<InviteActionState> {
+  const user = await requireUser();
+  const invite = await prisma.invite.findFirst({
+    where: {
+      id: inviteId,
+      userId: user.id,
+    },
+    select: {
+      id: true,
+      slug: true,
+    },
+  });
+
+  if (!invite) {
+    return {
+      error: "We couldn't find that invite or you don't have permission to delete it.",
+    };
+  }
+
+  try {
+    await prisma.invite.delete({
+      where: {
+        id: inviteId,
+      },
+    });
+
+    await inviteCache.delete(invite.slug);
+    revalidatePath("/dashboard");
+    return {};
+  } catch (error) {
+    console.error("Failed to delete invite", error);
+    return {
+      error: "Failed to delete this invite. Please try again.",
+    };
+  }
 }

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { PartyPopper, BarChart3 } from "lucide-react";
+import { PartyPopper, BarChart3, AlertCircle } from "lucide-react";
 
+import { DeleteInviteButton } from "@/components/dashboard/delete-invite-button";
 import { buttonStyles } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { getCoupleNames, parseInviteData, templateToTheme } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
@@ -10,8 +10,13 @@ import { formatShortDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
+export default async function DashboardPage(props: {
+  searchParams?: Promise<{ limit_reached?: string }>;
+}) {
   const user = await requireUser();
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  const isLimitReached = searchParams.limit_reached === "1";
+
   const invites = await prisma.invite.findMany({
     where: {
       userId: user.id,
@@ -56,6 +61,8 @@ export default async function DashboardPage() {
     };
   });
 
+  const isAtLimit = inviteCards.length >= 5;
+
   return (
     <div className="space-y-12">
       <section className="grid gap-6 md:grid-cols-3">
@@ -66,12 +73,25 @@ export default async function DashboardPage() {
               <PartyPopper className="size-5" />
             </div>
             <div>
-              <p className="font-heading text-4xl font-bold text-burgundy">{inviteCards.length}</p>
-              <p className="text-[11px] text-stone-500 font-semibold uppercase tracking-wider mt-1">Active Invitations</p>
+              <p className="font-heading text-4xl font-bold text-burgundy">
+                {inviteCards.length} <span className="text-xl font-normal text-stone-400">/ 5</span>
+              </p>
+              <p className="text-[11px] text-stone-500 font-semibold uppercase tracking-wider mt-1">
+                Active Invitations (5 max)
+              </p>
             </div>
           </div>
         </div>
       </section>
+
+      {(isAtLimit || isLimitReached) && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-900 flex items-center gap-3">
+          <AlertCircle className="size-5 text-amber-600 shrink-0" />
+          <p className="text-xs font-medium">
+            <span className="font-bold">Maximum limit reached:</span> You have created {inviteCards.length} out of 5 allowed invitations. To create a new invitation, please delete an existing one.
+          </p>
+        </div>
+      )}
 
       <section className="space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-gold/10 pb-8">
@@ -81,9 +101,26 @@ export default async function DashboardPage() {
               Create, refine, and orchestrate your wedding portals from a warm, luxury digital studio.
             </p>
           </div>
-          <Link href="/dashboard/invite/new" className={buttonStyles({ className: "active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white shadow-md" })}>
-            Create invite
-          </Link>
+          {isAtLimit ? (
+            <button
+              disabled
+              className={buttonStyles({
+                className: "uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-stone-200 !text-stone-400 cursor-not-allowed shadow-none border border-stone-300/50",
+              })}
+              title="You have reached the maximum limit of 5 invites"
+            >
+              Quota Reached (5/5)
+            </button>
+          ) : (
+            <Link
+              href="/dashboard/invite/new"
+              className={buttonStyles({
+                className: "active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white shadow-md",
+              })}
+            >
+              Create invite
+            </Link>
+          )}
         </div>
 
         {inviteCards.length === 0 ? (
@@ -162,6 +199,7 @@ export default async function DashboardPage() {
                     >
                       View
                     </Link>
+                    <DeleteInviteButton inviteId={invite.id} coupleNames={invite.coupleNames} />
                   </div>
                 </div>
               </div>

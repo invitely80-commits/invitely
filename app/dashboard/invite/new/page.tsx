@@ -1,10 +1,23 @@
+import { redirect } from "next/navigation";
+
 import { InviteEditorForm } from "@/components/dashboard/invite-editor-form";
 import { createInviteAction } from "@/lib/actions/invite-actions";
 import { type InviteTheme } from "@/lib/invites";
+import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/session";
 
 export default async function NewInvitePage(props: {
   searchParams: Promise<{ template?: string }>;
 }) {
+  const user = await requireUser();
+  const inviteCount = await prisma.invite.count({
+    where: { userId: user.id },
+  });
+
+  if (inviteCount >= 5) {
+    redirect("/dashboard?limit_reached=1");
+  }
+
   const searchParams = await props.searchParams;
   const initialTemplate = searchParams.template as InviteTheme | undefined;
 
