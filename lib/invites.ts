@@ -114,6 +114,8 @@ export const sampleInvite: InviteData = {
   contactPhone: "+91 98765 43210",
   gallery: [],
   heroImage: "",
+  enableRsvp: true,
+  askAccommodation: true,
   events: [
     {
       id: "mehendi",

@@ -31,10 +31,29 @@ model Invite {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rsvps       Rsvp[]
 
   @@index([userId])
   @@index([updatedAt])
   @@index([weddingDate])
+}
+
+model Rsvp {
+  id                 String   @id @default(cuid())
+  inviteId           String
+  name               String
+  guestCount         Int      @default(1)
+  attendanceTime     String
+  needsAccommodation Boolean?
+  phone              String?
+  email              String?
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  invite             Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+
+  @@index([inviteId])
+  @@index([createdAt])
 }
 
 enum InviteTemplate {

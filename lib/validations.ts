@@ -34,6 +34,9 @@ export const inviteDataSchema = z.object({
   gallery: z.array(z.string().url()).max(1, "You can upload 1 image.").default([]),
   heroImage: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   events: z.array(inviteEventSchema).min(1, "Add at least one event.").max(6, "Keep the invite to 6 events or fewer."),
+  enableRsvp: z.boolean().default(true),
+  askAccommodation: z.boolean().default(false),
+  rsvpDeadline: z.string().optional(),
 });
 
 export const inviteSubmissionSchema = inviteDataSchema
@@ -42,7 +45,25 @@ export const inviteSubmissionSchema = inviteDataSchema
     existingGallery: z.array(z.string().url()).max(1).default([]),
   });
 
+export const rsvpSubmissionSchema = z.object({
+  name: z.string().trim().min(2, "Please enter your full name."),
+  guestCount: z.coerce.number().int().min(1, "At least 1 attendee is required.").max(20, "Maximum party size is 20."),
+  attendanceTime: z.string().trim().min(1, "Please select which ceremony / time you will attend."),
+  needsAccommodation: z
+    .union([
+      z.boolean(),
+      z.string().transform((val) => val === "true" || val === "yes" || val === "1"),
+      z.null(),
+      z.undefined(),
+    ])
+    .optional(),
+  phone: z.string().trim().optional(),
+  email: z.string().trim().email("Enter a valid email address.").or(z.literal("")).optional(),
+  notes: z.string().trim().max(500, "Notes must be 500 characters or fewer.").optional(),
+});
+
 export type InviteEvent = z.infer<typeof inviteEventSchema>;
 export type InviteData = z.infer<typeof inviteDataSchema>;
 export type InviteSubmission = z.infer<typeof inviteSubmissionSchema>;
+export type RsvpSubmission = z.infer<typeof rsvpSubmissionSchema>;
 

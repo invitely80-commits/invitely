@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PartyPopper } from "lucide-react";
+import { PartyPopper, BarChart3 } from "lucide-react";
 
 import { buttonStyles } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,6 +25,9 @@ export default async function DashboardPage() {
       weddingDate: true,
       updatedAt: true,
       data: true,
+      _count: {
+        select: { rsvps: true },
+      },
     },
     orderBy: {
       updatedAt: "desc",
@@ -49,6 +52,7 @@ export default async function DashboardPage() {
       theme: templateToTheme(invite.template),
       coupleNames,
       weddingDate,
+      rsvpCount: invite._count.rsvps,
     };
   });
 
@@ -101,9 +105,14 @@ export default async function DashboardPage() {
               <div key={invite.id} className="surface-card spotlight-glow rounded-[32px] p-10 flex flex-col justify-between hover:shadow-2xl">
                 <div>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center rounded-full bg-gold/5 border border-gold/15 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">
-                      {invite.theme} theme
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center rounded-full bg-gold/5 border border-gold/15 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">
+                        {invite.theme} theme
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                        {invite.rsvpCount} {invite.rsvpCount === 1 ? "RSVP" : "RSVPs"}
+                      </span>
+                    </div>
                     <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-widest">
                       Studio Canvas
                     </span>
@@ -127,20 +136,31 @@ export default async function DashboardPage() {
                   <div className="text-[10px] font-semibold text-stone-400 uppercase tracking-widest">
                     Last update: <span className="font-mono-lux text-stone-600 font-bold">{formatShortDate(invite.updatedAt)}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <Link
+                      href={`/dashboard/invite/${invite.id}/analytics`}
+                      className={buttonStyles({
+                        variant: "secondary",
+                        size: "sm",
+                        className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-3.5 border-gold/20",
+                      })}
+                    >
+                      <BarChart3 className="size-3.5 mr-1 text-gold" />
+                      Analytics
+                    </Link>
                     <Link
                       href={`/dashboard/invite/${invite.id}/edit`}
-                      className={buttonStyles({ size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5" })}
+                      className={buttonStyles({ size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-4" })}
                     >
-                      Edit invite
+                      Edit
                     </Link>
                     <Link
                       href={`/${invite.slug}`}
-                      className={buttonStyles({ variant: "secondary", size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5" })}
+                      className={buttonStyles({ variant: "ghost", size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-3 text-stone-500 hover:text-burgundy" })}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      View page
+                      View
                     </Link>
                   </div>
                 </div>

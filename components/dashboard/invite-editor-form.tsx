@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useActionState, useEffect, useState } from "react";
-import { CalendarDays, ImagePlus, Link2, MinusCircle, PlusCircle, Sparkles, LayoutPanelLeft } from "lucide-react";
+import { CalendarDays, ImagePlus, Link2, MinusCircle, PlusCircle, Sparkles, LayoutPanelLeft, Users, Hotel } from "lucide-react";
 
 import { CopyLinkButton } from "@/components/dashboard/copy-link-button";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,8 @@ const defaultInviteData: InviteData = {
   contactPhone: "",
   gallery: [],
   heroImage: "",
+  enableRsvp: true,
+  askAccommodation: false,
   events: [createEvent({ title: "Welcome Dinner", date: "2026-11-13", time: "18:00" })],
 };
 
@@ -80,6 +82,8 @@ export function InviteEditorForm({
   const [description, setDescription] = useState(mergedValue.description);
   const [contactEmail, setContactEmail] = useState(mergedValue.contactEmail || "");
   const [contactPhone, setContactPhone] = useState(mergedValue.contactPhone || "");
+  const [enableRsvp, setEnableRsvp] = useState<boolean>(mergedValue.enableRsvp ?? true);
+  const [askAccommodation, setAskAccommodation] = useState<boolean>(mergedValue.askAccommodation ?? false);
   const [existingGallery, setExistingGallery] = useState<string[]>(mergedValue.gallery);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
@@ -130,6 +134,8 @@ export function InviteEditorForm({
     theme,
     contactEmail,
     contactPhone,
+    enableRsvp,
+    askAccommodation,
     events,
     gallery: newPreviews.length > 0 ? newPreviews : existingGallery,
     heroImage: "",
@@ -163,6 +169,8 @@ export function InviteEditorForm({
           <input type="hidden" name="theme" value={theme} />
           <input type="hidden" name="eventsJson" value={JSON.stringify(events)} readOnly />
           <input type="hidden" name="existingGalleryJson" value={JSON.stringify(existingGallery)} readOnly />
+          <input type="hidden" name="enableRsvp" value={enableRsvp ? "true" : "false"} />
+          <input type="hidden" name="askAccommodation" value={askAccommodation ? "true" : "false"} />
 
           {/* COUPLE DETAILS */}
           <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
@@ -341,6 +349,96 @@ export function InviteEditorForm({
                       <Image src={preview} alt="New upload preview" width={200} height={200} unoptimized className="aspect-square w-40 rounded-[18px] object-cover" />
                     </div>
                   ))}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {/* GUEST RSVP & ACCOMMODATION SETTINGS */}
+          <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+            <div className="flex items-start gap-4">
+              <div className="rounded-2xl bg-gold/5 border border-gold/15 p-3 text-gold shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+                <Users className="size-5" />
+              </div>
+              <div>
+                <h2 className="font-heading text-3xl font-bold text-burgundy tracking-tight">RSVP & Accommodation</h2>
+                <p className="mt-1 text-sm leading-relaxed text-stone-500">
+                  Collect attendance and manage guest lodging directly from your portal.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 space-y-6">
+              {/* RSVP Form Toggle */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl border border-gold/15 bg-white/60">
+                <div>
+                  <p className="font-bold text-sm text-stone-900">Enable Guest RSVP Form</p>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    Guests can confirm attendance, party size, and celebration times.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEnableRsvp(true)}
+                    className={`h-9 px-4 rounded-full text-xs font-bold transition active-scale ${
+                      enableRsvp
+                        ? "bg-burgundy text-white shadow-sm"
+                        : "border border-stone-200 text-stone-600 bg-white"
+                    }`}
+                  >
+                    Enabled
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEnableRsvp(false)}
+                    className={`h-9 px-4 rounded-full text-xs font-bold transition active-scale ${
+                      !enableRsvp
+                        ? "bg-stone-800 text-white shadow-sm"
+                        : "border border-stone-200 text-stone-600 bg-white"
+                    }`}
+                  >
+                    Disabled
+                  </button>
+                </div>
+              </div>
+
+              {/* Accommodation Question Toggle */}
+              {enableRsvp ? (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 rounded-2xl border border-gold/15 bg-white/60">
+                  <div className="flex items-start gap-3">
+                    <Hotel className="size-4 text-gold mt-1 shrink-0" />
+                    <div>
+                      <p className="font-bold text-sm text-stone-900">Ask Guests About Accommodation</p>
+                      <p className="text-xs text-stone-500 mt-0.5">
+                        Ask guests: <em>&ldquo;Do you require accommodation / hotel stay?&rdquo;</em>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setAskAccommodation(true)}
+                      className={`h-9 px-4 rounded-full text-xs font-bold transition active-scale ${
+                        askAccommodation
+                          ? "bg-gold text-white shadow-sm"
+                          : "border border-stone-200 text-stone-600 bg-white"
+                      }`}
+                    >
+                      Yes, Ask
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAskAccommodation(false)}
+                      className={`h-9 px-4 rounded-full text-xs font-bold transition active-scale ${
+                        !askAccommodation
+                          ? "bg-stone-200 text-stone-800 font-bold"
+                          : "border border-stone-200 text-stone-600 bg-white"
+                      }`}
+                    >
+                      Don&apos;t Ask
+                    </button>
+                  </div>
                 </div>
               ) : null}
             </div>
