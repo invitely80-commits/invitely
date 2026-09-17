@@ -350,7 +350,7 @@ export function InviteEditorForm({
             <p className="text-xs leading-relaxed text-stone-400 font-semibold tracking-wide uppercase">
               Your wedding site is responsive and optimized.
             </p>
-            <SubmitButton size="lg" pendingLabel="Curating your legacy website..." className="active-scale uppercase tracking-wider text-[11px] font-bold h-14 px-8 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] hover:shadow-[0_10px_40px_rgba(87,0,19,0.3)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+            <SubmitButton size="lg" pendingLabel="Curating your legacy website..." className="active-scale uppercase tracking-wider text-[11px] font-bold h-14 px-8 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white hover:shadow-[0_10px_40px_rgba(87,0,19,0.3)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
               {submitLabel}
             </SubmitButton>
           </div>

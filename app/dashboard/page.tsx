@@ -77,7 +77,7 @@ export default async function DashboardPage() {
               Create, refine, and orchestrate your wedding portals from a warm, luxury digital studio.
             </p>
           </div>
-          <Link href="/dashboard/invite/new" className={buttonStyles({ className: "active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] shadow-md" })}>
+          <Link href="/dashboard/invite/new" className={buttonStyles({ className: "active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white shadow-md" })}>
             Create invite
           </Link>
         </div>
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink/60 font-medium text-pretty">
               Set up your couple details, choose a cultural canvas, orchestrate rituals, and publish a beautiful heirloom portal in minutes.
             </p>
-            <Link href="/dashboard/invite/new" className={buttonStyles({ className: "mt-10 active-scale uppercase tracking-widest text-[11px] font-bold h-14 px-10 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] shadow-md" })}>
+            <Link href="/dashboard/invite/new" className={buttonStyles({ className: "mt-10 active-scale uppercase tracking-widest text-[11px] font-bold h-14 px-10 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white shadow-md" })}>
               Create your first invite
             </Link>
           </div>

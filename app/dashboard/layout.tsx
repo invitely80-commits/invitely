@@ -31,7 +31,7 @@ export default async function DashboardLayout({
               <LayoutDashboard className="size-3.5" />
               Dashboard
             </Link>
-            <Link href="/dashboard/invite/new" className={buttonStyles({ size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)]" })}>
+            <Link href="/dashboard/invite/new" className={buttonStyles({ size: "sm", className: "active-scale uppercase tracking-wider text-[10px] font-bold h-10 px-5 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white" })}>
               <PlusCircle className="size-3.5" />
               New Invite
             </Link>

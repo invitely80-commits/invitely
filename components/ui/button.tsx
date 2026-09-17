@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = {
   primary:
-    "bg-[linear-gradient(135deg,var(--color-burgundy)_0%,var(--color-burgundy-container)_100%)] text-white shadow-[0_24px_50px_rgba(87,0,19,0.18)] hover:brightness-110 focus-visible:outline-burgundy",
+    "bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white shadow-[0_24px_50px_rgba(87,0,19,0.18)] hover:brightness-110 focus-visible:outline-burgundy",
   secondary:
     "bg-gold-fixed text-gold ring-1 ring-gold/10 hover:bg-gold-fixed/90 focus-visible:outline-gold",
   ghost:
