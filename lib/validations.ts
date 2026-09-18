@@ -43,6 +43,7 @@ export const inviteSubmissionSchema = inviteDataSchema
   .omit({ gallery: true, heroImage: true })
   .extend({
     existingGallery: z.array(z.string().url()).max(1).default([]),
+    customSlug: z.string().trim().optional(),
   });
 
 export const rsvpSubmissionSchema = z.object({

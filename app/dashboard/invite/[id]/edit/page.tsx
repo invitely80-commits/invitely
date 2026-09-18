@@ -75,6 +75,8 @@ export default async function EditInvitePage({
         submitLabel="Save Changes"
         defaultValue={invite.parsedData}
         inviteUrl={absoluteUrl(`/${invite.slug}`)}
+        currentSlug={invite.slug}
+        inviteId={invite.id}
         notice={notice}
       />
 

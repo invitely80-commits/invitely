@@ -8,7 +8,7 @@ import { parseInviteData, themeToTemplate } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { inviteCache } from "@/lib/redis";
 import { requireUser } from "@/lib/session";
-import { generateInviteSlug } from "@/lib/slug";
+import { generateInviteSlug, checkSlugAvailability, formatSlug } from "@/lib/slug";
 import {
   inviteSubmissionSchema,
   type InviteData,
@@ -18,15 +18,16 @@ import {
 
 export type InviteActionState = {
   error?: string;
+  fieldErrors?: Record<string, string[]>;
 };
 
 type ParsedInvitePayload =
   | {
-      error: string;
-    }
-  | {
       data: InviteSubmission;
       files: File[];
+    }
+  | {
+      error: string;
     };
 
 function parseJsonField<T>(value: FormDataEntryValue | null, fallback: T): T {
@@ -56,6 +57,7 @@ async function parseInvitePayload(formData: FormData): Promise<ParsedInvitePaylo
     enableRsvp: formData.get("enableRsvp") === "true" || formData.get("enableRsvp") === "on",
     askAccommodation: formData.get("askAccommodation") === "true" || formData.get("askAccommodation") === "on",
     rsvpDeadline: (formData.get("rsvpDeadline") as string) || undefined,
+    customSlug: (formData.get("customSlug") as string) || undefined,
     events,
     existingGallery,
   });
@@ -129,7 +131,12 @@ export async function createInviteAction(
   let inviteId = "";
 
   try {
-    const slug = await generateInviteSlug(parsed.data.brideName, parsed.data.groomName);
+    const slug = await generateInviteSlug(
+      parsed.data.brideName,
+      parsed.data.groomName,
+      parsed.data.customSlug,
+      parsed.data.weddingDate,
+    );
     const uploadedImages = await uploadInviteImages(parsed.files, `invitely/${user.id}`);
     const inviteData = finalizeInviteData(parsed.data, uploadedImages);
 
@@ -149,7 +156,7 @@ export async function createInviteAction(
   } catch (error) {
     console.error("Failed to create invite", error);
     return {
-      error: "We couldn't create your invite right now. Please try again once your setup is configured.",
+      error: error instanceof Error ? error.message : "We couldn't create your invite right now. Please try again.",
     };
   }
 
@@ -182,6 +189,25 @@ export async function updateInviteAction(
     return parsed;
   }
 
+  let targetSlug = existingInvite.slug;
+  if (parsed.data.customSlug) {
+    const cleaned = formatSlug(parsed.data.customSlug);
+    if (cleaned && cleaned !== existingInvite.slug) {
+      const availability = await checkSlugAvailability(cleaned, {
+        currentInviteId: inviteId,
+        brideName: parsed.data.brideName,
+        groomName: parsed.data.groomName,
+        weddingDate: parsed.data.weddingDate,
+      });
+      if (!availability.available) {
+        return {
+          error: availability.reason || `The link "${cleaned}" is not available.`,
+        };
+      }
+      targetSlug = cleaned;
+    }
+  }
+
   try {
     const uploadedImages = await uploadInviteImages(parsed.files, `invitely/${user.id}`);
     const inviteData = finalizeInviteData(parsed.data, uploadedImages);
@@ -192,6 +218,7 @@ export async function updateInviteAction(
         userId: user.id, // Combined ownership check
       },
       data: {
+        slug: targetSlug,
         template: themeToTemplate(parsed.data.theme),
         brideName: parsed.data.brideName,
         groomName: parsed.data.groomName,
@@ -202,6 +229,9 @@ export async function updateInviteAction(
 
     // Proactive Cache Invalidation
     await inviteCache.delete(existingInvite.slug);
+    if (targetSlug !== existingInvite.slug) {
+      await inviteCache.delete(targetSlug);
+    }
   } catch (error) {
     console.error("Failed to update invite", error);
     return {
@@ -212,6 +242,9 @@ export async function updateInviteAction(
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/invite/${inviteId}/edit`);
   revalidatePath(`/${existingInvite.slug}`);
+  if (targetSlug !== existingInvite.slug) {
+    revalidatePath(`/${targetSlug}`);
+  }
   redirect(`/dashboard/invite/${inviteId}/edit?updated=1`);
 }
 

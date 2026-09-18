@@ -2,7 +2,22 @@
 
 import Image from "next/image";
 import { useActionState, useEffect, useState } from "react";
-import { CalendarDays, ImagePlus, Link2, MinusCircle, PlusCircle, Sparkles, LayoutPanelLeft, Users, Hotel } from "lucide-react";
+import {
+  CalendarDays,
+  ImagePlus,
+  Link2,
+  MinusCircle,
+  PlusCircle,
+  Sparkles,
+  LayoutPanelLeft,
+  Users,
+  Hotel,
+  Globe,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  RefreshCw,
+} from "lucide-react";
 
 import { CopyLinkButton } from "@/components/dashboard/copy-link-button";
 import { Button } from "@/components/ui/button";
@@ -17,6 +32,18 @@ import { type InviteData, type InviteEvent } from "@/lib/validations";
 import { InviteRenderer } from "@/components/templates/render-invite";
 
 const initialState: InviteActionState = {};
+
+function toKebab(str: string): string {
+  return str
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 18);
+}
 
 function createEvent(partial?: Partial<InviteEvent>): InviteEvent {
   return {
@@ -55,6 +82,8 @@ export function InviteEditorForm({
   submitLabel,
   defaultValue,
   inviteUrl,
+  currentSlug,
+  inviteId,
   notice,
   initialTemplate,
 }: {
@@ -65,6 +94,8 @@ export function InviteEditorForm({
   submitLabel: string;
   defaultValue?: InviteData;
   inviteUrl?: string;
+  currentSlug?: string;
+  inviteId?: string;
   notice?: string;
   initialTemplate?: InviteTheme;
 }) {
@@ -88,11 +119,107 @@ export function InviteEditorForm({
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
 
+  // Custom Slug & Availability State
+  const [slug, setSlug] = useState<string>(() => {
+    if (currentSlug) return currentSlug;
+    const b = toKebab(mergedValue.brideName);
+    const g = toKebab(mergedValue.groomName);
+    return b && g ? `${b}-weds-${g}` : b || g ? `${b || g}-wedding` : "";
+  });
+  const [isCustomizedByUser, setIsCustomizedByUser] = useState<boolean>(Boolean(currentSlug));
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [slugFeedback, setSlugFeedback] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   useEffect(() => {
     return () => {
       newPreviews.forEach((preview) => URL.revokeObjectURL(preview));
     };
   }, [newPreviews]);
+
+  // Auto-sync slug when couple names change (if user hasn't explicitly customized)
+  useEffect(() => {
+    if (isCustomizedByUser) return;
+    const b = toKebab(brideName);
+    const g = toKebab(groomName);
+    if (b && g) {
+      setSlug(`${b}-weds-${g}`);
+    } else if (b) {
+      setSlug(`${b}-wedding`);
+    } else if (g) {
+      setSlug(`${g}-wedding`);
+    }
+  }, [brideName, groomName, isCustomizedByUser]);
+
+  // Debounced availability check
+  useEffect(() => {
+    if (!slug || slug.trim().length < 3) {
+      setSlugStatus("invalid");
+      setSlugFeedback("Link must be at least 3 characters.");
+      setSuggestions([]);
+      return;
+    }
+
+    setSlugStatus("checking");
+    setSlugFeedback("Checking link availability...");
+
+    const timer = setTimeout(async () => {
+      try {
+        const params = new URLSearchParams({
+          slug,
+          ...(inviteId ? { inviteId } : {}),
+          ...(brideName ? { brideName } : {}),
+          ...(groomName ? { groomName } : {}),
+          ...(weddingDate ? { weddingDate } : {}),
+        });
+
+        const res = await fetch(`/api/invites/check-slug?${params.toString()}`);
+        if (!res.ok) throw new Error("Check failed");
+        const data = await res.json();
+
+        if (data.available) {
+          setSlugStatus("available");
+          setSlugFeedback(`✓ /${data.slug} is available!`);
+          setSuggestions([]);
+        } else {
+          setSlugStatus("taken");
+          setSlugFeedback(data.reason || `"${data.slug}" is already taken.`);
+          setSuggestions(data.suggestions || []);
+        }
+      } catch {
+        setSlugStatus("idle");
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [slug, inviteId, brideName, groomName, weddingDate]);
+
+  function handleSlugChange(val: string) {
+    setIsCustomizedByUser(true);
+    const formatted = val
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-");
+    setSlug(formatted);
+  }
+
+  function handleSelectSuggestion(suggestedSlug: string) {
+    setIsCustomizedByUser(true);
+    setSlug(suggestedSlug);
+  }
+
+  function handleResetSlug() {
+    setIsCustomizedByUser(false);
+    const b = toKebab(brideName);
+    const g = toKebab(groomName);
+    if (b && g) {
+      setSlug(`${b}-weds-${g}`);
+    } else if (b) {
+      setSlug(`${b}-wedding`);
+    } else if (g) {
+      setSlug(`${g}-wedding`);
+    }
+  }
 
   function updateEvent(eventId: string, field: keyof InviteEvent, value: string) {
     setEvents((current) =>
@@ -171,6 +298,7 @@ export function InviteEditorForm({
           <input type="hidden" name="existingGalleryJson" value={JSON.stringify(existingGallery)} readOnly />
           <input type="hidden" name="enableRsvp" value={enableRsvp ? "true" : "false"} />
           <input type="hidden" name="askAccommodation" value={askAccommodation ? "true" : "false"} />
+          <input type="hidden" name="customSlug" value={slug} />
 
           {/* COUPLE DETAILS */}
           <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
@@ -209,6 +337,116 @@ export function InviteEditorForm({
               <div className="md:col-span-2">
                 <Label htmlFor="description">Invitation description</Label>
                 <Textarea id="description" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Share the tone of your celebration..." required />
+              </div>
+            </div>
+          </div>
+
+          {/* CUSTOM WEDDING URL */}
+          <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="rounded-2xl bg-burgundy/5 border border-burgundy/15 p-3 text-burgundy shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+                  <Globe className="size-5" />
+                </div>
+                <div>
+                  <h2 className="font-heading text-3xl text-burgundy tracking-tight">Your Wedding Website Link</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-stone-600">
+                    The custom web link your guests will open. Match it to your wedding hashtag or print invitations.
+                  </p>
+                </div>
+              </div>
+              {isCustomizedByUser && (
+                <button
+                  type="button"
+                  onClick={handleResetSlug}
+                  className="text-[11px] font-semibold text-stone-400 hover:text-burgundy transition flex items-center gap-1.5 mt-1 shrink-0 px-3 py-1.5 rounded-full border border-stone-200 hover:border-burgundy/30 bg-white shadow-sm"
+                  title="Reset to name-based link"
+                >
+                  <RefreshCw className="size-3" />
+                  Auto-generate
+                </button>
+              )}
+            </div>
+
+            <div className="mt-6">
+              <Label htmlFor="customSlug" className="text-xs uppercase tracking-wider font-bold text-stone-600">
+                Personalized URL
+              </Label>
+              
+              <div className={`mt-2 flex items-center rounded-2xl border transition-all duration-200 bg-white shadow-inner overflow-hidden ${
+                slugStatus === "available"
+                  ? "border-emerald-500 ring-2 ring-emerald-500/20"
+                  : slugStatus === "taken" || slugStatus === "invalid"
+                  ? "border-rose-400 ring-2 ring-rose-400/20"
+                  : "border-stone-200 focus-within:border-burgundy focus-within:ring-2 focus-within:ring-burgundy/20"
+              }`}>
+                <span className="px-4 py-3 bg-stone-50 border-r border-stone-200 text-stone-400 text-xs sm:text-sm font-mono select-none">
+                  invitely.in/
+                </span>
+                <input
+                  id="customSlug"
+                  type="text"
+                  value={slug}
+                  onChange={(e) => handleSlugChange(e.target.value)}
+                  placeholder="priya-weds-rahul"
+                  className="flex-1 px-3 py-3 text-sm sm:text-base font-medium text-stone-900 placeholder:text-stone-300 focus:outline-none bg-transparent"
+                  autoComplete="off"
+                  spellCheck="false"
+                />
+                <div className="pr-4 shrink-0 flex items-center gap-1.5">
+                  {slugStatus === "checking" && (
+                    <Loader2 className="size-4 animate-spin text-stone-400" />
+                  )}
+                  {slugStatus === "available" && (
+                    <CheckCircle2 className="size-4 text-emerald-600" />
+                  )}
+                  {(slugStatus === "taken" || slugStatus === "invalid") && (
+                    <AlertCircle className="size-4 text-rose-500" />
+                  )}
+                </div>
+              </div>
+
+              {/* FEEDBACK MESSAGE & SUGGESTIONS */}
+              <div className="mt-3 min-h-[22px]">
+                {slugStatus === "available" && (
+                  <p className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
+                    <span className="inline-block size-2 rounded-full bg-emerald-500" />
+                    <span>invitely.in/{slug} is available!</span>
+                  </p>
+                )}
+
+                {slugStatus === "checking" && (
+                  <p className="text-xs text-stone-400 font-medium">Checking link availability...</p>
+                )}
+
+                {(slugStatus === "taken" || slugStatus === "invalid") && (
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                      <span className="inline-block size-2 rounded-full bg-rose-500" />
+                      {slugFeedback}
+                    </p>
+
+                    {suggestions.length > 0 && (
+                      <div className="rounded-2xl bg-amber-50/80 border border-amber-200/80 p-4">
+                        <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wider">
+                          Available suggestions — click any to claim:
+                        </p>
+                        <div className="mt-2.5 flex flex-wrap gap-2">
+                          {suggestions.map((sug) => (
+                            <button
+                              key={sug}
+                              type="button"
+                              onClick={() => handleSelectSuggestion(sug)}
+                              className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold font-mono text-amber-950 border border-amber-300/80 shadow-sm hover:border-amber-500 hover:bg-amber-100/50 transition active:scale-95"
+                            >
+                              <span className="text-amber-600 font-bold">+</span> /{sug}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -445,10 +683,22 @@ export function InviteEditorForm({
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4 pb-20 lg:pb-0">
-            <p className="text-xs leading-relaxed text-stone-400 font-semibold tracking-wide uppercase">
-              Your wedding site is responsive and optimized.
-            </p>
-            <SubmitButton size="lg" pendingLabel="Curating your legacy website..." className="active-scale uppercase tracking-wider text-[11px] font-bold h-14 px-8 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white hover:shadow-[0_10px_40px_rgba(87,0,19,0.3)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+            <div>
+              <p className="text-xs leading-relaxed text-stone-400 font-semibold tracking-wide uppercase">
+                Your wedding site is responsive and optimized.
+              </p>
+              {(slugStatus === "taken" || slugStatus === "invalid") && (
+                <p className="text-xs text-rose-600 font-semibold mt-1">
+                  Please pick an available wedding link above before saving.
+                </p>
+              )}
+            </div>
+            <SubmitButton
+              size="lg"
+              disabled={slugStatus === "taken" || slugStatus === "invalid" || slugStatus === "checking"}
+              pendingLabel="Curating your legacy website..."
+              className="active-scale uppercase tracking-wider text-[11px] font-bold h-14 px-8 bg-[linear-gradient(135deg,var(--color-burgundy)_0%,#3d000d_100%)] !text-white hover:shadow-[0_10px_40px_rgba(87,0,19,0.3)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {submitLabel}
             </SubmitButton>
           </div>
