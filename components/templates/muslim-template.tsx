@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 
 const DEFAULT_DATA = {
   brideFirstName: "Zoya", brideLastName: "Khan",
@@ -147,44 +147,25 @@ export function MuslimTemplate({
 
       {/* ── TRADITIONS: EMERALD & GOLD ──────────────────────────────── */}
       <section className="relative py-32 md:py-52 bg-[#1A2E2A] text-[#FDFBF7] overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none scale-150">
-          <Image src={d.heroImage} alt="" fill className="object-cover grayscale brightness-200" />
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none scale-125">
+          <Image src="/images/templates/muslim/story_god_tier.png" alt="" fill className="object-cover grayscale brightness-150" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-20 md:space-y-28">
           <div className="space-y-8">
-            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Sacred Rituals</span>
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-50 text-[#E8D5A0]">Sacred Rituals</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-[#E8D5A0]">Bespoke Traditions</h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 py-8 md:py-16">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.2 }}
-                className="space-y-8 group"
-              >
-                <div className="relative flex justify-center">
-                   <div className="w-12 h-px bg-[#E8D5A0]/40 group-hover:w-20 transition-all duration-700" />
-                </div>
-                <div className="space-y-4">
-                  <p className="font-sans text-[11px] tracking-editorial uppercase text-[#E8D5A0] font-bold">
-                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                  </p>
-                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-widest text-[#FDFBF7]">{event.title}</h3>
-                </div>
-                <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-[240px] mx-auto tracking-wide">
-                  {event.description || `${event.venue}, ${event.address}`}
-                </p>
-                <MapSection 
-                  address={event.address} 
-                  mapUrl={event.mapUrl} 
-                  buttonClassName="border-[#E8D5A0]/20 text-[#E8D5A0]/60 hover:border-[#E8D5A0]/40"
-                />
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="muslim"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>

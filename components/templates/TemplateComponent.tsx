@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 
 const DEFAULT_DATA = {
   brideFirstName: "Victoria", brideLastName: "Blackwood",
@@ -145,40 +145,21 @@ export function TemplateComponent({
           <Image src={d.heroImage} alt="" fill className="object-cover" />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-24 md:space-y-40">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-20 md:space-y-28">
           <div className="space-y-10">
-            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-30">The Itinerary of Excellence</span>
+            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-40 text-[#E8D5A0]">The Itinerary of Excellence</span>
             <h2 className="font-serif italic text-4xl md:text-7xl font-light tracking-wide text-[#E8D5A0]">Bespoke Evening</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-16 md:gap-32 py-12 md:py-24 text-left border-y border-white/10">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, scale: 0.98 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.1 }}
-                className="space-y-8 py-10 group"
-              >
-                <div className="flex items-center justify-between border-b border-white/20 pb-4">
-                  <p className="font-sans text-[11px] tracking-editorial uppercase font-bold text-[#E8D5A0]">
-                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                  </p>
-                  <div className="w-1.5 h-1.5 bg-[#C9A84C] rotate-45 shadow-[0_0_10px_rgba(201,168,76,0.6)]" />
-                </div>
-                <div className="space-y-4">
-                  <h3 className="font-serif text-3xl md:text-5xl font-normal tracking-tight text-white">{event.title}</h3>
-                  <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-sm tracking-wide">
-                    {event.description || `${event.venue}, ${event.address}`}
-                  </p>
-                  <MapSection 
-                    address={event.address} 
-                    mapUrl={event.mapUrl} 
-                    buttonClassName="border-white/10 text-white/60 hover:border-white/30"
-                  />
-                </div>
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="luxury"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>

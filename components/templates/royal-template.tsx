@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 
 const DEFAULT_DATA = {
   brideFirstName: "Meera", brideLastName: "Rathore",
@@ -146,49 +146,25 @@ export function RoyalTemplate({
 
       {/* ── THE FESTIVITIES: ROYAL PROTOCOL ────────────────────────── */}
       <section className="relative py-32 md:py-52 bg-[#8B1A1A] text-[#FDFBF7] overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none scale-150">
-          <Image src="/images/templates/south-indian/gopuram_vibrant.png" alt="" fill className="object-cover grayscale brightness-200" />
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none scale-125">
+          <Image src="/images/templates/royal/rajasthani_palace_interior.png" alt="" fill className="object-cover grayscale brightness-200" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-20 md:space-y-28">
           <div className="space-y-8">
-            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Imperial Ceremonies</span>
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-50 text-[#E8D5A0]">Imperial Ceremonies</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-[#E8D5A0]">The Celebration</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 py-8">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.2 }}
-                className="space-y-10 group"
-              >
-                <div className="flex flex-col items-center">
-                   <p className="font-serif text-[22px] md:text-[26px] tracking-widest text-[#E8D5A0] opacity-80 font-thin italic">
-                     {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                   </p>
-                   <div className="w-px h-12 bg-[#E8D5A0]/40 my-4" />
-                </div>
-                <div className="space-y-4 text-center">
-                   <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-widest uppercase text-white">{event.title}</h3>
-                  <div className="space-y-3">
-                    <p className="font-sans text-[11px] text-[#E8D5A0] tracking-widest uppercase font-medium">
-                      {event.time} @ {event.venue}
-                    </p>
-                    <p className="font-sans text-[13px] text-white/70 font-light leading-relaxed max-w-[260px] mx-auto tracking-wide">
-                      {event.description || event.address}
-                    </p>
-                    <MapSection 
-                      address={event.address} 
-                      mapUrl={event.mapUrl} 
-                      buttonClassName="border-[#E8D5A0]/20 text-[#E8D5A0]/60 hover:border-[#E8D5A0]/40"
-                    />
-                  </div>
-                </div>
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="royal"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>

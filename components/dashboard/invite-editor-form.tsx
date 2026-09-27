@@ -18,6 +18,7 @@ import {
   Loader2,
   RefreshCw,
   Trash2,
+  Camera,
 } from "lucide-react";
 
 import { CopyLinkButton } from "@/components/dashboard/copy-link-button";
@@ -60,6 +61,7 @@ function createEvent(partial?: Partial<InviteEvent>): InviteEvent {
     address: partial?.address ?? "",
     mapUrl: partial?.mapUrl ?? "",
     description: partial?.description ?? "",
+    imageUrl: partial?.imageUrl ?? "",
   };
 }
 
@@ -132,11 +134,19 @@ export function InviteEditorForm({
   const [slugFeedback, setSlugFeedback] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
+  const [eventPreviews, setEventPreviews] = useState<Record<string, string>>({});
+  const eventFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
   useEffect(() => {
     return () => {
       newPreviews.forEach((preview) => URL.revokeObjectURL(preview));
+      Object.values(eventPreviews).forEach((preview) => {
+        if (preview.startsWith("blob:")) {
+          URL.revokeObjectURL(preview);
+        }
+      });
     };
-  }, [newPreviews]);
+  }, [newPreviews, eventPreviews]);
 
   // Auto-sync slug when couple names change (if user hasn't explicitly customized)
   useEffect(() => {
@@ -233,10 +243,62 @@ export function InviteEditorForm({
   }
 
   function removeEvent(eventId: string) {
+    if (eventPreviews[eventId]?.startsWith("blob:")) {
+      URL.revokeObjectURL(eventPreviews[eventId]);
+    }
+    setEventPreviews((prev) => {
+      const copy = { ...prev };
+      delete copy[eventId];
+      return copy;
+    });
     setEvents((current) => {
       if (current.length === 1) return current;
       return current.filter((event) => event.id !== eventId);
     });
+  }
+
+  function handleEventFileChange(eventId: string, event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+      alert("The image exceeds the 3MB limit. Please choose a smaller file.");
+      event.target.value = "";
+      return;
+    }
+
+    const currentTotalPhotos =
+      (activeImage ? 1 : 0) +
+      events.filter((e) => Boolean(eventPreviews[e.id] || e.imageUrl) && e.id !== eventId).length;
+
+    if (currentTotalPhotos >= 5) {
+      alert("You have reached the maximum limit of 5 photos per template.");
+      event.target.value = "";
+      return;
+    }
+
+    if (eventPreviews[eventId]?.startsWith("blob:")) {
+      URL.revokeObjectURL(eventPreviews[eventId]);
+    }
+
+    const url = URL.createObjectURL(file);
+    setEventPreviews((prev) => ({ ...prev, [eventId]: url }));
+    updateEvent(eventId, "imageUrl", url);
+  }
+
+  function handleRemoveEventPhoto(eventId: string) {
+    if (eventPreviews[eventId]?.startsWith("blob:")) {
+      URL.revokeObjectURL(eventPreviews[eventId]);
+    }
+    setEventPreviews((prev) => {
+      const updated = { ...prev };
+      delete updated[eventId];
+      return updated;
+    });
+    updateEvent(eventId, "imageUrl", "");
+    if (eventFileInputRefs.current[eventId]) {
+      eventFileInputRefs.current[eventId]!.value = "";
+    }
   }
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -273,7 +335,19 @@ export function InviteEditorForm({
 
   const activeImage = newPreviews[0] || existingGallery[0];
 
-  // Construct the live preview data object
+  // Construct the live preview data object with all event photos
+  const updatedEventsForPreview = events.map((e) => ({
+    ...e,
+    imageUrl: eventPreviews[e.id] || e.imageUrl || "",
+  }));
+
+  const allPreviewImages = Array.from(
+    new Set([
+      ...(activeImage ? [activeImage] : []),
+      ...updatedEventsForPreview.map((e) => e.imageUrl).filter((url): url is string => Boolean(url)),
+    ]),
+  ).slice(0, 5);
+
   const livePreviewData: InviteData = {
     brideName,
     groomName,
@@ -284,9 +358,9 @@ export function InviteEditorForm({
     contactPhone,
     enableRsvp,
     askAccommodation,
-    events,
-    gallery: newPreviews.length > 0 ? newPreviews : existingGallery,
-    heroImage: "",
+    events: updatedEventsForPreview,
+    gallery: allPreviewImages,
+    heroImage: activeImage || allPreviewImages[0] || "",
   };
 
   return (
@@ -315,8 +389,23 @@ export function InviteEditorForm({
           ) : null}
 
           <input type="hidden" name="theme" value={theme} />
-          <input type="hidden" name="eventsJson" value={JSON.stringify(events)} readOnly />
-          <input type="hidden" name="existingGalleryJson" value={JSON.stringify(existingGallery)} readOnly />
+          <input
+            type="hidden"
+            name="eventsJson"
+            value={JSON.stringify(
+              events.map((e) => ({
+                ...e,
+                imageUrl: e.imageUrl && !e.imageUrl.startsWith("blob:") ? e.imageUrl : "",
+              })),
+            )}
+            readOnly
+          />
+          <input
+            type="hidden"
+            name="existingGalleryJson"
+            value={JSON.stringify(existingGallery.filter((url) => !url.startsWith("blob:")))}
+            readOnly
+          />
           <input type="hidden" name="enableRsvp" value={enableRsvp ? "true" : "false"} />
           <input type="hidden" name="askAccommodation" value={askAccommodation ? "true" : "false"} />
           <input type="hidden" name="customSlug" value={slug} />
@@ -512,61 +601,175 @@ export function InviteEditorForm({
               })}
             </div>
 
-            <div className="mt-16 relative border-l border-gold/20 pl-8 md:pl-12 ml-4 space-y-12">
-              {events.map((event, index) => (
-                <div key={event.id} className="relative group">
-                  <div className="absolute -left-[41px] md:-left-[57px] top-4 h-8 w-8 rounded-full border border-gold bg-[#fcf9f2] flex items-center justify-center text-[10px] font-bold text-burgundy shadow-[0_0_15px_rgba(154,127,63,0.15)] group-hover:scale-110 transition-transform duration-500">
-                    {index + 1}
-                  </div>
-                  <div className="rounded-[32px] border border-white/40 bg-white/40 p-8 backdrop-blur-xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] transition duration-700 hover:bg-white/60 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)]">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gold/10 pb-5">
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gold">Ritual timeline</span>
-                        <h3 className="mt-1 font-heading text-2xl font-bold text-burgundy tracking-tight">
-                          {event.title || "Ceremony moment"}
-                        </h3>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        type="button"
-                        className="active-scale text-xs tracking-wider uppercase font-bold text-stone-400 hover:text-burgundy"
-                        onClick={() => removeEvent(event.id)}
-                        disabled={events.length === 1}
-                      >
-                        <MinusCircle className="size-3.5 mr-2" />
-                        Remove
-                      </Button>
-                    </div>
-                    <div className="mt-6 grid gap-5 md:grid-cols-2">
-                      <div>
-                        <Label>Event title</Label>
-                        <Input value={event.title} onChange={(e) => updateEvent(event.id, "title", e.target.value)} placeholder="e.g. Traditional Mehndi" />
-                      </div>
-                      <div>
-                        <Label>Venue</Label>
-                        <Input value={event.venue} onChange={(e) => updateEvent(event.id, "venue", e.target.value)} placeholder="e.g. Royal Palace Ballroom" />
-                      </div>
-                      <div>
-                        <Label>Date</Label>
-                        <Input type="date" value={event.date} onChange={(e) => updateEvent(event.id, "date", e.target.value)} />
-                      </div>
-                      <div>
-                        <Label>Time</Label>
-                        <Input type="time" value={event.time ?? ""} onChange={(e) => updateEvent(event.id, "time", e.target.value)} />
-                      </div>
-                      <div className="md:col-span-2">
-                        <Label>Address</Label>
-                        <Input value={event.address} onChange={(e) => updateEvent(event.id, "address", e.target.value)} placeholder="e.g. 12, Palace Road, Jaipur, Rajasthan" />
-                      </div>
-                      <div className="md:col-span-2">
-                        <Label>Description</Label>
-                        <Textarea className="min-h-24" value={event.description ?? ""} placeholder="Detail dress codes, key times, or warm personal greetings." onChange={(e) => updateEvent(event.id, "description", e.target.value)} />
-                      </div>
-                    </div>
-                  </div>
+            {/* CEREMONY PHOTO STORYTELLING GUIDANCE */}
+            <div className="mt-10 rounded-2xl border border-gold/25 bg-gold/[0.03] p-5">
+              <div className="flex items-start gap-3.5">
+                <div className="rounded-xl bg-gold/15 p-2 text-gold shrink-0 mt-0.5">
+                  <Sparkles className="size-4" />
                 </div>
-              ))}
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy">
+                      Ceremony-to-Photo Storytelling
+                    </h4>
+                    <span className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-stone-600 border border-stone-200 shadow-xs">
+                      {(activeImage ? 1 : 0) + events.filter((e) => Boolean(eventPreviews[e.id] || e.imageUrl)).length} of 5 photos used
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-stone-600">
+                    We recommend uploading <strong>1 photo per ceremony</strong> (you have {events.length} {events.length === 1 ? "ceremony" : "ceremonies"} scheduled). Each ceremony will feature its photo side-by-side in your wedding invitation. Max 5 photos per template.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 relative border-l border-gold/20 pl-8 md:pl-12 ml-4 space-y-12">
+              {events.map((event, index) => {
+                const currentEventPhoto = eventPreviews[event.id] || event.imageUrl;
+                return (
+                  <div key={event.id} className="relative group">
+                    <div className="absolute -left-[41px] md:-left-[57px] top-4 h-8 w-8 rounded-full border border-gold bg-[#fcf9f2] flex items-center justify-center text-[10px] font-bold text-burgundy shadow-[0_0_15px_rgba(154,127,63,0.15)] group-hover:scale-110 transition-transform duration-500">
+                      {index + 1}
+                    </div>
+                    <div className="rounded-[32px] border border-white/40 bg-white/40 p-8 backdrop-blur-xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] transition duration-700 hover:bg-white/60 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)]">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gold/10 pb-5">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gold">Ritual timeline</span>
+                          <h3 className="mt-1 font-heading text-2xl font-bold text-burgundy tracking-tight">
+                            {event.title || "Ceremony moment"}
+                          </h3>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="active-scale text-xs tracking-wider uppercase font-bold text-stone-400 hover:text-burgundy"
+                          onClick={() => removeEvent(event.id)}
+                          disabled={events.length === 1}
+                        >
+                          <MinusCircle className="size-3.5 mr-2" />
+                          Remove
+                        </Button>
+                      </div>
+                      <div className="mt-6 grid gap-5 md:grid-cols-2">
+                        <div>
+                          <Label>Event title</Label>
+                          <Input value={event.title} onChange={(e) => updateEvent(event.id, "title", e.target.value)} placeholder="e.g. Traditional Mehndi" />
+                        </div>
+                        <div>
+                          <Label>Venue</Label>
+                          <Input value={event.venue} onChange={(e) => updateEvent(event.id, "venue", e.target.value)} placeholder="e.g. Royal Palace Ballroom" />
+                        </div>
+                        <div>
+                          <Label>Date</Label>
+                          <Input type="date" value={event.date} onChange={(e) => updateEvent(event.id, "date", e.target.value)} />
+                        </div>
+                        <div>
+                          <Label>Time</Label>
+                          <Input type="time" value={event.time ?? ""} onChange={(e) => updateEvent(event.id, "time", e.target.value)} />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Label>Address</Label>
+                          <Input value={event.address} onChange={(e) => updateEvent(event.id, "address", e.target.value)} placeholder="e.g. 12, Palace Road, Jaipur, Rajasthan" />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Label>Description</Label>
+                          <Textarea className="min-h-24" value={event.description ?? ""} placeholder="Detail dress codes, key times, or warm personal greetings." onChange={(e) => updateEvent(event.id, "description", e.target.value)} />
+                        </div>
+
+                        {/* CEREMONY PHOTO UPLOAD (SIDE-BY-SIDE) */}
+                        <div className="md:col-span-2 pt-4 border-t border-gold/15">
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <div>
+                              <Label className="text-xs uppercase tracking-wider font-bold text-burgundy flex items-center gap-1.5">
+                                <Camera className="size-3.5 text-gold" />
+                                Ceremony Photo (Optional)
+                              </Label>
+                              <p className="text-[11px] text-stone-500 mt-0.5">
+                                Featured side-by-side with this ceremony&apos;s details in your invitation.
+                              </p>
+                            </div>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 shrink-0">
+                              Ceremony {index + 1}
+                            </span>
+                          </div>
+
+                          {/* Hidden file input for this ceremony */}
+                          <input
+                            ref={(el) => {
+                              eventFileInputRefs.current[event.id] = el;
+                            }}
+                            id={`eventImage_${event.id}`}
+                            name={`eventImage_${event.id}`}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleEventFileChange(event.id, e)}
+                          />
+
+                          {currentEventPhoto ? (
+                            <div className="flex items-center gap-4 p-3 rounded-2xl border border-gold/25 bg-white/80 shadow-sm">
+                              <div className="relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-100 shadow-inner">
+                                <Image
+                                  src={currentEventPhoto}
+                                  alt={event.title || `Ceremony ${index + 1}`}
+                                  fill
+                                  unoptimized={currentEventPhoto.startsWith("blob:")}
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-stone-800 truncate">
+                                  {event.title || `Ceremony ${index + 1}`} Photo Selected
+                                </p>
+                                <p className="text-[11px] text-emerald-600 font-medium flex items-center gap-1 mt-0.5">
+                                  <CheckCircle2 className="size-3 shrink-0" />
+                                  Displays side-by-side
+                                </p>
+                                <div className="mt-2.5 flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => eventFileInputRefs.current[event.id]?.click()}
+                                    className="h-7 px-2.5 text-[10px] font-bold uppercase tracking-wider text-stone-600 border-stone-200 hover:border-gold/40"
+                                  >
+                                    <RefreshCw className="size-2.5 mr-1" />
+                                    Change
+                                  </Button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveEventPhoto(event.id)}
+                                    className="inline-flex items-center gap-1 h-7 px-2.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition"
+                                  >
+                                    <Trash2 className="size-2.5" />
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              onClick={() => eventFileInputRefs.current[event.id]?.click()}
+                              className="rounded-2xl border border-dashed border-gold/30 bg-gold/[0.02] hover:bg-gold/[0.05] hover:border-gold/50 p-4 transition text-center cursor-pointer group"
+                            >
+                              <div className="flex items-center justify-center gap-2 text-burgundy group-hover:text-gold transition-colors">
+                                <Camera className="size-4" />
+                                <span className="text-xs font-bold uppercase tracking-wider">
+                                  Add Photo for this Ceremony
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-1">
+                                JPG, PNG, or WEBP up to 3MB &bull; Defaults to curated {theme} artwork if unselected
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             <Button type="button" variant="secondary" className="mt-12 active-scale uppercase tracking-wider text-[11px] font-bold h-12 px-6 shadow-sm hover:shadow-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" onClick={addEvent}>

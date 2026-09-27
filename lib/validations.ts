@@ -21,6 +21,7 @@ export const inviteEventSchema = z.object({
   address: z.string().trim().min(1, "Add a venue address."),
   mapUrl: z.string().trim().url("Enter a valid URL").or(z.literal("")).optional(),
   description: z.string().trim().max(240, "Keep event notes under 240 characters.").optional().default(""),
+  imageUrl: z.string().trim().optional(),
 });
 
 export const inviteDataSchema = z.object({
@@ -31,7 +32,7 @@ export const inviteDataSchema = z.object({
   theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian"]),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
-  gallery: z.array(z.string().url()).max(1, "You can upload 1 image.").default([]),
+  gallery: z.array(z.string().url()).max(5, "You can upload up to 5 photos.").default([]),
   heroImage: z.union([z.string().url(), z.literal(""), z.null()]).optional(),
   events: z.array(inviteEventSchema).min(1, "Add at least one event.").max(6, "Keep the invite to 6 events or fewer."),
   enableRsvp: z.boolean().default(true),
@@ -42,7 +43,7 @@ export const inviteDataSchema = z.object({
 export const inviteSubmissionSchema = inviteDataSchema
   .omit({ gallery: true, heroImage: true })
   .extend({
-    existingGallery: z.array(z.string().url()).max(1).default([]),
+    existingGallery: z.array(z.string().url()).max(5).default([]),
     customSlug: z.string().trim().optional(),
   });
 

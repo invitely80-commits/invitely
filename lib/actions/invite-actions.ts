@@ -24,7 +24,8 @@ export type InviteActionState = {
 type ParsedInvitePayload =
   | {
       data: InviteSubmission;
-      files: File[];
+      galleryFiles: File[];
+      eventFiles: { eventId: string; file: File }[];
     }
   | {
       error: string;
@@ -68,24 +69,52 @@ async function parseInvitePayload(formData: FormData): Promise<ParsedInvitePaylo
     };
   }
 
-  const files = formData
+  const galleryFiles = formData
     .getAll("galleryFiles")
     .filter((value): value is File => value instanceof File && value.size > 0);
 
-  if (parsed.data.existingGallery.length + files.length > 1) {
+  const eventFiles: { eventId: string; file: File }[] = [];
+  for (const event of events) {
+    const file = formData.get(`eventImage_${event.id}`);
+    if (file instanceof File && file.size > 0) {
+      eventFiles.push({ eventId: event.id, file });
+    }
+  }
+
+  const totalNewFiles = galleryFiles.length + eventFiles.length;
+  if (parsed.data.existingGallery.length + totalNewFiles > 5) {
     return {
-      error: "You can keep only 1 photo in one invite to ensure it remains lightweight.",
+      error: "You can keep up to 5 photos in your invitation.",
     };
   }
 
   return {
     data: parsed.data,
-    files,
+    galleryFiles,
+    eventFiles,
   };
 }
 
-function finalizeInviteData(payload: InviteSubmission, uploadedImages: string[]): InviteData {
-  const gallery = [...payload.existingGallery, ...uploadedImages];
+function finalizeInviteData(
+  payload: InviteSubmission,
+  uploadedGalleryImages: string[],
+  uploadedEventImagesMap: Record<string, string> = {},
+): InviteData {
+  const updatedEvents = payload.events.map((event) => {
+    const uploadedUrl = uploadedEventImagesMap[event.id];
+    if (uploadedUrl) {
+      return { ...event, imageUrl: uploadedUrl };
+    }
+    return event;
+  });
+
+  const eventImages = updatedEvents
+    .map((e) => e.imageUrl)
+    .filter((url): url is string => Boolean(url && url.length > 0));
+
+  const gallery = Array.from(
+    new Set([...payload.existingGallery, ...uploadedGalleryImages, ...eventImages]),
+  ).slice(0, 5);
 
   return {
     brideName: payload.brideName,
@@ -98,7 +127,7 @@ function finalizeInviteData(payload: InviteSubmission, uploadedImages: string[])
     enableRsvp: payload.enableRsvp,
     askAccommodation: payload.askAccommodation,
     rsvpDeadline: payload.rsvpDeadline,
-    events: payload.events,
+    events: updatedEvents,
     gallery,
     heroImage: gallery[0] ?? "",
   };
@@ -137,8 +166,18 @@ export async function createInviteAction(
       parsed.data.customSlug,
       parsed.data.weddingDate,
     );
-    const uploadedImages = await uploadInviteImages(parsed.files, `invitely/${user.id}`);
-    const inviteData = finalizeInviteData(parsed.data, uploadedImages);
+    const uploadedGalleryImages = await uploadInviteImages(parsed.galleryFiles, `invitely/${user.id}`);
+    const uploadedEventImagesMap: Record<string, string> = {};
+    if (parsed.eventFiles.length > 0) {
+      const uploadedEventUrls = await uploadInviteImages(
+        parsed.eventFiles.map((ef) => ef.file),
+        `invitely/${user.id}`,
+      );
+      parsed.eventFiles.forEach((ef, idx) => {
+        uploadedEventImagesMap[ef.eventId] = uploadedEventUrls[idx];
+      });
+    }
+    const inviteData = finalizeInviteData(parsed.data, uploadedGalleryImages, uploadedEventImagesMap);
 
     const invite = await prisma.invite.create({
       data: {
@@ -209,8 +248,18 @@ export async function updateInviteAction(
   }
 
   try {
-    const uploadedImages = await uploadInviteImages(parsed.files, `invitely/${user.id}`);
-    const inviteData = finalizeInviteData(parsed.data, uploadedImages);
+    const uploadedGalleryImages = await uploadInviteImages(parsed.galleryFiles, `invitely/${user.id}`);
+    const uploadedEventImagesMap: Record<string, string> = {};
+    if (parsed.eventFiles.length > 0) {
+      const uploadedEventUrls = await uploadInviteImages(
+        parsed.eventFiles.map((ef) => ef.file),
+        `invitely/${user.id}`,
+      );
+      parsed.eventFiles.forEach((ef, idx) => {
+        uploadedEventImagesMap[ef.eventId] = uploadedEventUrls[idx];
+      });
+    }
+    const inviteData = finalizeInviteData(parsed.data, uploadedGalleryImages, uploadedEventImagesMap);
 
     await prisma.invite.update({
       where: {

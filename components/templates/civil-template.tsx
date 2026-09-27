@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 
 const DEFAULT_DATA = {
   brideFirstName: "Sophie", brideLastName: "Bennett",
@@ -141,38 +141,19 @@ export function CivilTemplate({
       <section className="relative py-32 md:py-52 bg-[#FAFAFA] text-charcoal overflow-hidden border-y border-charcoal/5">
         <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-32">
           <div className="space-y-8">
-            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">The Order of Day</span>
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-50 text-stone-600">The Order of Day</span>
             <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-charcoal/70">The Ceremony</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-x-16 md:gap-x-32 gap-y-24 md:gap-y-40 py-8 md:py-16">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.2 }}
-                className="text-left space-y-6"
-              >
-                <div className="flex items-center gap-6">
-                  <p className="font-sans text-[11px] font-bold tracking-editorial uppercase text-charcoal/60">
-                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                  </p>
-                  <div className="flex-1 h-px bg-charcoal/20" />
-                </div>
-                <div className="space-y-4">
-                  <h3 className="font-serif text-2xl md:text-4xl font-normal tracking-tight text-charcoal">{event.title}</h3>
-                  <p className="font-sans text-[13px] text-charcoal/70 font-light leading-relaxed max-w-sm tracking-wide">
-                    {event.description || `${event.venue}, ${event.address}`}
-                  </p>
-                  <MapSection 
-                    address={event.address} 
-                    mapUrl={event.mapUrl} 
-                    buttonClassName="border-charcoal/10 text-charcoal/60 hover:border-charcoal/30"
-                  />
-                </div>
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="civil"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 
 const DEFAULT_DATA = {
   brideFirstName: "Aarohi", brideLastName: "Verma",
@@ -137,40 +137,21 @@ export function MinimalTemplate({
 
       {/* ── THE MOMENTS: SILENT GRID ────────────────────────────────── */}
       <section className="relative py-32 md:py-52 bg-white text-black overflow-hidden border-t border-black/5">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24 md:space-y-40">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-20 md:space-y-28">
           <div className="space-y-10">
-            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-20">The Timeline of Union</span>
-            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-black/70">The Moments</h2>
+            <span className="font-sans text-[9px] tracking-[1em] uppercase opacity-35 text-stone-700">The Timeline of Union</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-black/75">The Moments</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-x-16 md:gap-x-24 gap-y-24 md:gap-40 py-8 md:py-16">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, scale: 0.98 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5, delay: i * 0.1 }}
-                className="text-left space-y-4"
-              >
-                <div className="flex items-center gap-4 border-b border-black/10 pb-2">
-                   <p className="font-sans text-[11px] tracking-editorial uppercase opacity-60 text-black font-medium">
-                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                   </p>
-                   <div className="w-1.5 h-1.5 bg-black/20 rounded-full" />
-                </div>
-                <div className="space-y-3">
-                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-tight text-black">{event.title}</h3>
-                  <p className="font-sans text-[13px] text-black/60 font-light leading-relaxed max-w-sm tracking-wide">
-                    {event.description || `${event.venue}, ${event.address}`}
-                  </p>
-                  <MapSection 
-                    address={event.address} 
-                    mapUrl={event.mapUrl} 
-                    buttonClassName="border-black/10 text-black/60 hover:border-black/30"
-                  />
-                </div>
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="minimal"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>

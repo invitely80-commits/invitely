@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
-import { MapSection } from "@/components/templates/map-section";
+import { ThemedEventCard } from "@/components/templates/ThemedEventCard";
 import { LightRays, GopuramSilhouette, RitualIcon, AnimatedBirds } from "./visuals/SouthIndianVisual";
 
 const DEFAULT_DATA = {
@@ -144,41 +144,26 @@ export function SouthIndianTemplate({
       </section>
 
       {/* ── THE CELEBRATION: LOGISTICS ─────────────────────────────── */}
-      <section className="relative py-32 md:py-48 bg-white border-t border-black/5 overflow-hidden">
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-24">
+      <section className="relative py-32 md:py-48 bg-[#FFFDF9] border-t border-black/5 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none scale-125">
+          <Image src="/images/templates/south-indian/gopuram_vibrant.png" alt="" fill className="object-cover grayscale" />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center space-y-20 md:space-y-28">
           <div className="space-y-8">
-            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-40">Events</span>
-            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide">The Celebration</h2>
+            <span className="font-sans text-[10px] tracking-editorial uppercase opacity-50 text-[#8B1A1A]">Sacred Schedule</span>
+            <h2 className="font-serif italic text-4xl md:text-6xl font-light tracking-wide text-[#2D1B1B]">The Celebration</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 py-8 md:py-16">
+          <div className="space-y-12 md:space-y-16 py-4">
             {invite.data.events.map((event, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.2 }}
-                className="text-left space-y-6 group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-px bg-[#C9A84C]/60 group-hover:w-12 transition-all duration-700" />
-                  <p className="font-sans text-[11px] tracking-editorial uppercase text-[#8B1A1A] font-bold">
-                    {event.time} @ {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' })}
-                  </p>
-                </div>
-                <div className="space-y-4 pl-12">
-                  <h3 className="font-serif text-2xl md:text-3xl font-normal tracking-tight text-[#2D1B1B]">{event.title}</h3>
-                  <p className="font-sans text-[13px] text-[#4A4A4A] font-light leading-relaxed max-w-sm tracking-wide">
-                    {event.description || `${event.venue}, ${event.address}`}
-                  </p>
-                  <MapSection 
-                    address={event.address} 
-                    mapUrl={event.mapUrl} 
-                    buttonClassName="border-[#C9A84C]/20 text-[#8B1A1A]/60 hover:border-[#C9A84C]/40"
-                  />
-                </div>
-              </motion.div>
+              <ThemedEventCard
+                key={event.id || i}
+                event={event}
+                index={i}
+                theme="south-indian"
+                gallery={invite.data.gallery}
+              />
             ))}
           </div>
         </div>
