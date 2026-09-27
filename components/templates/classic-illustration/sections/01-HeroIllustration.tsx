@@ -20,7 +20,7 @@ export function HeroIllustration({
 }: HeroIllustrationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Smooth scroll tracking across the 220vh container
+  // Smooth scroll tracking across the 250vh container
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -28,26 +28,28 @@ export function HeroIllustration({
 
   // Inertial spring to completely eliminate any jerkiness on trackpads or mouse wheels
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 45,
-    damping: 20,
+    stiffness: 38,
+    damping: 18,
     restDelta: 0.0001,
   });
 
   // 3D Parallax & Vertical Camera Pan
   // At 0%: Camera focuses on the Grand Gopuram & the dynamic couple names
   // At 100%: Camera smoothly tilts and pans down into the tranquil lotus pond with the couple in limelight
-  const imageY = useTransform(smoothProgress, [0, 1], ["0%", "-38%"]);
+  // We translate by -75vh so the bottom half (couple on stone steps by the lotus pond) arrives perfectly in the viewport on any screen size
+  const imageY = useTransform(smoothProgress, [0, 1], ["0vh", "-75vh"]);
   const imageScale = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.03, 1.06]);
 
   // Phase 1: Gopuram & Couple Names Fade Out on scroll
-  const gopuramOpacity = useTransform(smoothProgress, [0, 0.25, 0.45], [1, 0.85, 0]);
-  const gopuramY = useTransform(smoothProgress, [0, 0.45], [0, -70]);
-  const gopuramFadeMask = useTransform(smoothProgress, [0.15, 0.48], [0, 0.95]);
+  const gopuramOpacity = useTransform(smoothProgress, [0, 0.2, 0.42], [1, 0.9, 0]);
+  const gopuramY = useTransform(smoothProgress, [0, 0.42], [0, -80]);
+  const gopuramFadeMask = useTransform(smoothProgress, [0.12, 0.45], [0, 0.95]);
 
   // Phase 2: Second Half (Couple at Lotus Pond) Coming into the Limelight
-  const pondLimelightOpacity = useTransform(smoothProgress, [0.38, 0.65, 1], [0, 1, 1]);
-  const pondTextY = useTransform(smoothProgress, [0.38, 0.7], [45, 0]);
-  const pondSunlightGlow = useTransform(smoothProgress, [0.35, 0.75], [0, 0.85]);
+  const pondLimelightOpacity = useTransform(smoothProgress, [0.45, 0.72, 1], [0, 1, 1]);
+  const pondTextY = useTransform(smoothProgress, [0.45, 0.75], [50, 0]);
+  const pondSunlightGlow = useTransform(smoothProgress, [0.4, 0.8], [0, 0.9]);
+  const pondSpotlightScale = useTransform(smoothProgress, [0.45, 0.85], [0.85, 1.1]);
 
   const brideFirst = brideName.split(" ")[0];
   const groomFirst = groomName.split(" ")[0];
@@ -55,12 +57,30 @@ export function HeroIllustration({
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-[220vh] bg-[#F7F2E7] select-none"
+      className="relative w-full min-h-[250vh] bg-[#F7F2E7] select-none"
     >
       {/* STICKY FULLSCREEN VIEWPORT - OCCUPIES 100% OF THE SCREEN */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between">
         
-        {/* TOP FLOATING NAVIGATION BAR */}
+        {/* 1. FULL-BLEED AMBIENT ATMOSPHERE LAYER (Edge-to-Edge across all screens) */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden pointer-events-none">
+          {/* Subtle Ambient Artwork Wash for Widescreen Edge Blending */}
+          <div className="absolute inset-0 scale-125 blur-3xl opacity-45 transform-gpu">
+            <Image
+              src="/images/templates/classic-illustration/hero_illustration.png"
+              alt="Ambient Temple Background"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </div>
+
+          {/* Warm Temple Parchment Base Gradient */}
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#F7F2E7]/40 to-[#F7F2E7]/90" />
+        </div>
+
+        {/* 2. TOP FLOATING NAVIGATION BAR */}
         <header className="relative z-30 w-full px-6 py-5 flex items-center justify-between max-w-6xl mx-auto transition-all duration-300">
           {/* Couple Monogram */}
           <div className="font-serif text-lg sm:text-2xl tracking-[0.25em] text-[#801818] font-bold drop-shadow-sm">
@@ -68,7 +88,7 @@ export function HeroIllustration({
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-4 sm:gap-8 font-serif text-xs sm:text-sm tracking-wider text-[#4A382E] bg-white/40 backdrop-blur-md px-5 py-2 rounded-full border border-[#D4AF37]/30 shadow-sm">
+          <nav className="flex items-center gap-4 sm:gap-8 font-serif text-xs sm:text-sm tracking-wider text-[#4A382E] bg-white/60 backdrop-blur-md px-6 py-2.5 rounded-full border border-[#D4AF37]/35 shadow-sm">
             <span className="text-[#801818] font-semibold border-b-2 border-[#801818] pb-0.5">
               Home
             </span>
@@ -90,48 +110,51 @@ export function HeroIllustration({
           </nav>
         </header>
 
-        {/* FULLSCREEN 3D PARALLAX ILLUSTRATION - OCCUPIES ENTIRE VIEWPORT */}
-        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden pointer-events-none">
+        {/* 3. 3D PARALLAX ILLUSTRATION CANVAS - CENTERPIECE WITH FEATHERED SIDES */}
+        <div className="absolute inset-0 z-10 w-full h-full flex justify-center overflow-hidden pointer-events-none">
           <motion.div
             style={{
               y: imageY,
               scale: imageScale,
             }}
-            className="relative w-full h-[165vh] will-change-transform origin-top"
+            className="relative w-full max-w-[960px] lg:max-w-[1100px] xl:max-w-[1240px] h-[175vh] will-change-transform origin-top [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
           >
             <Image
               src="/images/templates/classic-illustration/hero_illustration.png"
               alt="Classic South Indian Temple Illustration"
               fill
               priority
-              sizes="100vw"
-              className="object-cover object-top select-none pointer-events-none"
+              sizes="(max-width: 1024px) 100vw, 1240px"
+              className="object-cover object-top select-none pointer-events-none drop-shadow-2xl"
             />
 
             {/* Limelight Golden Sunlight Aura over Sacred Pond & Couple */}
             <motion.div
-              style={{ opacity: pondSunlightGlow }}
-              className="absolute inset-x-0 bottom-0 h-2/3 bg-radial-gradient from-[#FFEBB3]/35 via-[#F7D896]/15 to-transparent pointer-events-none"
+              style={{
+                opacity: pondSunlightGlow,
+                scale: pondSpotlightScale,
+              }}
+              className="absolute inset-x-0 bottom-0 h-3/5 bg-radial-gradient from-[#FFE7A8]/45 via-[#F7D896]/20 to-transparent pointer-events-none"
             />
 
             {/* Smooth Atmospheric Mist that dissolves the Top Gopuram on scroll */}
             <motion.div
               style={{ opacity: gopuramFadeMask }}
-              className="absolute inset-x-0 top-0 h-3/5 bg-gradient-to-b from-[#F7F2E7] via-[#F7F2E7]/85 to-transparent pointer-events-none"
+              className="absolute inset-x-0 top-0 h-3/5 bg-gradient-to-b from-[#F7F2E7] via-[#F7F2E7]/90 to-transparent pointer-events-none"
             />
           </motion.div>
         </div>
 
-        {/* FLOATING LOTUS BLOSSOMS & PETALS LAYER (ENTIRE SCREEN WIDTH) */}
+        {/* 4. FLOATING LOTUS BLOSSOMS & PETALS LAYER (ENTIRE SCREEN 100VW) */}
         <FloatingFlowers isPondStage={true} />
 
-        {/* PHASE 1 OVERLAY: TOP GOPURAM TEXT PRESENTATION (DYNAMIC FROM FORM) */}
+        {/* 5. PHASE 1 OVERLAY: TOP GOPURAM TEXT PRESENTATION (DYNAMIC FROM FORM) */}
         <motion.div
           style={{
             opacity: gopuramOpacity,
             y: gopuramY,
           }}
-          className="relative z-10 my-auto flex flex-col items-center justify-center text-center px-4 will-change-transform pointer-events-none max-w-2xl mx-auto"
+          className="relative z-20 my-auto flex flex-col items-center justify-center text-center px-4 will-change-transform pointer-events-none max-w-2xl mx-auto"
         >
           {/* Auspicious Red Emblem */}
           <div className="mb-2 text-[#801818]">
@@ -180,7 +203,7 @@ export function HeroIllustration({
           </div>
         </motion.div>
 
-        {/* PHASE 2 OVERLAY: SECOND HALF (COUPLE BY LOTUS POND) IN LIMELIGHT */}
+        {/* 6. PHASE 2 OVERLAY: SECOND HALF (COUPLE BY LOTUS POND) IN LIMELIGHT */}
         <motion.div
           style={{
             opacity: pondLimelightOpacity,
@@ -188,11 +211,11 @@ export function HeroIllustration({
           }}
           className="absolute inset-x-0 bottom-10 sm:bottom-14 z-20 flex flex-col items-center justify-center text-center px-4 pointer-events-none will-change-transform"
         >
-          <div className="max-w-md sm:max-w-lg bg-[#FAF5EC]/92 backdrop-blur-md px-6 sm:px-10 py-5 rounded-2xl border border-[#D4AF37]/50 shadow-[0_20px_50px_rgba(43,27,23,0.18)] space-y-2">
+          <div className="max-w-md sm:max-w-xl bg-[#FAF5EC]/95 backdrop-blur-md px-6 sm:px-12 py-6 rounded-2xl border border-[#D4AF37]/50 shadow-[0_25px_60px_rgba(43,27,23,0.22)] space-y-2">
             <span className="text-[10px] uppercase tracking-[0.35em] text-[#801818] font-sans font-bold block">
               The Sacred Pushkarini
             </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#241712] font-normal leading-snug">
+            <h3 className="font-serif text-xl sm:text-2xl md:text-3xl text-[#241712] font-normal leading-snug">
               Where Sacred Waters Mirror Timeless Devotion
             </h3>
             <p className="font-serif text-xs sm:text-sm text-[#5C4D43] italic leading-relaxed">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { type TemplateInvite } from "@/components/templates/render-invite";
@@ -26,7 +26,7 @@ export function ClassicIllustrationTemplate({
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#F7F2E7] text-[#2B1B17] overflow-x-hidden selection:bg-[#801818] selection:text-white">
+    <div className="relative w-full min-h-screen bg-[#F7F2E7] text-[#2B1B17] overflow-x-clip selection:bg-[#801818] selection:text-white">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
         .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
