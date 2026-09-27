@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
   ImagePlus,
@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Loader2,
   RefreshCw,
+  Trash2,
 } from "lucide-react";
 
 import { CopyLinkButton } from "@/components/dashboard/copy-link-button";
@@ -238,6 +239,8 @@ export function InviteEditorForm({
     });
   }
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   function handleFilesChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
     const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024);
@@ -246,11 +249,29 @@ export function InviteEditorForm({
       alert("The image exceeds the 3MB limit. Please choose a smaller file.");
     }
 
-    setNewPreviews((current) => {
-      current.forEach((preview) => URL.revokeObjectURL(preview));
-      return validFiles.slice(0, 1).map((file) => URL.createObjectURL(file));
-    });
+    if (validFiles.length > 0) {
+      setNewPreviews((current) => {
+        current.forEach((preview) => URL.revokeObjectURL(preview));
+        return validFiles.slice(0, 1).map((file) => URL.createObjectURL(file));
+      });
+      setExistingGallery([]);
+    }
   }
+
+  function handleRemoveImage() {
+    newPreviews.forEach((preview) => URL.revokeObjectURL(preview));
+    setNewPreviews([]);
+    setExistingGallery([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function handleTriggerUpload() {
+    fileInputRef.current?.click();
+  }
+
+  const activeImage = newPreviews[0] || existingGallery[0];
 
   // Construct the live preview data object
   const livePreviewData: InviteData = {
@@ -554,42 +575,104 @@ export function InviteEditorForm({
             </Button>
           </div>
 
-          {/* GALLERY IMAGE */}
+          {/* BACKGROUND IMAGE */}
           <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
             <div className="flex items-start gap-4">
               <div className="rounded-2xl bg-gold/5 border border-gold/15 p-3 text-gold shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
                 <ImagePlus className="size-5" />
               </div>
               <div>
-                <h2 className="font-heading text-3xl font-bold text-burgundy tracking-tight">Gallery image</h2>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="font-heading text-3xl font-bold text-burgundy tracking-tight">Background Image</h2>
+                  <span className="rounded-full bg-gold/10 border border-gold/20 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gold">Hero Portal</span>
+                </div>
                 <p className="mt-1 text-sm leading-relaxed text-stone-500">
-                  Upload an exquisite portrait (max 3MB) to grace the main header.
+                  Upload an exquisite portrait or photo (max 3MB) to appear as the main background of your wedding portal.
                 </p>
               </div>
             </div>
-            
-            <div className="mt-8 rounded-[24px] border-2 border-dashed border-gold/25 bg-gold/[0.01] p-8 text-center transition duration-500 hover:bg-gold/[0.03] hover:border-gold/45 group cursor-pointer relative">
-              <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold mx-auto mb-4 group-hover:scale-110 transition-transform duration-700 ease-out shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                <ImagePlus className="size-5" />
-              </div>
-              <Label htmlFor="galleryFiles" className="cursor-pointer font-bold text-xs uppercase tracking-widest text-burgundy group-hover:text-gold block mb-2 transition-colors">
-                Select high-fidelity portrait
-              </Label>
-              <p className="text-[10px] text-stone-400 font-semibold tracking-wide uppercase mb-4">
-                JPG, PNG or WEBP up to 3MB
-              </p>
-              <Input id="galleryFiles" name="galleryFiles" type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer h-full w-full" onChange={handleFilesChange} />
-              
-              {newPreviews.length > 0 ? (
-                <div className="mt-6 flex justify-center">
-                  {newPreviews.map((preview) => (
-                    <div key={preview} className="overflow-hidden rounded-[24px] border border-gold/15 bg-white p-2 shadow-lg z-10 relative pointer-events-none">
-                      <Image src={preview} alt="New upload preview" width={200} height={200} unoptimized className="aspect-square w-40 rounded-[18px] object-cover" />
+
+            {/* Hidden file input for native form submission */}
+            <input
+              ref={fileInputRef}
+              id="galleryFiles"
+              name="galleryFiles"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFilesChange}
+            />
+
+            {activeImage ? (
+              <div className="mt-8 rounded-[28px] border border-gold/20 bg-white/90 p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-center gap-6">
+                  {/* Image Preview Container */}
+                  <div className="relative group shrink-0 overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 shadow-md w-48 h-36">
+                    <Image
+                      src={activeImage}
+                      alt="Background preview"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/15 pointer-events-none" />
+                    <span className="absolute bottom-2 left-2 rounded-md bg-black/70 backdrop-blur-sm px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                      Active Background
+                    </span>
+                  </div>
+
+                  {/* Actions & Info */}
+                  <div className="flex-1 flex flex-col justify-between self-stretch text-center sm:text-left py-1">
+                    <div>
+                      <h4 className="font-bold text-sm text-stone-900">Portal Background Selected</h4>
+                      <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                        This image is set as the background for your digital invitation. You can replace it or remove it at any time.
+                      </p>
                     </div>
-                  ))}
+
+                    <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={handleTriggerUpload}
+                        className="active-scale uppercase tracking-wider text-[10px] font-bold h-9 px-4 border-stone-200 hover:border-gold/40"
+                      >
+                        <RefreshCw className="size-3 mr-1.5 text-stone-600" />
+                        Change Image
+                      </Button>
+
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[10px] font-bold uppercase tracking-wider text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition duration-200 active-scale"
+                      >
+                        <Trash2 className="size-3 text-red-600" />
+                        Delete Image
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              ) : null}
-            </div>
+              </div>
+            ) : (
+              <div
+                onClick={handleTriggerUpload}
+                className="mt-8 rounded-[24px] border-2 border-dashed border-gold/25 bg-gold/[0.01] p-10 text-center transition duration-500 hover:bg-gold/[0.03] hover:border-gold/45 group cursor-pointer"
+              >
+                <div className="w-14 h-14 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold mx-auto mb-4 group-hover:scale-110 transition-transform duration-700 ease-out shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                  <ImagePlus className="size-6" />
+                </div>
+                <p className="font-bold text-xs uppercase tracking-widest text-burgundy group-hover:text-gold transition-colors">
+                  Upload Background Image
+                </p>
+                <p className="text-[11px] text-stone-500 mt-1">
+                  Click to choose a portrait, venue photo, or backdrop
+                </p>
+                <p className="text-[10px] text-stone-400 font-semibold tracking-wide uppercase mt-3">
+                  JPG, PNG or WEBP up to 3MB
+                </p>
+              </div>
+            )}
           </div>
 
           {/* GUEST RSVP & ACCOMMODATION SETTINGS */}
