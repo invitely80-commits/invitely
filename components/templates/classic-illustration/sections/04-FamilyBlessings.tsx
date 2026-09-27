@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import Image from "next/image";
@@ -7,9 +7,14 @@ import { motion, useScroll, useTransform } from "framer-motion";
 interface FamilyBlessingsProps {
   brideName: string;
   groomName: string;
+  description?: string;
 }
 
-export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) {
+export function FamilyBlessings({
+  brideName,
+  groomName,
+  description = "",
+}: FamilyBlessingsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -19,14 +24,43 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
   const groomY = useTransform(scrollYProgress, [0, 1], [30, -30]);
   const brideY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
-  const brideFirst = brideName.split(" ")[0].toUpperCase();
   const groomFirst = groomName.split(" ")[0].toUpperCase();
+  const brideFirst = brideName.split(" ")[0].toUpperCase();
+
+  // Dynamic Family Lineage derivation without hardcoding static names
+  // If description contains specific family details, extract them; otherwise provide respectful dynamic lineages
+  const parseLineage = (role: "groom" | "bride") => {
+    const isGroom = role === "groom";
+    const name = isGroom ? groomName : brideName;
+
+    // Check if description has explicit family markers
+    if (description) {
+      const marker = isGroom ? /groom family:?(.*?)(?=bride family|$)/i : /bride family:?(.*?)$/i;
+      const match = description.match(marker);
+      if (match && match[1].trim()) {
+        const text = match[1].trim();
+        return {
+          grandparents: text.includes("|") ? text.split("|")[0].trim() : `Paternal & Maternal Grandparents of ${name}`,
+          parents: text.includes("|") ? text.split("|")[1].trim() : `Parents & Family of ${name}`,
+        };
+      }
+    }
+
+    // Default respectful traditional dynamic lineage honoring the actual couple's names
+    return {
+      grandparents: `Grandparents & Elders of the ${isGroom ? groomFirst : brideFirst} Lineage`,
+      parents: `Parents & Guardians of ${name}`,
+    };
+  };
+
+  const groomFamily = parseLineage("groom");
+  const brideFamily = parseLineage("bride");
 
   return (
     <section
       id="family"
       ref={sectionRef}
-      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none"
+      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none border-t border-[#D4AF37]/25"
     >
       {/* Background Subtle Floral & Palm Leaf Border Accents */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-radial-gradient from-[#D4AF37]/10 to-transparent pointer-events-none" />
@@ -72,8 +106,8 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
           <p className="font-serif text-xs uppercase tracking-[0.35em] text-[#554339] font-medium">
             The Family of
           </p>
-          <h3 className="font-serif text-2xl sm:text-3xl text-[#801818] tracking-[0.2em] font-normal uppercase">
-            {groomFirst}
+          <h3 className="font-serif text-2xl sm:text-3xl text-[#801818] tracking-[0.2em] font-normal uppercase break-words px-2">
+            {groomName}
           </h3>
 
           <div className="flex items-center justify-center text-[#801818]">
@@ -91,14 +125,13 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
           </div>
 
           {/* Grandparents & Parents Lineage */}
-          <div className="space-y-6 max-w-md mx-auto pt-2">
+          <div className="space-y-6 max-w-md mx-auto pt-2 px-4">
             <div>
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Grandparents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed">
-                Late Sri Venkataraman Iyer &amp; Smt. Lakshmi Ammal<br />
-                Sri Raghavan Iyer &amp; Smt. Meenakshi Iyer
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+                {groomFamily.grandparents}
               </p>
             </div>
 
@@ -110,15 +143,15 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Parents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed">
-                Sri Suresh Iyer &amp; Smt. Kavitha Suresh
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+                {groomFamily.parents}
               </p>
             </div>
           </div>
         </motion.div>
 
         {/* Ornamental Section Divider */}
-        <div className="my-16 flex items-center justify-center max-w-md mx-auto">
+        <div className="my-16 flex items-center justify-center max-w-md mx-auto px-4">
           <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent" />
           <span className="w-2 h-2 rotate-45 border border-[#801818] mx-3" />
           <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37]/50 to-transparent" />
@@ -136,8 +169,8 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
           <p className="font-serif text-xs uppercase tracking-[0.35em] text-[#554339] font-medium">
             The Family of
           </p>
-          <h3 className="font-serif text-2xl sm:text-3xl text-[#801818] tracking-[0.2em] font-normal uppercase">
-            {brideFirst}
+          <h3 className="font-serif text-2xl sm:text-3xl text-[#801818] tracking-[0.2em] font-normal uppercase break-words px-2">
+            {brideName}
           </h3>
 
           <div className="flex items-center justify-center text-[#801818]">
@@ -155,14 +188,13 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
           </div>
 
           {/* Grandparents & Parents Lineage */}
-          <div className="space-y-6 max-w-md mx-auto pt-2">
+          <div className="space-y-6 max-w-md mx-auto pt-2 px-4">
             <div>
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Grandparents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed">
-                Late Sri Narayanan Rao &amp; Smt. Rukmini Rao<br />
-                Sri Krishnamurthy Sharma &amp; Smt. Radha Sharma
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+                {brideFamily.grandparents}
               </p>
             </div>
 
@@ -174,8 +206,8 @@ export function FamilyBlessings({ brideName, groomName }: FamilyBlessingsProps) 
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Parents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed">
-                Sri Prakash Sharma &amp; Smt. Anitha Prakash
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+                {brideFamily.parents}
               </p>
             </div>
           </div>

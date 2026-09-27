@@ -1,14 +1,14 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
 
-import { HeroIllustration } from "./sections/01-HeroIllustration";
-import { FamilyBlessings } from "./sections/02-FamilyBlessings";
+import { RsvpDoorWelcome } from "./sections/01-RsvpDoorWelcome";
+import { VenuePalace } from "./sections/02-VenuePalace";
 import { WeddingCeremonies } from "./sections/03-WeddingCeremonies";
-import { VenuePalace } from "./sections/04-VenuePalace";
-import { ClassicRsvpClosing } from "./sections/05-ClassicRsvpClosing";
+import { FamilyBlessings } from "./sections/04-FamilyBlessings";
+import { HeroCoverSanctum } from "./sections/05-HeroCoverSanctum";
 
 interface ClassicIllustrationTemplateProps {
   invite: TemplateInvite;
@@ -30,6 +30,7 @@ export function ClassicIllustrationTemplate({
       invite.data.events[0]?.venue ||
       "Bengaluru",
     events: invite.data.events || [],
+    description: invite.data.description || "",
     enableRsvp: invite.data.enableRsvp !== false,
     askAccommodation: invite.data.askAccommodation,
   };
@@ -43,39 +44,42 @@ export function ClassicIllustrationTemplate({
         .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}</style>
 
-      {/* SEQUENCE 1: 3D PARALLAX HERO (GOPURAM -> LOTUS POND COUPLE) */}
-      <HeroIllustration
+      {/* SECTION 1: RSVP / WELCOME DOORWAY */}
+      <RsvpDoorWelcome
+        inviteId={invite.id}
         brideName={d.brideName}
         groomName={d.groomName}
         weddingDate={d.weddingDate}
         city={d.city}
-      />
-
-      {/* SEQUENCE 2: FAMILY BLESSINGS & ANCESTRAL HOMES */}
-      <FamilyBlessings
-        brideName={d.brideName}
-        groomName={d.groomName}
-      />
-
-      {/* SEQUENCE 3: THE WEDDING & SACRED MANDAPAM CEREMONIES */}
-      <WeddingCeremonies
         events={d.events}
+        askAccommodation={d.askAccommodation}
+        preview={preview}
+        enableRsvp={d.enableRsvp}
       />
 
-      {/* SEQUENCE 4: THE VENUE & ILLUSTRATED PALACE MAP */}
+      {/* SECTION 2: THE VENUE & ILLUSTRATED PALACE MAP */}
       <VenuePalace
         primaryEvent={d.events[0]}
       />
 
-      {/* SEQUENCE 5: RSVP & CLOSING BLESSINGS */}
-      <ClassicRsvpClosing
-        inviteId={invite.id}
+      {/* SECTION 3: THE WEDDING & SACRED MANDAPAM CEREMONIES */}
+      <WeddingCeremonies
         events={d.events}
-        askAccommodation={d.askAccommodation}
-        preview={preview}
-        coupleNames={`${d.groomName} & ${d.brideName}`}
-        enableRsvp={d.enableRsvp}
+      />
+
+      {/* SECTION 4: FAMILY BLESSINGS & ANCESTRAL HOMES */}
+      <FamilyBlessings
+        brideName={d.brideName}
+        groomName={d.groomName}
+        description={d.description}
+      />
+
+      {/* SECTION 5: FINAL HERO / INVITATION COVER (GOPURAM -> SACRED PUSHKARINI) */}
+      <HeroCoverSanctum
+        brideName={d.brideName}
+        groomName={d.groomName}
         weddingDate={d.weddingDate}
+        city={d.city}
       />
     </div>
   );

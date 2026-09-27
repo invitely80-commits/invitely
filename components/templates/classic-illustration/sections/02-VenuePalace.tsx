@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import Image from "next/image";
@@ -32,7 +32,7 @@ export function VenuePalace({ primaryEvent }: VenuePalaceProps) {
     <section
       id="venue"
       ref={sectionRef}
-      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none"
+      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none border-t border-[#D4AF37]/25"
     >
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}

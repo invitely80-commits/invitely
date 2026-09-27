@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import Image from "next/image";
@@ -9,12 +9,20 @@ interface WeddingCeremoniesProps {
   events?: InviteEvent[];
 }
 
-const DEFAULT_CEREMONIES = [
+const DEFAULT_CEREMONIES: Array<{
+  key: string;
+  title: string;
+  date: string;
+  time: string;
+  venue?: string;
+  image: string;
+}> = [
   {
     key: "haldi",
     title: "HALDI",
     date: "09 JAN 2027",
     time: "10:00 AM",
+    venue: "",
     image: "/images/templates/classic-illustration/ceremony_haldi.png",
   },
   {
@@ -22,6 +30,7 @@ const DEFAULT_CEREMONIES = [
     title: "SANGEET",
     date: "10 JAN 2027",
     time: "06:30 PM",
+    venue: "",
     image: "/images/templates/classic-illustration/ceremony_sangeet.png",
   },
   {
@@ -29,6 +38,7 @@ const DEFAULT_CEREMONIES = [
     title: "ENGAGEMENT",
     date: "10 JAN 2027",
     time: "07:30 PM",
+    venue: "",
     image: "/images/templates/classic-illustration/ceremony_engagement.png",
   },
   {
@@ -36,6 +46,7 @@ const DEFAULT_CEREMONIES = [
     title: "MUHURTHAM",
     date: "12 JAN 2027",
     time: "09:30 AM",
+    venue: "",
     image: "/images/templates/classic-illustration/ceremony_muhurtham.png",
   },
   {
@@ -43,9 +54,31 @@ const DEFAULT_CEREMONIES = [
     title: "RECEPTION",
     date: "12 JAN 2027",
     time: "07:00 PM",
+    venue: "",
     image: "/images/templates/classic-illustration/ceremony_reception.png",
   },
 ];
+
+function getCeremonyImage(title: string, customImage?: string): string {
+  if (customImage) return customImage;
+  const lower = title.toLowerCase();
+  if (lower.includes("haldi") || lower.includes("mehendi") || lower.includes("pellikuthuru")) {
+    return "/images/templates/classic-illustration/ceremony_haldi.png";
+  }
+  if (lower.includes("sangeet") || lower.includes("musical") || lower.includes("dance")) {
+    return "/images/templates/classic-illustration/ceremony_sangeet.png";
+  }
+  if (lower.includes("engage") || lower.includes("ring") || lower.includes("roka") || lower.includes("nishchit")) {
+    return "/images/templates/classic-illustration/ceremony_engagement.png";
+  }
+  if (lower.includes("muhur") || lower.includes("kalyan") || lower.includes("wedding") || lower.includes("phera") || lower.includes("shaadi")) {
+    return "/images/templates/classic-illustration/ceremony_muhurtham.png";
+  }
+  if (lower.includes("recept") || lower.includes("dinner") || lower.includes("party")) {
+    return "/images/templates/classic-illustration/ceremony_reception.png";
+  }
+  return "/images/templates/classic-illustration/ceremony_engagement.png";
+}
 
 export function WeddingCeremonies({ events = [] }: WeddingCeremoniesProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -56,29 +89,41 @@ export function WeddingCeremonies({ events = [] }: WeddingCeremoniesProps) {
 
   const mandapamScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1, 1.03]);
 
-  // Combine user events with our illustrated ceremony cards
-  const displayCeremonies = DEFAULT_CEREMONIES.map((def, idx) => {
-    const userEvent = events[idx];
-    return {
-      ...def,
-      title: userEvent?.title ? userEvent.title.toUpperCase() : def.title,
-      date: userEvent?.date
-        ? new Date(userEvent.date).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }).toUpperCase()
-        : def.date,
-      time: userEvent?.time || def.time,
-      venue: userEvent?.venue,
-    };
-  });
+  // If user provided events in database/editor, map them cleanly
+  const activeEvents = events.length > 0
+    ? events.map((e, idx) => ({
+        key: e.id || `event-${idx}`,
+        title: e.title.toUpperCase(),
+        date: e.date
+          ? new Date(e.date).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }).toUpperCase()
+          : "AUSPICIOUS DAY",
+        time: e.time || "",
+        venue: e.venue || "",
+        image: getCeremonyImage(e.title, e.imageUrl),
+      }))
+    : DEFAULT_CEREMONIES;
+
+  const count = activeEvents.length;
+
+  // Adapt grid layout dynamically for 3 vs 5 vs other numbers
+  const gridClasses =
+    count === 3
+      ? "grid-cols-1 md:grid-cols-3 max-w-4xl"
+      : count === 4
+      ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4 max-w-5xl"
+      : count <= 5
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 max-w-6xl"
+      : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl";
 
   return (
     <section
       id="wedding"
       ref={sectionRef}
-      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none"
+      className="relative w-full py-28 px-4 sm:px-6 bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none border-t border-[#D4AF37]/25"
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -126,49 +171,67 @@ export function WeddingCeremonies({ events = [] }: WeddingCeremoniesProps) {
           />
         </motion.div>
 
-        {/* 5 Illustrated Ceremony Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 pt-4">
-          {displayCeremonies.map((ceremony, idx) => (
-            <motion.div
-              key={ceremony.key}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: idx * 0.12 }}
-              className="flex flex-col items-center text-center p-4 rounded-xl hover:bg-white/40 transition-colors duration-300 relative group"
-            >
-              {/* Illustrated Vignette */}
-              <div className="relative w-full aspect-[4/3] mb-4 group-hover:scale-105 transition-transform duration-500 ease-out">
-                <Image
-                  src={ceremony.image}
-                  alt={ceremony.title}
-                  fill
-                  className="object-contain"
-                />
-              </div>
+        {/* Illustrated Ceremony Cards with Delicate Column Dividers */}
+        <div className={`grid ${gridClasses} mx-auto gap-y-10 sm:gap-y-6 pt-4`}>
+          {activeEvents.map((ceremony, idx) => {
+            const isLast = idx === activeEvents.length - 1;
+            return (
+              <motion.div
+                key={ceremony.key}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: idx * 0.12 }}
+                className={`relative flex flex-col items-center text-center px-4 sm:px-6 py-2 group ${
+                  !isLast ? "lg:border-r lg:border-[#D4AF37]/35" : ""
+                }`}
+              >
+                {/* Center Column Ornament on the Divider for Desktop */}
+                {!isLast && (
+                  <div className="hidden lg:flex absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 items-center justify-center text-[#801818] z-10 pointer-events-none">
+                    <span className="w-1.5 h-1.5 rotate-45 bg-[#801818]" />
+                  </div>
+                )}
 
-              {/* Ceremony Title */}
-              <h3 className="font-serif text-sm sm:text-base tracking-[0.25em] text-[#2B1B17] font-semibold uppercase mb-1">
-                {ceremony.title}
-              </h3>
+                {/* Illustrated Vignette */}
+                <div className="relative w-full aspect-[4/3] max-w-[200px] mb-4 group-hover:scale-105 transition-transform duration-500 ease-out">
+                  <Image
+                    src={ceremony.image}
+                    alt={ceremony.title}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
 
-              {/* Date & Time */}
-              <p className="font-serif text-xs sm:text-sm text-[#735A4B] tracking-wider mb-2">
-                {ceremony.date}
-              </p>
+                {/* Ceremony Title */}
+                <h3 className="font-serif text-sm sm:text-base tracking-[0.25em] text-[#2B1B17] font-semibold uppercase mb-1">
+                  {ceremony.title}
+                </h3>
 
-              {ceremony.time && (
-                <p className="text-[11px] text-[#801818] tracking-widest font-sans font-medium uppercase mb-2">
-                  {ceremony.time}
+                {/* Date & Time */}
+                <p className="font-serif text-xs sm:text-sm text-[#735A4B] tracking-wider mb-1">
+                  {ceremony.date}
                 </p>
-              )}
 
-              {/* Red Emblem Accent */}
-              <div className="text-[#801818] flex items-center justify-center mt-auto pt-2">
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#801818]" />
-              </div>
-            </motion.div>
-          ))}
+                {ceremony.time && (
+                  <p className="text-[11px] text-[#801818] tracking-widest font-sans font-medium uppercase mb-1">
+                    {ceremony.time}
+                  </p>
+                )}
+
+                {ceremony.venue && (
+                  <p className="text-[11px] text-[#554339] tracking-wider font-serif italic max-w-[180px] truncate mb-2">
+                    {ceremony.venue}
+                  </p>
+                )}
+
+                {/* Red Emblem Accent */}
+                <div className="text-[#801818] flex items-center justify-center mt-auto pt-3">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[#801818]" />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
