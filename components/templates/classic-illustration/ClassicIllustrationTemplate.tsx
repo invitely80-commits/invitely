@@ -1,9 +1,14 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { type TemplateInvite } from "@/components/templates/render-invite";
 import { formatDisplayDate } from "@/lib/utils";
+
 import { HeroIllustration } from "./sections/01-HeroIllustration";
+import { FamilyBlessings } from "./sections/02-FamilyBlessings";
+import { WeddingCeremonies } from "./sections/03-WeddingCeremonies";
+import { VenuePalace } from "./sections/04-VenuePalace";
+import { ClassicRsvpClosing } from "./sections/05-ClassicRsvpClosing";
 
 interface ClassicIllustrationTemplateProps {
   invite: TemplateInvite;
@@ -12,6 +17,7 @@ interface ClassicIllustrationTemplateProps {
 
 export function ClassicIllustrationTemplate({
   invite,
+  preview = false,
 }: ClassicIllustrationTemplateProps) {
   const d = {
     brideName: invite.data.brideName || "Ananya",
@@ -23,6 +29,9 @@ export function ClassicIllustrationTemplate({
       invite.data.events[0]?.address.split(",").slice(-2)[0]?.trim() ||
       invite.data.events[0]?.venue ||
       "Bengaluru",
+    events: invite.data.events || [],
+    enableRsvp: invite.data.enableRsvp !== false,
+    askAccommodation: invite.data.askAccommodation,
   };
 
   return (
@@ -34,12 +43,39 @@ export function ClassicIllustrationTemplate({
         .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}</style>
 
-      {/* SECTION 01: 3D PARALLAX HERO ILLUSTRATION WITH FLOATING FLOWERS */}
+      {/* SEQUENCE 1: 3D PARALLAX HERO (GOPURAM -> LOTUS POND COUPLE) */}
       <HeroIllustration
         brideName={d.brideName}
         groomName={d.groomName}
         weddingDate={d.weddingDate}
         city={d.city}
+      />
+
+      {/* SEQUENCE 2: FAMILY BLESSINGS & ANCESTRAL HOMES */}
+      <FamilyBlessings
+        brideName={d.brideName}
+        groomName={d.groomName}
+      />
+
+      {/* SEQUENCE 3: THE WEDDING & SACRED MANDAPAM CEREMONIES */}
+      <WeddingCeremonies
+        events={d.events}
+      />
+
+      {/* SEQUENCE 4: THE VENUE & ILLUSTRATED PALACE MAP */}
+      <VenuePalace
+        primaryEvent={d.events[0]}
+      />
+
+      {/* SEQUENCE 5: RSVP & CLOSING BLESSINGS */}
+      <ClassicRsvpClosing
+        inviteId={invite.id}
+        events={d.events}
+        askAccommodation={d.askAccommodation}
+        preview={preview}
+        coupleNames={`${d.groomName} & ${d.brideName}`}
+        enableRsvp={d.enableRsvp}
+        weddingDate={d.weddingDate}
       />
     </div>
   );
