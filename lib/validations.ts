@@ -29,7 +29,7 @@ export const inviteDataSchema = z.object({
   groomName: z.string().trim().min(1, "Groom name is required."),
   weddingDate: z.string().trim().min(1, "Wedding date is required."),
   description: z.string().trim().min(1, "Invitation description is required."),
-  theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian"]),
+  theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian", "temple-journey"]),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
   gallery: z.array(z.string().url()).max(5, "You can upload up to 5 photos.").default([]),

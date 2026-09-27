@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { InviteRenderer } from "@/components/templates/render-invite";
-import { getCoupleNames, parseInviteData, templateToTheme } from "@/lib/invites";
+import { getCoupleNames, parseInviteData, templateToTheme, type InviteTheme } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { inviteCache } from "@/lib/redis";
 
@@ -79,7 +79,7 @@ export default async function PublicInvitePage({ params }: PublicInvitePageProps
         invite={{
           id: invite.id,
           slug: invite.slug,
-          template: templateToTheme(invite.template),
+          template: (data.theme as InviteTheme) || templateToTheme(invite.template),
           data,
         }}
       />

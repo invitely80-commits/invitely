@@ -9,6 +9,7 @@ import { ChristianTemplate } from "@/components/templates/christian-template";
 import { SikhTemplate } from "@/components/templates/sikh-template";
 import { CivilTemplate } from "@/components/templates/civil-template";
 import { SouthIndianTemplate } from "@/components/templates/south-indian-template";
+import { TempleJourneyTemplate } from "@/components/templates/temple-journey/TempleJourneyTemplate";
 import { TemplateComponent as LuxuryTemplate } from "@/components/templates/TemplateComponent";
 
 import { RsvpSection } from "@/components/templates/rsvp-section";
@@ -45,13 +46,15 @@ export function InviteRenderer({
         return <LuxuryTemplate invite={invite} preview={preview} />;
       case "south-indian":
         return <SouthIndianTemplate invite={invite} preview={preview} />;
+      case "temple-journey":
+        return <TempleJourneyTemplate invite={invite} preview={preview} />;
       case "minimal":
       default:
         return <MinimalTemplate invite={invite} preview={preview} />;
     }
   };
 
-  const showRsvp = invite.data.enableRsvp !== false;
+  const showRsvp = invite.data.enableRsvp !== false && invite.template !== "temple-journey";
 
   return (
     <div className="relative">

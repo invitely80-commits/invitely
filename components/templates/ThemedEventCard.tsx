@@ -75,6 +75,18 @@ export function ThemedEventCard({
           metaIcon: "text-[#C9A84C]",
           mapButton: "border-[#C9A84C]/40 text-[#8B1A1A] hover:border-[#8B1A1A]/60 hover:bg-[#8B1A1A]/5",
         };
+      case "temple-journey":
+        return {
+          cardContainer: "border border-[#D4AF37]/40 bg-[#FFFFFF] shadow-[0_24px_60px_rgba(36,30,25,0.08)] rounded-2xl",
+          photoFrame: "border-2 border-[#D4AF37]/60 shadow-[0_15px_40px_rgba(126,29,29,0.12)] rounded-xl",
+          tagBg: "bg-[#7E1D1D] text-[#FAF7F0] border border-[#D4AF37]/50 tracking-wider",
+          dateText: "text-[#7E1D1D]",
+          dividerColor: "bg-[#D4AF37]/45",
+          titleText: "text-[#16120E]",
+          bodyText: "text-[#4A3E36]",
+          metaIcon: "text-[#D4AF37]",
+          mapButton: "border-[#D4AF37]/50 text-[#7E1D1D] hover:border-[#7E1D1D] hover:bg-[#7E1D1D]/5",
+        };
       case "hindu":
         return {
           cardContainer: "border border-[#E8D5A0]/25 bg-[#1A0F0A]/85 backdrop-blur-xl shadow-[0_25px_60px_rgba(232,213,160,0.07)]",

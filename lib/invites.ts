@@ -1,7 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -63,6 +63,12 @@ export const themeOptions: Array<{
     description: "A God Tier cinematic heritage experience with layered parallax and editorial storytelling.",
     color: "#8B1A1A",
   },
+  {
+    value: "temple-journey",
+    label: "South Indian — Temple Journey",
+    description: "An ultra-premium, 10-panel cinematic temple journey with carved doors, sacred mandapam, and sunset waters.",
+    color: "#7E1D1D",
+  },
 ];
 
 export function themeToTemplate(theme: InviteTheme): InviteTemplate {
@@ -75,7 +81,9 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     case "civil": return InviteTemplate.CIVIL;
     case "luxury": return InviteTemplate.LUXURY;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "south-indian": return (InviteTemplate as any).SOUTH_INDIAN;
+    case "south-indian":
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case "temple-journey": return (InviteTemplate as any).SOUTH_INDIAN;
     default: return InviteTemplate.MINIMAL;
   }
 }
