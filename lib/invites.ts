@@ -1,7 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey" | "classic-illustration";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -69,6 +69,12 @@ export const themeOptions: Array<{
     description: "An ultra-premium, 10-panel cinematic temple journey with carved doors, sacred mandapam, and sunset waters.",
     color: "#7E1D1D",
   },
+  {
+    value: "classic-illustration",
+    label: "South Indian — Classic Illustration",
+    description: "Handcrafted temple illustration with floating lotus blossoms, 3D smooth parallax, and serene pushkarini pond reflection.",
+    color: "#801818",
+  },
 ];
 
 export function themeToTemplate(theme: InviteTheme): InviteTemplate {
@@ -83,7 +89,9 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     case "south-indian":
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "temple-journey": return (InviteTemplate as any).SOUTH_INDIAN;
+    case "temple-journey":
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case "classic-illustration": return (InviteTemplate as any).SOUTH_INDIAN;
     default: return InviteTemplate.MINIMAL;
   }
 }

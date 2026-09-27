@@ -10,6 +10,7 @@ import { SikhTemplate } from "@/components/templates/sikh-template";
 import { CivilTemplate } from "@/components/templates/civil-template";
 import { SouthIndianTemplate } from "@/components/templates/south-indian-template";
 import { TempleJourneyTemplate } from "@/components/templates/temple-journey/TempleJourneyTemplate";
+import { ClassicIllustrationTemplate } from "@/components/templates/classic-illustration/ClassicIllustrationTemplate";
 import { TemplateComponent as LuxuryTemplate } from "@/components/templates/TemplateComponent";
 
 import { RsvpSection } from "@/components/templates/rsvp-section";
@@ -48,13 +49,18 @@ export function InviteRenderer({
         return <SouthIndianTemplate invite={invite} preview={preview} />;
       case "temple-journey":
         return <TempleJourneyTemplate invite={invite} preview={preview} />;
+      case "classic-illustration":
+        return <ClassicIllustrationTemplate invite={invite} preview={preview} />;
       case "minimal":
       default:
         return <MinimalTemplate invite={invite} preview={preview} />;
     }
   };
 
-  const showRsvp = invite.data.enableRsvp !== false && invite.template !== "temple-journey";
+  const showRsvp =
+    invite.data.enableRsvp !== false &&
+    invite.template !== "temple-journey" &&
+    invite.template !== "classic-illustration";
 
   return (
     <div className="relative">
