@@ -1,7 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey" | "classic-illustration";
+export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey" | "classic-illustration" | "south-indian-heritage";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -75,6 +75,12 @@ export const themeOptions: Array<{
     description: "Handcrafted temple illustration with floating lotus blossoms, 3D smooth parallax, and serene pushkarini pond reflection.",
     color: "#801818",
   },
+  {
+    value: "south-indian-heritage",
+    label: "South Indian Heritage Wedding",
+    description: "Editorial luxury wedding stationery with delicate botanical foliage, ancestral family homes, and gold detailing.",
+    color: "#821919",
+  },
 ];
 
 export function themeToTemplate(theme: InviteTheme): InviteTemplate {
@@ -91,7 +97,9 @@ export function themeToTemplate(theme: InviteTheme): InviteTemplate {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     case "temple-journey":
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "classic-illustration": return (InviteTemplate as any).SOUTH_INDIAN;
+    case "classic-illustration":
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    case "south-indian-heritage": return (InviteTemplate as any).SOUTH_INDIAN;
     default: return InviteTemplate.MINIMAL;
   }
 }
@@ -132,6 +140,12 @@ export const sampleInvite: InviteData = {
   heroImage: "",
   enableRsvp: true,
   askAccommodation: true,
+  familyDetails: {
+    groomGrandparents: "Late Sri Venkataraman Iyer & Smt. Lakshmi Ammal\nSri Raghavan Iyer & Smt. Meenakshi Iyer",
+    groomParents: "Sri Suresh Iyer & Smt. Kavitha Suresh",
+    brideGrandparents: "Late Sri Narayanan Rao & Smt. Rukmini Rao\nSri Krishnamurthy Sharma & Smt. Radha Sharma",
+    brideParents: "Sri Prakash Sharma & Smt. Anitha Prakash",
+  },
   events: [
     {
       id: "mehendi",

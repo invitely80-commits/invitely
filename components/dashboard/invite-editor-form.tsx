@@ -13,6 +13,7 @@ import {
   Users,
   Hotel,
   Globe,
+  Landmark,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -30,7 +31,7 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { type InviteActionState } from "@/lib/actions/invite-actions";
 import { themeOptions, type InviteTheme } from "@/lib/invites";
-import { type InviteData, type InviteEvent } from "@/lib/validations";
+import { type InviteData, type InviteEvent, type InviteFamilyDetails } from "@/lib/validations";
 import { InviteRenderer } from "@/components/templates/render-invite";
 
 const initialState: InviteActionState = {};
@@ -118,6 +119,7 @@ export function InviteEditorForm({
   const [contactPhone, setContactPhone] = useState(mergedValue.contactPhone || "");
   const [enableRsvp, setEnableRsvp] = useState<boolean>(mergedValue.enableRsvp ?? true);
   const [askAccommodation, setAskAccommodation] = useState<boolean>(mergedValue.askAccommodation ?? false);
+  const [familyDetails, setFamilyDetails] = useState<InviteFamilyDetails>(mergedValue.familyDetails ?? {});
   const [existingGallery, setExistingGallery] = useState<string[]>(mergedValue.gallery);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
@@ -236,6 +238,13 @@ export function InviteEditorForm({
     setEvents((current) =>
       current.map((event) => (event.id === eventId ? { ...event, [field]: value } : event)),
     );
+  }
+
+  function updateFamilyDetails(field: keyof NonNullable<InviteFamilyDetails>, value: string) {
+    setFamilyDetails((current) => ({
+      ...(current ?? {}),
+      [field]: value,
+    }));
   }
 
   function addEvent() {
@@ -358,6 +367,7 @@ export function InviteEditorForm({
     contactPhone,
     enableRsvp,
     askAccommodation,
+    familyDetails,
     events: updatedEventsForPreview,
     gallery: allPreviewImages,
     heroImage: activeImage || allPreviewImages[0] || "",
@@ -406,6 +416,12 @@ export function InviteEditorForm({
             value={JSON.stringify(existingGallery.filter((url) => !url.startsWith("blob:")))}
             readOnly
           />
+          <input
+            type="hidden"
+            name="familyDetailsJson"
+            value={JSON.stringify(familyDetails ?? {})}
+            readOnly
+          />
           <input type="hidden" name="enableRsvp" value={enableRsvp ? "true" : "false"} />
           <input type="hidden" name="askAccommodation" value={askAccommodation ? "true" : "false"} />
           <input type="hidden" name="customSlug" value={slug} />
@@ -447,6 +463,59 @@ export function InviteEditorForm({
               <div className="md:col-span-2">
                 <Label htmlFor="description">Invitation description</Label>
                 <Textarea id="description" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Share the tone of your celebration..." required />
+              </div>
+            </div>
+          </div>
+
+          {/* FAMILY LINEAGE */}
+          <div className="surface-card p-8 md:p-10 rounded-[32px] ring-1 ring-black/5 bg-white/70 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)]">
+            <div className="flex items-start gap-4">
+              <div className="rounded-2xl bg-gold/5 border border-gold/15 p-3 text-gold shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+                <Landmark className="size-5" />
+              </div>
+              <div>
+                <h2 className="font-heading text-3xl text-burgundy tracking-tight">Family lineage</h2>
+                <p className="mt-2 text-sm leading-7 text-stone-600">
+                  These details power the illustrated blessing page in the classic South Indian template.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              <div>
+                <Label htmlFor="groomGrandparents">Groom&apos;s grandparents</Label>
+                <Textarea
+                  id="groomGrandparents"
+                  value={familyDetails?.groomGrandparents ?? ""}
+                  onChange={(e) => updateFamilyDetails("groomGrandparents", e.target.value)}
+                  placeholder="Late Sri Venkataraman Iyer & Smt. Lakshmi Ammal"
+                />
+              </div>
+              <div>
+                <Label htmlFor="groomParents">Groom&apos;s parents</Label>
+                <Textarea
+                  id="groomParents"
+                  value={familyDetails?.groomParents ?? ""}
+                  onChange={(e) => updateFamilyDetails("groomParents", e.target.value)}
+                  placeholder="Sri Suresh Iyer & Smt. Kavitha Suresh"
+                />
+              </div>
+              <div>
+                <Label htmlFor="brideGrandparents">Bride&apos;s grandparents</Label>
+                <Textarea
+                  id="brideGrandparents"
+                  value={familyDetails?.brideGrandparents ?? ""}
+                  onChange={(e) => updateFamilyDetails("brideGrandparents", e.target.value)}
+                  placeholder="Sri Narayanan Rao & Smt. Rukmini Rao"
+                />
+              </div>
+              <div>
+                <Label htmlFor="brideParents">Bride&apos;s parents</Label>
+                <Textarea
+                  id="brideParents"
+                  value={familyDetails?.brideParents ?? ""}
+                  onChange={(e) => updateFamilyDetails("brideParents", e.target.value)}
+                  placeholder="Sri Prakash Sharma & Smt. Anitha Prakash"
+                />
               </div>
             </div>
           </div>

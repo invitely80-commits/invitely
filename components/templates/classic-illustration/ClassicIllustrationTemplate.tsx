@@ -8,7 +8,6 @@ import { RsvpDoorWelcome } from "./sections/01-RsvpDoorWelcome";
 import { VenuePalace } from "./sections/02-VenuePalace";
 import { WeddingCeremonies } from "./sections/03-WeddingCeremonies";
 import { FamilyBlessings } from "./sections/04-FamilyBlessings";
-import { HeroCoverSanctum } from "./sections/05-HeroCoverSanctum";
 
 interface ClassicIllustrationTemplateProps {
   invite: TemplateInvite;
@@ -44,7 +43,25 @@ export function ClassicIllustrationTemplate({
         .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}</style>
 
-      {/* SECTION 1: RSVP / WELCOME DOORWAY */}
+      {/* SECTION 1: FAMILY BLESSINGS & ANCESTRAL HOMES */}
+      <FamilyBlessings
+        brideName={d.brideName}
+        groomName={d.groomName}
+        description={d.description}
+        familyDetails={invite.data.familyDetails}
+      />
+
+      {/* SECTION 2: THE WEDDING & SACRED MANDAPAM CEREMONIES */}
+      <WeddingCeremonies
+        events={d.events}
+      />
+
+      {/* SECTION 3: THE VENUE & ILLUSTRATED PALACE MAP */}
+      <VenuePalace
+        primaryEvent={d.events[0]}
+      />
+
+      {/* SECTION 4: RSVP DOORWAY */}
       <RsvpDoorWelcome
         inviteId={invite.id}
         brideName={d.brideName}
@@ -55,31 +72,6 @@ export function ClassicIllustrationTemplate({
         askAccommodation={d.askAccommodation}
         preview={preview}
         enableRsvp={d.enableRsvp}
-      />
-
-      {/* SECTION 2: THE VENUE & ILLUSTRATED PALACE MAP */}
-      <VenuePalace
-        primaryEvent={d.events[0]}
-      />
-
-      {/* SECTION 3: THE WEDDING & SACRED MANDAPAM CEREMONIES */}
-      <WeddingCeremonies
-        events={d.events}
-      />
-
-      {/* SECTION 4: FAMILY BLESSINGS & ANCESTRAL HOMES */}
-      <FamilyBlessings
-        brideName={d.brideName}
-        groomName={d.groomName}
-        description={d.description}
-      />
-
-      {/* SECTION 5: FINAL HERO / INVITATION COVER (GOPURAM -> SACRED PUSHKARINI) */}
-      <HeroCoverSanctum
-        brideName={d.brideName}
-        groomName={d.groomName}
-        weddingDate={d.weddingDate}
-        city={d.city}
       />
     </div>
   );

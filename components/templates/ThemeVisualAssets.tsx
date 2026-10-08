@@ -57,6 +57,24 @@ export const getThemeCardStyles = (theme: string) => {
         shadow: "shadow-[0_20px_50px_rgba(201,168,76,0.1)]",
         label: "Vedic Traditions"
       };
+    case "classic-illustration":
+      return {
+        background: "bg-[#F7F2E7]",
+        border: "border-[#C9A84C]/60",
+        accent: "text-[#E8D5A0]",
+        pattern: "bg-[radial-gradient(circle_at_center,_#801818_1px,_transparent_1px)] bg-[size:46px_46px] opacity-[0.05]",
+        shadow: "shadow-[0_24px_60px_rgba(128,24,24,0.16)]",
+        label: "Illustrated Heirloom"
+      };
+    case "south-indian-heritage":
+      return {
+        background: "bg-[#F8F3E8]",
+        border: "border-[#C9A84C]/60",
+        accent: "text-[#821919]",
+        pattern: "bg-[radial-gradient(circle_at_center,_#821919_1px,_transparent_1px)] bg-[size:48px_48px] opacity-[0.05]",
+        shadow: "shadow-[0_24px_60px_rgba(130,25,25,0.16)]",
+        label: "Heritage Stationery",
+      };
     case "minimal":
       return {
         background: "bg-transparent",

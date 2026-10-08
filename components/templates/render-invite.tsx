@@ -11,6 +11,7 @@ import { CivilTemplate } from "@/components/templates/civil-template";
 import { SouthIndianTemplate } from "@/components/templates/south-indian-template";
 import { TempleJourneyTemplate } from "@/components/templates/temple-journey/TempleJourneyTemplate";
 import { ClassicIllustrationTemplate } from "@/components/templates/classic-illustration/ClassicIllustrationTemplate";
+import { SouthIndianHeritageTemplate } from "@/components/templates/south-indian-heritage/SouthIndianHeritageTemplate";
 import { TemplateComponent as LuxuryTemplate } from "@/components/templates/TemplateComponent";
 
 import { RsvpSection } from "@/components/templates/rsvp-section";
@@ -51,6 +52,8 @@ export function InviteRenderer({
         return <TempleJourneyTemplate invite={invite} preview={preview} />;
       case "classic-illustration":
         return <ClassicIllustrationTemplate invite={invite} preview={preview} />;
+      case "south-indian-heritage":
+        return <SouthIndianHeritageTemplate invite={invite} preview={preview} />;
       case "minimal":
       default:
         return <MinimalTemplate invite={invite} preview={preview} />;
@@ -60,7 +63,8 @@ export function InviteRenderer({
   const showRsvp =
     invite.data.enableRsvp !== false &&
     invite.template !== "temple-journey" &&
-    invite.template !== "classic-illustration";
+    invite.template !== "classic-illustration" &&
+    invite.template !== "south-indian-heritage";
 
   return (
     <div className="relative">

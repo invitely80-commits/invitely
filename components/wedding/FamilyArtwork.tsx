@@ -13,25 +13,27 @@ interface FamilyArtworkProps {
 export function FamilyArtwork({ src, alt, priority = false }: FamilyArtworkProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18, scale: 0.985 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full max-w-[540px] sm:max-w-[620px] mx-auto my-5 sm:my-7 select-none"
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative z-10 w-full max-w-[760px] mx-auto my-1 sm:my-2 select-none"
     >
-      {/* Aspect ratio container preserving full architectural composition without cropping */}
-      <div className="relative w-full aspect-[16/9.2] overflow-hidden rounded-xl">
+      {/* 
+        Layer 3: Family scene illustration
+        - Zero card styling: no borders, no shadows, no rounded corners, no cards
+        - Transparent feathered alpha edges melt naturally into the continuous parchment canvas
+        - Architectural subject remains tack-sharp in center
+      */}
+      <div className="relative w-full aspect-[16/9.2] mx-auto flex items-center justify-center">
         <Image
           src={src}
           alt={alt}
           fill
           priority={priority}
-          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 580px, 620px"
-          className="object-contain object-center [mask-image:radial-gradient(ellipse_92%_90%_at_50%_50%,black_82%,transparent_100%)]"
+          sizes="(max-width: 640px) 96vw, (max-width: 1024px) 720px, 760px"
+          className="object-contain object-center"
         />
-
-        {/* Soft atmospheric warmth blending with parchment base */}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#F8F3E8]/10 to-[#F8F3E8]/40 pointer-events-none" />
       </div>
     </motion.div>
   );

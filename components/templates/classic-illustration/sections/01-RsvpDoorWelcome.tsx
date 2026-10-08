@@ -63,7 +63,7 @@ export function RsvpDoorWelcome({
 
   return (
     <section
-      id="welcome"
+      id="rsvp"
       className="relative w-full min-h-screen bg-[#F7F2E7] text-[#2B1B17] overflow-hidden select-none flex flex-col justify-between"
     >
       {/* 1. TOP FLOATING NAVIGATION BAR */}
@@ -73,20 +73,17 @@ export function RsvpDoorWelcome({
         </div>
 
         <nav className="flex items-center gap-3 sm:gap-7 font-serif text-xs sm:text-sm tracking-wider text-[#4A382E] bg-white/70 backdrop-blur-md px-5 sm:px-7 py-2.5 rounded-full border border-[#D4AF37]/35 shadow-sm">
-          <a href="#welcome" className="text-[#801818] font-semibold border-b-2 border-[#801818] pb-0.5">
-            RSVP
-          </a>
-          <a href="#venue" className="hover:text-[#801818] transition-colors cursor-pointer hidden sm:inline">
-            Venue
+          <a href="#family" className="hover:text-[#801818] transition-colors cursor-pointer hidden sm:inline">
+            Family
           </a>
           <a href="#wedding" className="hover:text-[#801818] transition-colors cursor-pointer">
             Wedding
           </a>
-          <a href="#family" className="hover:text-[#801818] transition-colors cursor-pointer hidden sm:inline">
-            Family
+          <a href="#venue" className="hover:text-[#801818] transition-colors cursor-pointer hidden sm:inline">
+            Venue
           </a>
-          <a href="#sanctum" className="hover:text-[#801818] transition-colors cursor-pointer text-[#801818] font-semibold">
-            Invitation
+          <a href="#rsvp" className="text-[#801818] font-semibold border-b-2 border-[#801818] pb-0.5">
+            RSVP
           </a>
         </nav>
       </header>
@@ -348,10 +345,10 @@ export function RsvpDoorWelcome({
       {/* Bottom Scroll Indicator to Venue */}
       <div className="relative z-10 w-full pb-6 text-center">
         <a
-          href="#venue"
+          href="#family"
           className="inline-flex flex-col items-center gap-1 text-[10px] tracking-[0.3em] uppercase text-[#735A4B] font-sans hover:text-[#801818] transition-colors"
         >
-          <span>Explore The Venue</span>
+          <span>Return to Blessings</span>
           <span className="text-xs animate-bounce">↓</span>
         </a>
       </div>

@@ -3,17 +3,20 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { type InviteFamilyDetails } from "@/lib/validations";
 
 interface FamilyBlessingsProps {
   brideName: string;
   groomName: string;
   description?: string;
+  familyDetails?: InviteFamilyDetails;
 }
 
 export function FamilyBlessings({
   brideName,
   groomName,
   description = "",
+  familyDetails,
 }: FamilyBlessingsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -32,6 +35,15 @@ export function FamilyBlessings({
   const parseLineage = (role: "groom" | "bride") => {
     const isGroom = role === "groom";
     const name = isGroom ? groomName : brideName;
+    const grandparents = isGroom ? familyDetails?.groomGrandparents : familyDetails?.brideGrandparents;
+    const parents = isGroom ? familyDetails?.groomParents : familyDetails?.brideParents;
+
+    if (grandparents || parents) {
+      return {
+        grandparents: grandparents || `Grandparents & Elders of the ${isGroom ? groomFirst : brideFirst} Lineage`,
+        parents: parents || `Parents & Guardians of ${name}`,
+      };
+    }
 
     // Check if description has explicit family markers
     if (description) {
@@ -130,7 +142,7 @@ export function FamilyBlessings({
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Grandparents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words whitespace-pre-line">
                 {groomFamily.grandparents}
               </p>
             </div>
@@ -143,7 +155,7 @@ export function FamilyBlessings({
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Parents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words whitespace-pre-line">
                 {groomFamily.parents}
               </p>
             </div>
@@ -193,7 +205,7 @@ export function FamilyBlessings({
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Grandparents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words whitespace-pre-line">
                 {brideFamily.grandparents}
               </p>
             </div>
@@ -206,7 +218,7 @@ export function FamilyBlessings({
               <p className="font-serif italic text-sm sm:text-base text-[#801818] mb-1 font-light">
                 Parents
               </p>
-              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words">
+              <p className="font-serif text-xs sm:text-sm text-[#382820] leading-relaxed break-words whitespace-pre-line">
                 {brideFamily.parents}
               </p>
             </div>

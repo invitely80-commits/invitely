@@ -99,6 +99,18 @@ export function ThemedEventCard({
           metaIcon: "text-[#C5A059]",
           mapButton: "border-[#C5A059]/50 text-[#801818] hover:border-[#801818] hover:bg-[#801818]/5",
         };
+      case "south-indian-heritage":
+        return {
+          cardContainer: "border border-[#C5A059]/40 bg-[#F8F3E8] shadow-[0_24px_60px_rgba(130,25,25,0.08)] rounded-2xl",
+          photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(130,25,25,0.12)] rounded-xl",
+          tagBg: "bg-[#821919] text-[#FAF5EB] border border-[#C5A059]/50 tracking-wider",
+          dateText: "text-[#821919]",
+          dividerColor: "bg-[#C5A059]/45",
+          titleText: "text-[#2D231E]",
+          bodyText: "text-[#63534B]",
+          metaIcon: "text-[#C5A059]",
+          mapButton: "border-[#C5A059]/50 text-[#821919] hover:border-[#821919] hover:bg-[#821919]/5",
+        };
       case "hindu":
         return {
           cardContainer: "border border-[#E8D5A0]/25 bg-[#1A0F0A]/85 backdrop-blur-xl shadow-[0_25px_60px_rgba(232,213,160,0.07)]",

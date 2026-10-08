@@ -13,6 +13,7 @@ import {
   inviteSubmissionSchema,
   type InviteData,
   type InviteEvent,
+  type InviteFamilyDetails,
   type InviteSubmission,
 } from "@/lib/validations";
 
@@ -46,6 +47,7 @@ function parseJsonField<T>(value: FormDataEntryValue | null, fallback: T): T {
 async function parseInvitePayload(formData: FormData): Promise<ParsedInvitePayload> {
   const events = parseJsonField<InviteEvent[]>(formData.get("eventsJson"), []);
   const existingGallery = parseJsonField<string[]>(formData.get("existingGalleryJson"), []);
+  const familyDetails = parseJsonField<InviteFamilyDetails>(formData.get("familyDetailsJson"), {});
 
   const parsed = inviteSubmissionSchema.safeParse({
     brideName: formData.get("brideName"),
@@ -61,6 +63,7 @@ async function parseInvitePayload(formData: FormData): Promise<ParsedInvitePaylo
     customSlug: (formData.get("customSlug") as string) || undefined,
     events,
     existingGallery,
+    familyDetails,
   });
 
   if (!parsed.success) {
@@ -130,6 +133,7 @@ function finalizeInviteData(
     events: updatedEvents,
     gallery,
     heroImage: gallery[0] ?? "",
+    familyDetails: payload.familyDetails,
   };
 }
 

@@ -24,12 +24,21 @@ export const inviteEventSchema = z.object({
   imageUrl: z.string().trim().optional(),
 });
 
+export const inviteFamilyDetailsSchema = z
+  .object({
+    groomGrandparents: z.string().trim().max(240, "Keep grandparents details under 240 characters.").optional(),
+    groomParents: z.string().trim().max(240, "Keep parent details under 240 characters.").optional(),
+    brideGrandparents: z.string().trim().max(240, "Keep grandparents details under 240 characters.").optional(),
+    brideParents: z.string().trim().max(240, "Keep parent details under 240 characters.").optional(),
+  })
+  .optional();
+
 export const inviteDataSchema = z.object({
   brideName: z.string().trim().min(1, "Bride name is required."),
   groomName: z.string().trim().min(1, "Groom name is required."),
   weddingDate: z.string().trim().min(1, "Wedding date is required."),
   description: z.string().trim().min(1, "Invitation description is required."),
-  theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian", "temple-journey", "classic-illustration"]),
+  theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian", "temple-journey", "classic-illustration", "south-indian-heritage"]),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
   gallery: z.array(z.string().url()).max(5, "You can upload up to 5 photos.").default([]),
@@ -38,6 +47,7 @@ export const inviteDataSchema = z.object({
   enableRsvp: z.boolean().default(true),
   askAccommodation: z.boolean().default(false),
   rsvpDeadline: z.string().optional(),
+  familyDetails: inviteFamilyDetailsSchema,
 });
 
 export const inviteSubmissionSchema = inviteDataSchema
@@ -65,6 +75,7 @@ export const rsvpSubmissionSchema = z.object({
 });
 
 export type InviteEvent = z.infer<typeof inviteEventSchema>;
+export type InviteFamilyDetails = z.infer<typeof inviteFamilyDetailsSchema>;
 export type InviteData = z.infer<typeof inviteDataSchema>;
 export type InviteSubmission = z.infer<typeof inviteSubmissionSchema>;
 export type RsvpSubmission = z.infer<typeof rsvpSubmissionSchema>;

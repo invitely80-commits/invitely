@@ -12,6 +12,8 @@ const SikhVisual = dynamic(() => import("./visuals/SikhVisual"));
 const CivilVisual = dynamic(() => import("./visuals/CivilVisual"));
 const LuxuryVisual = dynamic(() => import("./visuals/LuxuryVisual"));
 const SouthIndianVisual = dynamic(() => import("./visuals/SouthIndianVisual"));
+const ClassicIllustrationVisual = dynamic(() => import("./visuals/ClassicIllustrationVisual"));
+const SouthIndianHeritageVisual = dynamic(() => import("./visuals/SouthIndianHeritageVisual"));
 const MinimalVisual = dynamic(() => import("./visuals/MinimalVisual"));
 
 /**
@@ -43,6 +45,8 @@ export const TraditionCard = ({
     sikh: "Arjun & Preet",
     civil: "Alex & Sam",
     luxury: "The Heirloom",
+    "classic-illustration": "Shreyas & Ananya",
+    "south-indian-heritage": "Shreyas & Ananya",
   };
 
   const name = sampleNames[theme] || "Our Union";
@@ -51,6 +55,8 @@ export const TraditionCard = ({
     switch (theme) {
       case "hindu": return <HinduVisual name={name} priority={priority} />;
       case "south-indian": return <SouthIndianVisual name={name} priority={priority} />;
+      case "classic-illustration": return <ClassicIllustrationVisual name={name} priority={priority} />;
+      case "south-indian-heritage": return <SouthIndianHeritageVisual name={name} priority={priority} />;
       case "muslim": return <MuslimVisual name={name} priority={priority} />;
       case "christian": return <ChristianVisual name={name} priority={priority} />;
       case "minimal": return <MinimalVisual name={name} priority={priority} />;
