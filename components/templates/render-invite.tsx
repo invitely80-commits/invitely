@@ -1,20 +1,6 @@
 import { type InviteTheme } from "@/lib/invites";
 import { type InviteData } from "@/lib/validations";
-
-import { MinimalTemplate } from "@/components/templates/minimal-template";
-import { RoyalTemplate } from "@/components/templates/royal-template";
-import { HinduTemplate } from "@/components/templates/hindu-template";
-import { MuslimTemplate } from "@/components/templates/muslim-template";
-import { ChristianTemplate } from "@/components/templates/christian-template";
-import { SikhTemplate } from "@/components/templates/sikh-template";
-import { CivilTemplate } from "@/components/templates/civil-template";
-import { SouthIndianTemplate } from "@/components/templates/south-indian-template";
-import { TempleJourneyTemplate } from "@/components/templates/temple-journey/TempleJourneyTemplate";
-import { ClassicIllustrationTemplate } from "@/components/templates/classic-illustration/ClassicIllustrationTemplate";
 import { SouthIndianHeritageTemplate } from "@/components/templates/south-indian-heritage/SouthIndianHeritageTemplate";
-import { TemplateComponent as LuxuryTemplate } from "@/components/templates/TemplateComponent";
-
-import { RsvpSection } from "@/components/templates/rsvp-section";
 
 export type TemplateInvite = {
   id: string;
@@ -30,55 +16,9 @@ export function InviteRenderer({
   invite: TemplateInvite;
   preview?: boolean;
 }) {
-  const renderTemplate = () => {
-    switch (invite.template) {
-      case "royal":
-        return <RoyalTemplate invite={invite} preview={preview} />;
-      case "hindu":
-        return <HinduTemplate invite={invite} preview={preview} />;
-      case "muslim":
-        return <MuslimTemplate invite={invite} preview={preview} />;
-      case "christian":
-        return <ChristianTemplate invite={invite} preview={preview} />;
-      case "sikh":
-        return <SikhTemplate invite={invite} preview={preview} />;
-      case "civil":
-        return <CivilTemplate invite={invite} preview={preview} />;
-      case "luxury":
-        return <LuxuryTemplate invite={invite} preview={preview} />;
-      case "south-indian":
-        return <SouthIndianTemplate invite={invite} preview={preview} />;
-      case "temple-journey":
-        return <TempleJourneyTemplate invite={invite} preview={preview} />;
-      case "classic-illustration":
-        return <ClassicIllustrationTemplate invite={invite} preview={preview} />;
-      case "south-indian-heritage":
-        return <SouthIndianHeritageTemplate invite={invite} preview={preview} />;
-      case "minimal":
-      default:
-        return <MinimalTemplate invite={invite} preview={preview} />;
-    }
-  };
-
-  const showRsvp =
-    invite.data.enableRsvp !== false &&
-    invite.template !== "temple-journey" &&
-    invite.template !== "classic-illustration" &&
-    invite.template !== "south-indian-heritage";
-
   return (
     <div className="relative">
-      {renderTemplate()}
-      {showRsvp ? (
-        <RsvpSection
-          inviteId={invite.id}
-          events={invite.data.events}
-          theme={invite.template}
-          askAccommodation={invite.data.askAccommodation}
-          preview={preview}
-          coupleNames={`${invite.data.brideName} & ${invite.data.groomName}`}
-        />
-      ) : null}
+      <SouthIndianHeritageTemplate invite={invite} preview={preview} />
     </div>
   );
 }

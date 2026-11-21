@@ -19,7 +19,7 @@ export default async function NewInvitePage(props: {
   }
 
   const searchParams = await props.searchParams;
-  const initialTemplate = searchParams.template as InviteTheme | undefined;
+  const initialTemplate = (searchParams.template as InviteTheme) || "south-indian-heritage";
 
   return (
     <div className="space-y-4">

@@ -186,15 +186,15 @@ export function ThemedEventCard({
       case "minimal":
       default:
         return {
-          cardContainer: "border border-stone-200/80 bg-white/75 backdrop-blur-sm shadow-[0_15px_40px_rgba(0,0,0,0.02)]",
-          photoFrame: "border border-stone-200/90 shadow-[0_10px_25px_rgba(0,0,0,0.04)]",
-          tagBg: "bg-stone-800 text-stone-100",
-          dateText: "text-stone-700",
-          dividerColor: "bg-stone-200",
-          titleText: "text-stone-900",
-          bodyText: "text-stone-600",
-          metaIcon: "text-stone-400",
-          mapButton: "border-stone-300 text-stone-700 hover:border-stone-600 hover:bg-stone-50",
+          cardContainer: "border border-[#C5A059]/40 bg-[#F8F3E8] shadow-[0_24px_60px_rgba(130,25,25,0.08)] rounded-2xl",
+          photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(130,25,25,0.12)] rounded-xl",
+          tagBg: "bg-[#821919] text-[#FAF5EB] border border-[#C5A059]/50 tracking-wider",
+          dateText: "text-[#821919]",
+          dividerColor: "bg-[#C5A059]/45",
+          titleText: "text-[#2D231E]",
+          bodyText: "text-[#63534B]",
+          metaIcon: "text-[#C5A059]",
+          mapButton: "border-[#C5A059]/50 text-[#821919] hover:border-[#821919] hover:bg-[#821919]/5",
         };
     }
   };

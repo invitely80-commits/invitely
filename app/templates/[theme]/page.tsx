@@ -15,13 +15,15 @@ export default async function TemplatePreviewPage({
   params: Promise<{ theme: string }>;
 }) {
   const { theme } = await params;
-  const isValidTheme = themeOptions.some((option) => option.value === theme);
+  const isValidTheme =
+    themeOptions.some((option) => option.value === theme) ||
+    theme === "south-indian-heritage";
 
   if (!isValidTheme) {
     notFound();
   }
 
-  const selectedTheme = theme as InviteTheme;
+  const selectedTheme: InviteTheme = "south-indian-heritage";
 
   // Custom preview data for this theme
   const previewInvite = {

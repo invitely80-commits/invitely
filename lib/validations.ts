@@ -38,7 +38,7 @@ export const inviteDataSchema = z.object({
   groomName: z.string().trim().min(1, "Groom name is required."),
   weddingDate: z.string().trim().min(1, "Wedding date is required."),
   description: z.string().trim().min(1, "Invitation description is required."),
-  theme: z.enum(["minimal", "royal", "hindu", "muslim", "christian", "sikh", "civil", "luxury", "south-indian", "temple-journey", "classic-illustration", "south-indian-heritage"]),
+  theme: z.string().default("south-indian-heritage"),
   contactEmail: z.union([z.string().trim().email("Enter a valid contact email."), z.literal("")]).default(""),
   contactPhone: z.union([z.string().trim().max(20), z.literal("")]).default(""),
   gallery: z.array(z.string().url()).max(5, "You can upload up to 5 photos.").default([]),
@@ -79,4 +79,3 @@ export type InviteFamilyDetails = z.infer<typeof inviteFamilyDetailsSchema>;
 export type InviteData = z.infer<typeof inviteDataSchema>;
 export type InviteSubmission = z.infer<typeof inviteSubmissionSchema>;
 export type RsvpSubmission = z.infer<typeof rsvpSubmissionSchema>;
-

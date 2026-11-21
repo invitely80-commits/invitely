@@ -1,7 +1,19 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme = "minimal" | "royal" | "hindu" | "muslim" | "christian" | "sikh" | "civil" | "luxury" | "south-indian" | "temple-journey" | "classic-illustration" | "south-indian-heritage";
+export type InviteTheme =
+  | "south-indian-heritage"
+  | "minimal"
+  | "royal"
+  | "hindu"
+  | "muslim"
+  | "christian"
+  | "sikh"
+  | "civil"
+  | "luxury"
+  | "south-indian"
+  | "temple-journey"
+  | "classic-illustration";
 
 export const themeOptions: Array<{
   value: InviteTheme;
@@ -10,72 +22,6 @@ export const themeOptions: Array<{
   color: string;
 }> = [
   {
-    value: "minimal",
-    label: "Minimal",
-    description: "Soft ivory layout with elegant spacing and a modern editorial feel.",
-    color: "#fcf9f2",
-  },
-  {
-    value: "royal",
-    label: "Royal",
-    description: "Maroon and gold styling for a richer, celebratory Indian wedding mood.",
-    color: "#5c1530",
-  },
-  {
-    value: "hindu",
-    label: "Hindu",
-    description: "A sacred celebration in Saffron and Gold, featuring traditional mandala patterns.",
-    color: "#f97316",
-  },
-  {
-    value: "muslim",
-    label: "Muslim",
-    description: "Nikah elegance in Emerald and Rich Gold with geometric artistic motifs.",
-    color: "#065f46",
-  },
-  {
-    value: "christian",
-    label: "Christian",
-    description: "Clean White and Champagne Silver with delicate floral textures and editorial type.",
-    color: "#ffffff",
-  },
-  {
-    value: "sikh",
-    label: "Sikh",
-    description: "Majestic celebration in Royal Blue and Vibrant Orange with bold typography.",
-    color: "#1e3a8a",
-  },
-  {
-    value: "civil",
-    label: "Civil",
-    description: "Modern minimalist storytelling focusing on high-fashion photography and clean lines.",
-    color: "#1c1c18",
-  },
-  {
-    value: "luxury",
-    label: "Luxury",
-    description: "God-Tier Editorial digital heirloom with 3D Virtual Envelope and bento-luxury architecture.",
-    color: "#1c1c18",
-  },
-  {
-    value: "south-indian",
-    label: "South Indian Hindu",
-    description: "A God Tier cinematic heritage experience with layered parallax and editorial storytelling.",
-    color: "#8B1A1A",
-  },
-  {
-    value: "temple-journey",
-    label: "South Indian — Temple Journey",
-    description: "An ultra-premium, 10-panel cinematic temple journey with carved doors, sacred mandapam, and sunset waters.",
-    color: "#7E1D1D",
-  },
-  {
-    value: "classic-illustration",
-    label: "South Indian — Classic Illustration",
-    description: "Handcrafted temple illustration with floating lotus blossoms, 3D smooth parallax, and serene pushkarini pond reflection.",
-    color: "#801818",
-  },
-  {
     value: "south-indian-heritage",
     label: "South Indian Heritage Wedding",
     description: "Editorial luxury wedding stationery with delicate botanical foliage, ancestral family homes, and gold detailing.",
@@ -83,40 +29,13 @@ export const themeOptions: Array<{
   },
 ];
 
-export function themeToTemplate(theme: InviteTheme): InviteTemplate {
-  switch (theme) {
-    case "royal": return InviteTemplate.ROYAL;
-    case "hindu": return InviteTemplate.HINDU;
-    case "muslim": return InviteTemplate.MUSLIM;
-    case "christian": return InviteTemplate.CHRISTIAN;
-    case "sikh": return InviteTemplate.SIKH;
-    case "civil": return InviteTemplate.CIVIL;
-    case "luxury": return InviteTemplate.LUXURY;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "south-indian":
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "temple-journey":
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "classic-illustration":
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case "south-indian-heritage": return (InviteTemplate as any).SOUTH_INDIAN;
-    default: return InviteTemplate.MINIMAL;
-  }
+export function themeToTemplate(_theme?: InviteTheme): InviteTemplate {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (InviteTemplate as any).SOUTH_INDIAN;
 }
 
-export function templateToTheme(template: InviteTemplate): InviteTheme {
-  switch (template) {
-    case InviteTemplate.ROYAL: return "royal";
-    case InviteTemplate.HINDU: return "hindu";
-    case InviteTemplate.MUSLIM: return "muslim";
-    case InviteTemplate.CHRISTIAN: return "christian";
-    case InviteTemplate.SIKH: return "sikh";
-    case InviteTemplate.CIVIL: return "civil";
-    case InviteTemplate.LUXURY: return "luxury";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    case (InviteTemplate as any).SOUTH_INDIAN: return "south-indian";
-    default: return "minimal";
-  }
+export function templateToTheme(_template?: InviteTemplate): InviteTheme {
+  return "south-indian-heritage";
 }
 
 export function parseInviteData(data: Prisma.JsonValue) {
@@ -128,12 +47,11 @@ export function getCoupleNames(invite: InviteData) {
 }
 
 export const sampleInvite: InviteData = {
-  brideName: "Aarohi",
-  groomName: "Vihaan",
-  weddingDate: "2026-12-12",
-  description:
-    "Join us for a joyful weekend of rituals, music, and heartfelt moments as our families come together to celebrate love.",
-  theme: "minimal",
+  brideName: "Sofia",
+  groomName: "Elias",
+  weddingDate: "2026-11-14",
+  description: "Join us in celebrating the beginning of our forever.",
+  theme: "south-indian-heritage",
   contactEmail: "family@invitely.com",
   contactPhone: "+91 98765 43210",
   gallery: [],
@@ -148,22 +66,22 @@ export const sampleInvite: InviteData = {
   },
   events: [
     {
-      id: "mehendi",
-      title: "Mehendi & Welcome Dinner",
-      date: "2026-12-11",
+      id: "welcomedinner",
+      title: "Welcome Dinner",
+      date: "2026-11-13",
       time: "18:00",
-      venue: "The Courtyard, Jaipur",
-      address: "Civil Lines, Jaipur, Rajasthan",
-      description: "An intimate evening of music, colours, and family welcomes.",
+      venue: "The Courtyard",
+      address: "Ancestral Estate, Bengaluru",
+      description: "An intimate evening of blessings and reunion.",
     },
     {
-      id: "wedding",
-      title: "Wedding Ceremony",
-      date: "2026-12-12",
-      time: "11:00",
-      venue: "Raj Palace Gardens",
-      address: "Amer Road, Jaipur, Rajasthan",
-      description: "Ceremony followed by lunch and celebrations.",
+      id: "muhurtham",
+      title: "Muhurtham Ceremony",
+      date: "2026-11-14",
+      time: "09:00",
+      venue: "The Sacred Mandapam",
+      address: "Heritage Grounds, Bengaluru",
+      description: "Sacred rituals and tying of the Mangalsutra.",
     },
   ],
 };

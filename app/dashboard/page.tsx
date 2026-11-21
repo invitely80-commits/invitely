@@ -144,7 +144,7 @@ export default async function DashboardPage(props: {
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
                       <span className="inline-flex items-center rounded-full bg-gold/5 border border-gold/15 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">
-                        {invite.theme} theme
+                        {invite.theme === "south-indian-heritage" ? "South Indian Heritage" : `${invite.theme} theme`}
                       </span>
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
                         {invite.rsvpCount} {invite.rsvpCount === 1 ? "RSVP" : "RSVPs"}

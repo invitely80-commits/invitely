@@ -71,7 +71,7 @@ const defaultInviteData: InviteData = {
   groomName: "Elias",
   weddingDate: "2026-11-14",
   description: "Join us in celebrating the beginning of our forever.",
-  theme: "minimal",
+  theme: "south-indian-heritage",
   contactEmail: "",
   contactPhone: "",
   gallery: [],
@@ -107,7 +107,7 @@ export function InviteEditorForm({
   const [state, formAction] = useActionState(action, initialState);
   
   // Lifted State for Live Preview
-  const [theme, setTheme] = useState<InviteTheme>(initialTemplate ?? mergedValue.theme);
+  const [theme, setTheme] = useState<InviteTheme>("south-indian-heritage");
   const [events, setEvents] = useState<InviteEvent[]>(
     mergedValue.events.length ? mergedValue.events : [createEvent()],
   );
@@ -192,7 +192,7 @@ export function InviteEditorForm({
 
         if (data.available) {
           setSlugStatus("available");
-          setSlugFeedback(`✓ /${data.slug} is available!`);
+          setSlugFeedback(`âœ“ /${data.slug} is available!`);
           setSuggestions([]);
         } else {
           setSlugStatus("taken");
@@ -476,7 +476,7 @@ export function InviteEditorForm({
               <div>
                 <h2 className="font-heading text-3xl text-burgundy tracking-tight">Family lineage</h2>
                 <p className="mt-2 text-sm leading-7 text-stone-600">
-                  These details power the illustrated blessing page in the classic South Indian template.
+                  These details power the illustrated blessing page in the South Indian Heritage template.
                 </p>
               </div>
             </div>
@@ -608,7 +608,7 @@ export function InviteEditorForm({
                     {suggestions.length > 0 && (
                       <div className="rounded-2xl bg-amber-50/80 border border-amber-200/80 p-4">
                         <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wider">
-                          Available suggestions — click any to claim:
+                          Available suggestions â€” click any to claim:
                         </p>
                         <div className="mt-2.5 flex flex-wrap gap-2">
                           {suggestions.map((sug) => (
@@ -644,7 +644,7 @@ export function InviteEditorForm({
               </div>
             </div>
 
-            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <div className="mt-8 grid gap-5 lg:grid-cols-1">
               {themeOptions.map((option) => {
                 const selected = theme === option.value;
                 return (

@@ -117,27 +117,19 @@ export default async function HomePage() {
         <div className="section-shell relative z-10">
           <div className="max-w-3xl mx-auto space-y-6 gsap-tradition-title pb-12 lg:pb-0">
             <span className="text-[11px] font-bold uppercase tracking-widest-label text-gold">The Collection</span>
-            <h2 className="font-heading text-4xl lg:text-7xl font-bold tracking-tight-display text-balance">Built for Every Tradition</h2>
-            <p className="text-lg text-white/40 font-medium leading-relaxed text-pretty">We honor the unique rituals of every heritage with bespoke iconography and meticulous aesthetics curated for your legacy.</p>
+            <h2 className="font-heading text-4xl lg:text-7xl font-bold tracking-tight-display text-balance">Built for Heritage Traditions</h2>
+            <p className="text-lg text-white/40 font-medium leading-relaxed text-pretty">We honor timeless wedding rituals with bespoke iconography and meticulous aesthetics curated for your legacy.</p>
           </div>
 
-          <div className="mt-12 lg:mt-64 grid grid-cols-2 lg:grid-cols-5 gap-6 gsap-tradition-cards-wrapper relative z-20">
-            {[
-              { name: "Hindu", icon: TraditionIcons.Hindu },
-              { name: "Muslim", icon: TraditionIcons.Muslim },
-              { name: "Christian", icon: TraditionIcons.Christian },
-              { name: "Sikh", icon: TraditionIcons.Sikh },
-              { name: "Civil", icon: TraditionIcons.Civil },
-            ].map((tradition, i) => (
-              <div key={i} className="gsap-tradition-card group relative bg-white/[0.02] p-10 rounded-[32px] border border-white/5 transition-all hover:bg-white/[0.06] hover:-translate-y-4 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] duration-500">
-                <div className="scale-110 mb-2 flex justify-center"><tradition.icon /></div>
-                <p className="mt-6 text-[9px] font-bold uppercase tracking-[0.3em] text-white/30 group-hover:text-gold transition-colors">{tradition.name}</p>
-              </div>
-            ))}
+          <div className="mt-12 lg:mt-48 flex justify-center gsap-tradition-cards-wrapper relative z-20">
+            <div className="gsap-tradition-card max-w-sm w-full group relative bg-white/[0.02] p-10 rounded-[32px] border border-white/5 transition-all hover:bg-white/[0.06] hover:-translate-y-4 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] duration-500">
+              <div className="scale-110 mb-2 flex justify-center"><TraditionIcons.Hindu /></div>
+              <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 group-hover:text-gold transition-colors">South Indian Heritage</p>
+            </div>
           </div>
           
           <Link href="/templates" className="mt-20 inline-flex items-center gap-4 text-gold hover:text-white transition-all font-bold uppercase tracking-widest text-[10px] group pb-2 border-b border-gold/20 hover:border-white/40 active-scale">
-            Explore all aesthetics <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-500" />
+            Explore the heritage template <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-500" />
           </Link>
         </div>
       </section>
@@ -236,7 +228,7 @@ export default async function HomePage() {
            </div>
         </div>
         <div className="section-shell mt-24 pt-12 border-t border-ink/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-           <p>© 2026 Invitely Digital. All Rights Reserved.</p>
+           <p>Â© 2026 Invitely Digital. All Rights Reserved.</p>
            <p className="text-gold">Language: English (Global)</p>
         </div>
       </footer>

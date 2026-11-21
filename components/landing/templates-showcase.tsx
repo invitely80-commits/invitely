@@ -14,18 +14,14 @@ import { InviteRenderer, type TemplateInvite } from "@/components/templates/rend
 
 const previewTemplates: TemplateInvite[] = [
   {
-    id: "minimal-preview",
-    slug: "aarohi-vihaan-demo",
-    template: "minimal",
-    data: sampleInvite,
-  },
-  {
-    id: "royal-preview",
-    slug: "aarohi-vihaan-demo-royal",
-    template: "royal",
+    id: "heritage-preview",
+    slug: "sofia-elias-heritage",
+    template: "south-indian-heritage",
     data: {
       ...sampleInvite,
-      theme: "royal",
+      theme: "south-indian-heritage",
+      brideName: "Sofia",
+      groomName: "Elias",
     },
   },
 ];
@@ -35,7 +31,7 @@ export function TemplatesShowcase() {
 
   return (
     <>
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="max-w-xl mx-auto">
         {previewTemplates.map((template, index) => (
           <motion.div
             key={template.id}
@@ -55,23 +51,29 @@ export function TemplatesShowcase() {
               <div className="flex items-center justify-between px-8 pb-8 pt-4">
                 <div>
                   <h3 className="font-heading text-3xl font-medium text-burgundy">
-                    {template.template === "royal" ? "Royal Heritage" : "Modern Minimal"}
+                    South Indian Heritage Wedding
                   </h3>
                   <p className="mt-2 text-[13.5px] leading-relaxed text-stone-500/90">
-                    {template.template === "royal"
-                      ? "A burgundy-and-gold statement for grand celebrations."
-                      : "An airy editorial style with graceful spacing and soft romance."}
+                    Editorial luxury wedding stationery with delicate botanical foliage, ancestral family homes, and gold detailing.
                   </p>
                 </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="shrink-0 px-5"
-                  onClick={() => setActiveTemplate(template)}
-                >
-                  <Eye className="size-4" />
-                  Preview
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full"
+                    onClick={() => setActiveTemplate(template)}
+                  >
+                    <Eye className="size-4" />
+                    Preview
+                  </Button>
+                  <Button asChild size="sm" className="rounded-full">
+                    <Link href={`/dashboard/invite/new?template=south-indian-heritage`}>
+                      Use template
+                      <ArrowUpRight className="size-4" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </Card>
           </motion.div>
@@ -81,42 +83,29 @@ export function TemplatesShowcase() {
       <AnimatePresence>
         {activeTemplate ? (
           <motion.div
-            className="fixed inset-0 z-[100] bg-burgundy/40 px-4 py-8 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setActiveTemplate(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           >
             <motion.div
-              className="mx-auto h-full max-w-6xl overflow-y-auto rounded-[48px] bg-ivory p-6 shadow-[0_40px_120px_rgba(87,0,19,0.3)]"
-              initial={{ opacity: 0, scale: 0.95, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 15 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              onClick={(event) => event.stopPropagation()}
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="relative max-h-[90vh] w-full max-w-4xl overflow-auto rounded-3xl bg-ivory p-6 shadow-2xl"
             >
-              <div className="mb-6 flex items-center justify-between gap-4 px-4 py-3">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-burgundy/40">
-                    Template Showcase
-                  </p>
-                  <h3 className="mt-1 font-heading text-3xl font-medium text-burgundy">
-                    {activeTemplate.template === "royal" ? "Royal Heritage" : "Modern Minimal"}
-                  </h3>
-                </div>
-                <Button variant="ghost" onClick={() => setActiveTemplate(null)} size="sm">
-                  Close Preview
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-heading text-2xl text-burgundy">Template Preview</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setActiveTemplate(null)}
+                >
+                  Close
                 </Button>
               </div>
-              <InviteRenderer invite={activeTemplate} preview />
-              <div className="flex justify-end px-4 pb-4 pt-8">
-                <Link
-                  href="/sign-up"
-                  className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-burgundy/80 hover:text-burgundy transition-colors"
-                >
-                  Start creating with this design
-                  <ArrowUpRight className="size-4" />
-                </Link>
+              <div className="overflow-hidden rounded-2xl border border-stone-200">
+                <InviteRenderer invite={activeTemplate} preview />
               </div>
             </motion.div>
           </motion.div>
@@ -125,4 +114,3 @@ export function TemplatesShowcase() {
     </>
   );
 }
-

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { type InviteTheme } from "@/lib/invites";
 import { buttonStyles } from "@/components/ui/button";
 
-export function TemplatePreviewBar({ theme }: { theme: InviteTheme }) {
+export function TemplatePreviewBar({ theme: _theme }: { theme: InviteTheme }) {
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
@@ -27,11 +27,11 @@ export function TemplatePreviewBar({ theme }: { theme: InviteTheme }) {
 
         <div className="hidden flex-col sm:flex">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold/80">Previewing Mood</p>
-          <p className="text-sm font-semibold text-white capitalize">{theme}</p>
+          <p className="text-sm font-semibold text-white">South Indian Heritage Wedding</p>
         </div>
 
         <Link
-          href={`/dashboard/invite/new?template=${theme}`}
+          href="/dashboard/invite/new?template=south-indian-heritage"
           className={buttonStyles({
             size: "lg",
             className: "h-10 rounded-full bg-gold px-6 text-xs font-bold uppercase tracking-widest text-burgundy border-none hover:bg-gold/90 sm:h-12 sm:px-10",
