@@ -6,7 +6,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Eye } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonStyles } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { sampleInvite } from "@/lib/invites";
 
@@ -59,7 +59,7 @@ export function TemplatesShowcase() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     className="rounded-full"
                     onClick={() => setActiveTemplate(template)}
@@ -67,12 +67,13 @@ export function TemplatesShowcase() {
                     <Eye className="size-4" />
                     Preview
                   </Button>
-                  <Button asChild size="sm" className="rounded-full">
-                    <Link href={`/dashboard/invite/new?template=south-indian-heritage`}>
-                      Use template
-                      <ArrowUpRight className="size-4" />
-                    </Link>
-                  </Button>
+                  <Link
+                    href="/dashboard/invite/new?template=south-indian-heritage"
+                    className={buttonStyles({ size: "sm", className: "rounded-full" })}
+                  >
+                    Use template
+                    <ArrowUpRight className="size-4 ml-1" />
+                  </Link>
                 </div>
               </div>
             </Card>

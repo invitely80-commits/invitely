@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { type InviteTheme } from "@/lib/invites";
 import { buttonStyles } from "@/components/ui/button";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TemplatePreviewBar({ theme: _theme }: { theme: InviteTheme }) {
   return (
     <motion.div

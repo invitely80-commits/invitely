@@ -1,4 +1,5 @@
-export const getThemeCardStyles = (_theme?: string) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getThemeCardStyles = (..._args: unknown[]) => {
   return {
     background: "bg-[#F8F3E8]",
     border: "border-[#C9A84C]/60",

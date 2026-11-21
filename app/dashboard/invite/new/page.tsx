@@ -10,9 +10,15 @@ export default async function NewInvitePage(props: {
   searchParams: Promise<{ template?: string }>;
 }) {
   const user = await requireUser();
-  const inviteCount = await prisma.invite.count({
-    where: { userId: user.id },
-  });
+
+  let inviteCount = 0;
+  try {
+    inviteCount = await prisma.invite.count({
+      where: { userId: user.id },
+    });
+  } catch (error) {
+    console.error("Failed to query invite count:", error);
+  }
 
   if (inviteCount >= 5) {
     redirect("/dashboard?limit_reached=1");

@@ -89,7 +89,7 @@ export function InviteEditorForm({
   currentSlug,
   inviteId,
   notice,
-  initialTemplate,
+  initialTemplate: _initialTemplate,
 }: {
   action: (
     state: InviteActionState,

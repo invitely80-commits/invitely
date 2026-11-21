@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { type InviteTheme } from "@/lib/invites";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const CultureBackground = ({
   activeTheme: _activeTheme,
 }: {

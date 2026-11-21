@@ -27,7 +27,7 @@ const CEREMONY_FALLBACK_IMAGES = [
 export function ThemedEventCard({
   event,
   index,
-  theme,
+  theme: _theme,
   gallery = [],
   className,
 }: ThemedEventCardProps) {

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { buttonStyles } from "@/components/ui/button";
 
 export function SiteHeader({
   ctaHref,

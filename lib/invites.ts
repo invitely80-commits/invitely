@@ -17,12 +17,14 @@ export const themeOptions: Array<{
   },
 ];
 
-export function themeToTemplate(_theme?: InviteTheme): InviteTemplate {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function themeToTemplate(..._args: unknown[]): InviteTemplate {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (InviteTemplate as any).SOUTH_INDIAN;
 }
 
-export function templateToTheme(_template?: InviteTemplate): InviteTheme {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function templateToTheme(..._args: unknown[]): InviteTheme {
   return "south-indian-heritage";
 }
 

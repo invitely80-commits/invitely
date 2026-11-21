@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Layers, MessageSquare, Palette, Sparkles, Wand2, Globe, ShieldCheck } from "lucide-react";
+import { ArrowRight, MessageSquare, Palette, Globe, ShieldCheck } from "lucide-react";
 
-import { FadeIn, ScaleIn } from "@/components/landing/motion";
+import { FadeIn } from "@/components/landing/motion";
 import { SiteHeader } from "@/components/landing/site-header";
 import { EditorialHero } from "@/components/landing/editorial-hero";
 import { TraditionIcons } from "@/components/landing/tradition-icons";

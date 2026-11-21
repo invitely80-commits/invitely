@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Navigation, ExternalLink, ChevronDown, ChevronUp, Map as MapIcon } from "lucide-react";
+import { Navigation, ExternalLink, ChevronUp, Map as MapIcon } from "lucide-react";
 import { getMapsContext } from "@/lib/maps-utils";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,6 @@ export function MapSection({
   mapUrl,
   className,
   buttonClassName,
-  accentColor = "#7A1F3D", // Default to maroon
 }: MapSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { embedUrl, googleMapsUrl, appleMapsUrl } = getMapsContext(mapUrl, address);

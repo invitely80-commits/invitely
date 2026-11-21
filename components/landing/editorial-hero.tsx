@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { FadeIn } from "@/components/landing/motion";
 import { HeroPreview } from "@/components/landing/hero-preview";
 
