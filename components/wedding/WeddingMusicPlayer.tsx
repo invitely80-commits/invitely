@@ -15,28 +15,85 @@ function getSafeAudioUrl(url?: string): string {
 
 interface WeddingMusicPlayerProps {
   musicUrl?: string;
+  autoPlay?: boolean;
 }
 
-export function WeddingMusicPlayer({ musicUrl = DEFAULT_WEDDING_MUSIC }: WeddingMusicPlayerProps) {
+export function WeddingMusicPlayer({
+  musicUrl = DEFAULT_WEDDING_MUSIC,
+  autoPlay = true,
+}: WeddingMusicPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasManuallyPausedRef = useRef(false);
   const activeUrl = getSafeAudioUrl(musicUrl);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load();
-      if (isPlaying) {
-        audioRef.current.play().catch(() => setIsPlaying(false));
-      }
+    if (!audioRef.current) return;
+    audioRef.current.load();
+    if (isPlaying) {
+      audioRef.current.play().catch(() => setIsPlaying(false));
     }
   }, [activeUrl]);
 
-  const toggleMusic = () => {
+  useEffect(() => {
+    if (!autoPlay) return;
+
+    let cleanupListeners: (() => void) | null = null;
+
+    const tryPlayAudio = () => {
+      if (!audioRef.current || hasManuallyPausedRef.current) return;
+      audioRef.current.volume = 0.85;
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            if (cleanupListeners) cleanupListeners();
+          })
+          .catch(() => {
+            // Browser policy blocked un-gestured audio; listeners handle first interaction
+          });
+      }
+    };
+
+    const handleFirstGesture = () => {
+      if (hasManuallyPausedRef.current) return;
+      tryPlayAudio();
+    };
+
+    // 1. Immediate attempt on page load
+    tryPlayAudio();
+
+    // 2. Gesture fallback listeners for first touch/click/scroll (satisfies browser policy across all devices)
+    const options: AddEventListenerOptions = { once: true, passive: true };
+    window.addEventListener("pointerdown", handleFirstGesture, options);
+    window.addEventListener("touchstart", handleFirstGesture, options);
+    window.addEventListener("click", handleFirstGesture, options);
+    window.addEventListener("scroll", handleFirstGesture, options);
+    window.addEventListener("keydown", handleFirstGesture, options);
+
+    cleanupListeners = () => {
+      window.removeEventListener("pointerdown", handleFirstGesture);
+      window.removeEventListener("touchstart", handleFirstGesture);
+      window.removeEventListener("click", handleFirstGesture);
+      window.removeEventListener("scroll", handleFirstGesture);
+      window.removeEventListener("keydown", handleFirstGesture);
+    };
+
+    return () => {
+      if (cleanupListeners) cleanupListeners();
+    };
+  }, [autoPlay, activeUrl]);
+
+  const toggleMusic = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!audioRef.current) return;
     if (isPlaying) {
+      hasManuallyPausedRef.current = true;
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      hasManuallyPausedRef.current = false;
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -53,6 +110,7 @@ export function WeddingMusicPlayer({ musicUrl = DEFAULT_WEDDING_MUSIC }: Wedding
         ref={audioRef}
         src={activeUrl}
         loop
+        autoPlay={autoPlay}
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
@@ -63,7 +121,7 @@ export function WeddingMusicPlayer({ musicUrl = DEFAULT_WEDDING_MUSIC }: Wedding
         onClick={toggleMusic}
         aria-label={isPlaying ? "Pause wedding music" : "Play wedding music"}
         title={isPlaying ? "Pause wedding music" : "Play wedding music"}
-        className="relative flex items-center gap-2 px-3 h-9 sm:h-10 rounded-full bg-[#FAF0E1]/95 backdrop-blur-md border border-[#C29B63]/50 shadow-[0_4px_20px_rgba(45,35,30,0.15)] text-[#821919] hover:bg-[#F5E6D0] hover:border-[#821919]/40 hover:shadow-[0_6px_24px_rgba(130,25,25,0.2)] transition-all duration-300"
+        className="relative flex items-center gap-2 px-3 h-9 sm:h-10 rounded-full bg-[#FAF0E1]/95 backdrop-blur-md border border-[#C29B63]/50 shadow-[0_4px_20px_rgba(45,35,30,0.15)] text-[#821919] hover:bg-[#F5E6D0] hover:border-[#821919]/40 hover:shadow-[0_6px_24px_rgba(130,25,25,0.2)] transition-all duration-300 cursor-pointer"
       >
         {isPlaying ? (
           <div className="flex items-end gap-[3px] h-3.5 w-3.5 pb-0.5" aria-hidden="true">

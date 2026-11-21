@@ -72,7 +72,7 @@ interface SouthIndianHeritageTemplateProps {
  */
 export function SouthIndianHeritageTemplate({
   invite,
-  preview: _preview = false,
+  preview = false,
 }: SouthIndianHeritageTemplateProps) {
   const data = invite?.data;
   const groomName = (data?.groomName?.trim() || DEMO_HERITAGE_DATA.groomName).toUpperCase();
@@ -128,7 +128,7 @@ export function SouthIndianHeritageTemplate({
   const musicUrl = rawMusicUrl && rawMusicUrl.trim() !== "" ? rawMusicUrl : DEFAULT_HERITAGE_MUSIC;
 
   return (
-    <WeddingInvitationShell musicUrl={musicUrl}>
+    <WeddingInvitationShell musicUrl={musicUrl} autoPlay={!preview}>
       {/* ================================================== */}
       {/* THE CONTINUOUS LUXURY INVITATION CANVAS            */}
       {/* ================================================== */}

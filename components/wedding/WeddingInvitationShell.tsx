@@ -7,6 +7,7 @@ import { WeddingMusicPlayer } from "./WeddingMusicPlayer";
 interface WeddingInvitationShellProps {
   children: React.ReactNode;
   musicUrl?: string;
+  autoPlay?: boolean;
   className?: string;
 }
 
@@ -17,12 +18,13 @@ interface WeddingInvitationShellProps {
  * - Continuous warm backdrop (#EDE3D2)
  * - Global typography injection (Cormorant Garamond, Cinzel)
  * - Non-intrusive section navigation (#families, #wedding, #events, #venue, #rsvp)
- * - Ambient music control
+ * - Ambient music control with seamless autoplay
  * - Smooth scroll behavior
  */
 export function WeddingInvitationShell({
   children,
   musicUrl,
+  autoPlay = true,
   className = "",
 }: WeddingInvitationShellProps) {
   return (
@@ -39,7 +41,7 @@ export function WeddingInvitationShell({
       `}</style>
 
       {/* 2. SUBTLE FLOATING MUSIC PLAYER */}
-      <WeddingMusicPlayer musicUrl={musicUrl} />
+      <WeddingMusicPlayer musicUrl={musicUrl} autoPlay={autoPlay} />
 
       {/* 3. THE CONTINUOUS INVITATION CANVAS */}
       <div className="w-full flex flex-col items-center pb-20">
