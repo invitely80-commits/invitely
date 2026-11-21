@@ -47,6 +47,7 @@ export const inviteDataSchema = z.object({
   enableRsvp: z.boolean().default(true),
   askAccommodation: z.boolean().default(false),
   rsvpDeadline: z.string().optional(),
+  musicUrl: z.string().optional(),
   familyDetails: inviteFamilyDetailsSchema,
 });
 

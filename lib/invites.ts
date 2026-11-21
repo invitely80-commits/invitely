@@ -42,6 +42,7 @@ export const sampleInvite: InviteData = {
   weddingDate: "2026-11-14",
   description: "Join us in celebrating the beginning of our forever.",
   theme: "south-indian-heritage",
+  musicUrl: "/wedding/music/south-indian-heritage.mp3",
   contactEmail: "family@invitely.com",
   contactPhone: "+91 98765 43210",
   gallery: [],

@@ -12,6 +12,8 @@ import { SectionEvents, ALL_HERITAGE_EVENTS } from "@/components/wedding/Section
 import { SectionVenue } from "@/components/wedding/SectionVenue";
 import { SectionRSVP } from "@/components/wedding/SectionRSVP";
 
+export const DEFAULT_HERITAGE_MUSIC = "/wedding/music/south-indian-heritage.mp3";
+
 export const DEMO_HERITAGE_DATA = {
   groomName: "SHREYAS",
   brideName: "ANANYA",
@@ -22,6 +24,7 @@ export const DEMO_HERITAGE_DATA = {
   venueAddress: "23, HAL Old Airport Road, Kodihalli, Bengaluru, Karnataka 560008",
   mapsUrl: "https://maps.google.com/?q=The+Leela+Palace+Bengaluru",
   subtitle: "Two families, one beautiful beginning",
+  musicUrl: DEFAULT_HERITAGE_MUSIC,
   groomGrandparents: [
     "Late Sri Venkataraman Iyer\n& Smt. Lakshmi Ammal",
     "Sri Raghavan Iyer\n& Smt. Meenakshi Iyer",
@@ -121,8 +124,11 @@ export function SouthIndianHeritageTemplate({
   const venueAddress = firstEvent?.address || DEMO_HERITAGE_DATA.venueAddress;
   const mapsUrl = firstEvent?.mapUrl || DEMO_HERITAGE_DATA.mapsUrl;
 
+  const rawMusicUrl = (data as { musicUrl?: string })?.musicUrl;
+  const musicUrl = rawMusicUrl && rawMusicUrl.trim() !== "" ? rawMusicUrl : DEFAULT_HERITAGE_MUSIC;
+
   return (
-    <WeddingInvitationShell musicUrl={(data as { musicUrl?: string })?.musicUrl}>
+    <WeddingInvitationShell musicUrl={musicUrl}>
       {/* ================================================== */}
       {/* THE CONTINUOUS LUXURY INVITATION CANVAS            */}
       {/* ================================================== */}
