@@ -47,7 +47,15 @@ export const inviteDataSchema = z.object({
   enableRsvp: z.boolean().default(true),
   askAccommodation: z.boolean().default(false),
   rsvpDeadline: z.string().optional(),
-  musicUrl: z.string().optional(),
+  musicUrl: z
+    .string()
+    .trim()
+    .max(500, "Music URL must be under 500 characters.")
+    .refine(
+      (val) => !val || val.startsWith("/") || val.startsWith("https://"),
+      "Music URL must be a valid HTTPS URL or relative path."
+    )
+    .optional(),
   familyDetails: inviteFamilyDetailsSchema,
 });
 

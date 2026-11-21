@@ -4,6 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 
 export const DEFAULT_WEDDING_MUSIC = "/wedding/music/south-indian-heritage.mp3";
 
+function getSafeAudioUrl(url?: string): string {
+  if (!url || typeof url !== "string") return DEFAULT_WEDDING_MUSIC;
+  const trimmed = url.trim();
+  if (trimmed.startsWith("/") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  return DEFAULT_WEDDING_MUSIC;
+}
+
 interface WeddingMusicPlayerProps {
   musicUrl?: string;
 }
@@ -11,7 +20,7 @@ interface WeddingMusicPlayerProps {
 export function WeddingMusicPlayer({ musicUrl = DEFAULT_WEDDING_MUSIC }: WeddingMusicPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const activeUrl = musicUrl?.trim() ? musicUrl : DEFAULT_WEDDING_MUSIC;
+  const activeUrl = getSafeAudioUrl(musicUrl);
 
   useEffect(() => {
     if (audioRef.current) {
