@@ -1,19 +1,7 @@
 import { InviteTemplate, type Prisma } from "@prisma/client";
 import { inviteDataSchema, type InviteData } from "@/lib/validations";
 
-export type InviteTheme =
-  | "south-indian-heritage"
-  | "minimal"
-  | "royal"
-  | "hindu"
-  | "muslim"
-  | "christian"
-  | "sikh"
-  | "civil"
-  | "luxury"
-  | "south-indian"
-  | "temple-journey"
-  | "classic-illustration";
+export type InviteTheme = "south-indian-heritage";
 
 export const themeOptions: Array<{
   value: InviteTheme;

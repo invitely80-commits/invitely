@@ -48,155 +48,19 @@ export function ThemedEventCard({
       })
     : "";
 
-  // Theme-specific styling tokens
+  // Theme-specific styling tokens (South Indian Heritage)
   const getThemeStyling = () => {
-    switch (theme) {
-      case "royal":
-        return {
-          cardContainer: "border border-[#C9A84C]/30 bg-[#1C0A0A]/70 backdrop-blur-xl shadow-[0_30px_70px_rgba(0,0,0,0.6)]",
-          photoFrame: "border-2 border-[#C9A84C]/60 shadow-[0_15px_40px_rgba(201,168,76,0.15)] ring-1 ring-[#C9A84C]/20",
-          tagBg: "bg-[#8B1A1A]/90 text-[#E8D5A0] border border-[#C9A84C]/40",
-          dateText: "text-[#E8D5A0]",
-          dividerColor: "bg-[#C9A84C]/40",
-          titleText: "text-[#FDFBF7]",
-          bodyText: "text-white/80",
-          metaIcon: "text-[#E8D5A0]",
-          mapButton: "border-[#E8D5A0]/30 text-[#E8D5A0] hover:border-[#E8D5A0]/80 hover:bg-[#C9A84C]/10",
-        };
-      case "south-indian":
-        return {
-          cardContainer: "border border-[#C9A84C]/40 bg-[#FFFDF9] shadow-[0_20px_60px_rgba(139,26,26,0.06)]",
-          photoFrame: "border-2 border-[#C9A84C]/60 shadow-[0_15px_40px_rgba(139,26,26,0.12)]",
-          tagBg: "bg-[#8B1A1A] text-[#FAF7F2] border border-[#C9A84C]/50",
-          dateText: "text-[#8B1A1A]",
-          dividerColor: "bg-[#C9A84C]/50",
-          titleText: "text-[#2D1B1B]",
-          bodyText: "text-[#4A4A4A]",
-          metaIcon: "text-[#C9A84C]",
-          mapButton: "border-[#C9A84C]/40 text-[#8B1A1A] hover:border-[#8B1A1A]/60 hover:bg-[#8B1A1A]/5",
-        };
-      case "temple-journey":
-        return {
-          cardContainer: "border border-[#D4AF37]/40 bg-[#FFFFFF] shadow-[0_24px_60px_rgba(36,30,25,0.08)] rounded-2xl",
-          photoFrame: "border-2 border-[#D4AF37]/60 shadow-[0_15px_40px_rgba(126,29,29,0.12)] rounded-xl",
-          tagBg: "bg-[#7E1D1D] text-[#FAF7F0] border border-[#D4AF37]/50 tracking-wider",
-          dateText: "text-[#7E1D1D]",
-          dividerColor: "bg-[#D4AF37]/45",
-          titleText: "text-[#16120E]",
-          bodyText: "text-[#4A3E36]",
-          metaIcon: "text-[#D4AF37]",
-          mapButton: "border-[#D4AF37]/50 text-[#7E1D1D] hover:border-[#7E1D1D] hover:bg-[#7E1D1D]/5",
-        };
-      case "classic-illustration":
-        return {
-          cardContainer: "border border-[#C5A059]/40 bg-[#FFFDF9] shadow-[0_24px_60px_rgba(128,24,24,0.08)] rounded-2xl",
-          photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(128,24,24,0.12)] rounded-xl",
-          tagBg: "bg-[#801818] text-[#FBF6EB] border border-[#C5A059]/50 tracking-wider",
-          dateText: "text-[#801818]",
-          dividerColor: "bg-[#C5A059]/45",
-          titleText: "text-[#2B1B17]",
-          bodyText: "text-[#5C4D43]",
-          metaIcon: "text-[#C5A059]",
-          mapButton: "border-[#C5A059]/50 text-[#801818] hover:border-[#801818] hover:bg-[#801818]/5",
-        };
-      case "south-indian-heritage":
-        return {
-          cardContainer: "border border-[#C5A059]/40 bg-[#F8F3E8] shadow-[0_24px_60px_rgba(130,25,25,0.08)] rounded-2xl",
-          photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(130,25,25,0.12)] rounded-xl",
-          tagBg: "bg-[#821919] text-[#FAF5EB] border border-[#C5A059]/50 tracking-wider",
-          dateText: "text-[#821919]",
-          dividerColor: "bg-[#C5A059]/45",
-          titleText: "text-[#2D231E]",
-          bodyText: "text-[#63534B]",
-          metaIcon: "text-[#C5A059]",
-          mapButton: "border-[#C5A059]/50 text-[#821919] hover:border-[#821919] hover:bg-[#821919]/5",
-        };
-      case "hindu":
-        return {
-          cardContainer: "border border-[#E8D5A0]/25 bg-[#1A0F0A]/85 backdrop-blur-xl shadow-[0_25px_60px_rgba(232,213,160,0.07)]",
-          photoFrame: "border-2 border-[#E8D5A0]/45 shadow-[0_15px_40px_rgba(232,213,160,0.1)] ring-1 ring-gold-accent/20",
-          tagBg: "bg-[#8B2500]/90 text-[#E8D5A0] border border-[#E8D5A0]/30",
-          dateText: "text-[#E8D5A0]",
-          dividerColor: "bg-[#E8D5A0]/40",
-          titleText: "text-[#FDFBF7]",
-          bodyText: "text-white/80",
-          metaIcon: "text-[#E8D5A0]",
-          mapButton: "border-[#E8D5A0]/30 text-[#E8D5A0] hover:border-[#E8D5A0]/80 hover:bg-[#E8D5A0]/10",
-        };
-      case "muslim":
-        return {
-          cardContainer: "border border-[#D4AF37]/30 bg-[#0A1A10]/85 backdrop-blur-xl shadow-[0_25px_60px_rgba(212,175,55,0.08)]",
-          photoFrame: "border-2 border-[#D4AF37]/50 shadow-[0_15px_40px_rgba(212,175,55,0.1)]",
-          tagBg: "bg-[#062414] text-[#E8D5A0] border border-[#D4AF37]/40",
-          dateText: "text-[#E8D5A0]",
-          dividerColor: "bg-[#D4AF37]/40",
-          titleText: "text-[#FDFBF7]",
-          bodyText: "text-white/80",
-          metaIcon: "text-[#D4AF37]",
-          mapButton: "border-[#D4AF37]/30 text-[#E8D5A0] hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/10",
-        };
-      case "christian":
-        return {
-          cardContainer: "border border-stone-200/90 bg-white/85 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.04)]",
-          photoFrame: "border border-stone-200 shadow-[0_15px_35px_rgba(0,0,0,0.06)]",
-          tagBg: "bg-stone-900 text-stone-100",
-          dateText: "text-stone-700",
-          dividerColor: "bg-stone-300",
-          titleText: "text-stone-900",
-          bodyText: "text-stone-600",
-          metaIcon: "text-stone-500",
-          mapButton: "border-stone-300 text-stone-700 hover:border-stone-600 hover:bg-stone-50",
-        };
-      case "sikh":
-        return {
-          cardContainer: "border border-[#FF9933]/30 bg-[#0A111F]/85 backdrop-blur-xl shadow-[0_25px_60px_rgba(255,153,51,0.07)]",
-          photoFrame: "border-2 border-[#FF9933]/45 shadow-[0_15px_40px_rgba(255,153,51,0.1)]",
-          tagBg: "bg-[#0C1B33] text-[#FF9933] border border-[#FF9933]/40",
-          dateText: "text-[#FF9933]",
-          dividerColor: "bg-[#FF9933]/40",
-          titleText: "text-[#FDFBF7]",
-          bodyText: "text-white/80",
-          metaIcon: "text-[#FF9933]",
-          mapButton: "border-[#FF9933]/30 text-[#FF9933] hover:border-[#FF9933]/80 hover:bg-[#FF9933]/10",
-        };
-      case "civil":
-        return {
-          cardContainer: "border border-black/10 bg-[#FAFAFA] shadow-[0_15px_40px_rgba(0,0,0,0.03)]",
-          photoFrame: "border border-black/15 shadow-[0_15px_30px_rgba(0,0,0,0.05)]",
-          tagBg: "bg-black text-white",
-          dateText: "text-stone-900 font-semibold",
-          dividerColor: "bg-black/15",
-          titleText: "text-black",
-          bodyText: "text-stone-600",
-          metaIcon: "text-stone-400",
-          mapButton: "border-black/20 text-black hover:border-black/60 hover:bg-black/5",
-        };
-      case "luxury":
-        return {
-          cardContainer: "border border-[#C9A84C]/40 bg-[#080808]/90 backdrop-blur-2xl shadow-[0_30px_80px_rgba(0,0,0,0.85)]",
-          photoFrame: "border-2 border-[#C9A84C]/60 shadow-[0_20px_50px_rgba(201,168,76,0.15)] ring-1 ring-white/10",
-          tagBg: "bg-black/90 text-[#E8D5A0] border border-[#C9A84C]/50",
-          dateText: "text-[#E8D5A0]",
-          dividerColor: "bg-[#C9A84C]/50",
-          titleText: "text-white",
-          bodyText: "text-white/75",
-          metaIcon: "text-[#C9A84C]",
-          mapButton: "border-[#C9A84C]/35 text-[#E8D5A0] hover:border-[#C9A84C]/80 hover:bg-[#C9A84C]/10",
-        };
-      case "minimal":
-      default:
-        return {
-          cardContainer: "border border-[#C5A059]/40 bg-[#F8F3E8] shadow-[0_24px_60px_rgba(130,25,25,0.08)] rounded-2xl",
-          photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(130,25,25,0.12)] rounded-xl",
-          tagBg: "bg-[#821919] text-[#FAF5EB] border border-[#C5A059]/50 tracking-wider",
-          dateText: "text-[#821919]",
-          dividerColor: "bg-[#C5A059]/45",
-          titleText: "text-[#2D231E]",
-          bodyText: "text-[#63534B]",
-          metaIcon: "text-[#C5A059]",
-          mapButton: "border-[#C5A059]/50 text-[#821919] hover:border-[#821919] hover:bg-[#821919]/5",
-        };
-    }
+    return {
+      cardContainer: "border border-[#C5A059]/40 bg-[#F8F3E8] shadow-[0_24px_60px_rgba(130,25,25,0.08)] rounded-2xl",
+      photoFrame: "border-2 border-[#C5A059]/60 shadow-[0_15px_40px_rgba(130,25,25,0.12)] rounded-xl",
+      tagBg: "bg-[#821919] text-[#FAF5EB] border border-[#C5A059]/50 tracking-wider",
+      dateText: "text-[#821919]",
+      dividerColor: "bg-[#C5A059]/45",
+      titleText: "text-[#2D231E]",
+      bodyText: "text-[#63534B]",
+      metaIcon: "text-[#C5A059]",
+      mapButton: "border-[#C5A059]/50 text-[#821919] hover:border-[#821919] hover:bg-[#821919]/5",
+    };
   };
 
   const st = getThemeStyling();
